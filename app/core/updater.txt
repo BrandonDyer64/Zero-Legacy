@@ -8,13 +8,6 @@ if (!$config["updates"]["auto"]) {
 	debug_warn("Automatic Updates Disabled");
 }
 
-$update_host_default = "http://165.227.18.19/host";
-$update_host_bleeding_edge = "http://165.227.18.19/dev";
-if ($config["updates"]["bleeding_edge"]) {
-	$update_host = $update_host_bleeding_edge;
-} else {
-	$update_host = $update_host_default;
-}
 $host_version_info = json_decode(file_get_contents($update_host."/version.json"), true);
 
 function zero_update() {

@@ -3,7 +3,6 @@
 session_start();
 
 $config_file_name = "config/config.json";
-$defaults_host = "http://dev.quintify.com/qds/sites/zero";
 
 function make_config($file, $text, $example, $force = false) {
    $example_text_post = $example ? ".example.txt" : "";
@@ -51,3 +50,12 @@ if (file_exists($config_file_name)) {
 }
 
 $nl = $config["formatting"]["new_line"];
+
+$update_host_default = "http://165.227.18.19/host";
+$update_host_bleeding_edge = "http://165.227.18.19/dev";
+if ($config["updates"]["bleeding_edge"]) {
+   $update_host = $update_host_bleeding_edge;
+} else {
+   $update_host = $update_host_default;
+}
+$defaults_host = "$update_host";
