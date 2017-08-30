@@ -8,8 +8,8 @@ if (!$config["updates"]["auto"]) {
 	debug_warn("Automatic Updates Disabled");
 }
 
-$update_host_default = "http://quintify.com/qds/sites/zero/";
-$update_host_bleeding_edge = "http://dev.quintify.com/qds/sites/zero";
+$update_host_default = "http://165.227.18.19/host";
+$update_host_bleeding_edge = "http://165.227.18.19/dev";
 if ($config["updates"]["bleeding_edge"]) {
 	$update_host = $update_host_bleeding_edge;
 } else {
