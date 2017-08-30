@@ -1,0 +1,53 @@
+<?php
+
+if ($page == "doc") {
+
+   $table_data = '';
+   $table_header = '';
+
+   $data = db_schema($table);
+   $first = true;
+   foreach ($data as $row) {
+      $table_row = "";
+      foreach ($row as $key => $value) {
+         if (is_array($value)) {
+            $value = json_encode($value);
+         }
+         $table_row .= "<td>$value</td>";
+      }
+      $table_data .= <<<HTML
+
+      <tr class='list_table_data_row'>
+         $table_row
+      </tr>
+
+HTML;
+
+      if ($first) {
+         foreach ($row as $key => $value) {
+            $key = column_pretty_print($key);
+            $table_header .= "<th>$key</th>";
+         }
+         $first = false;
+      }
+   }
+
+   if (!$first) {
+   $content .= <<<HTML
+
+   <h2>Doc: <b>$table_pretty</b></h2>
+
+   <table class="list_table doc_table">
+      <tbody>
+         <tr class="list_table_header_row">
+            $table_header
+         </tr>
+         $table_data
+      </tbody>
+   </table>
+
+HTML;
+   } else {
+      $content .= create_error("Table name not provided.");
+   }
+}

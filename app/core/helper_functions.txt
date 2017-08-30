@@ -1,0 +1,461 @@
+<?php
+
+// Returns the full url
+function get_url() {
+    return (isset($_SERVER['HTTPS']) ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+}
+
+function starts_with($haystack, $needle) {
+    $length = strlen($needle);
+    return (substr($haystack, 0, $length) === $needle);
+}
+
+function select_table($name, $value = '') {
+    global $pdo;
+    global $config;
+    $query = "SHOW TABLES";
+    $stmt = $pdo->prepare($query);
+    $stmt->execute();
+    $options = '';
+    $database = $config['database']['database'];
+    while ($row = $stmt->fetch()) {
+        $table_name = $row["Tables_in_$database"];
+        $table_name_pretty = table_pretty_print($table_name);
+        $selected = '';
+        if ($table_name == $value) {
+            $selected = 'selected';
+        }
+        $options .= "<option value='$table_name' $selected>$table_name_pretty</option>";
+    }
+    $content = <<<HTML
+    <select name="$name" value="$value">
+        $options
+    </select>
+HTML;
+    return $content;
+}
+
+// Returns a more readable version of a table name
+function table_pretty_print($name) {
+    $name = str_replace('_', ' ', $name);
+    $name = ucwords($name);
+    return $name;
+}
+
+// Returns a more readable version of a column name
+$standard_field_names = json_decode(file_get_contents("config/standard_field_names.json"), true);
+function column_pretty_print($name) {
+    global $standard_field_names;
+    if (array_key_exists($name, $standard_field_names)) {
+        return $standard_field_names[$name];
+    }
+    $name = str_replace('_', ' ', $name);
+    $name = ucwords($name);
+    return $name;
+}
+
+// Cleans table and column names
+function db_clean($str) {
+    return preg_replace('/[^A-Za-z0-9_\\*\\.\\>\\<\\=]+/', '', $str);
+}
+
+function db_select($table, $columns, $where, $extra = '') {
+    global $pdo;
+    $table = db_clean($table);
+    // Clean columns
+    foreach ($columns as $key => $column) {
+        $columns[$key] = db_clean($column);
+    }
+    $columns = implode(',', $columns);
+    // Construct and clean where clause
+    $where_conditions = array();
+    $where_values = array();
+    foreach ($where as $column => $value) {
+        $column = db_clean($column);
+        if ($value != null) {
+            if (!is_array($value)) {
+                $where_conditions[] = "$column=?";
+                $where_values[] = $value;
+            } else {
+                $value[0] = db_clean($value[0]);
+                $where_conditions[] = "${column} ${value[0]} ?";
+                $where_values[] = $value[1];
+            }
+        } else {
+            $where_conditions[] = "$column IS NULL";
+        }
+    }
+    $where = implode(' AND ', $where_conditions);
+    // Create statement
+    $query = "SELECT $columns FROM $table WHERE $where $extra";
+    $stmt = $pdo->prepare($query);
+    $stmt->execute($where_values);
+    return $stmt;
+}
+
+function db_select_ids($table, $columns, $id_min, $id_max) {
+    global $pdo;
+    $table = db_clean($table);
+    // Clean columns
+    foreach ($columns as $key => $column) {
+        $columns[$key] = db_clean($column);
+    }
+    $columns = implode(',', $columns);
+    // Create statement
+    $query = "SELECT $columns FROM $table WHERE id >= ? AND id <= ?";
+    $stmt = $pdo->prepare($query);
+    $stmt->execute([$id_min, $id_max]);
+    return $stmt;
+}
+
+function db_update($table, $values, $where) {
+    global $pdo;
+    $table = db_clean($table);
+    // Clean columns
+    $columns = [];
+    $column_values = array();
+    foreach ($values as $key => $value) {
+        $columns[$key] = db_clean($key)."=?";
+        $column_values[] = $value;
+    }
+    $columns = implode(', ', $columns);
+    // Construct and clean where clause
+    $where_conditions = array();
+    $where_values = array();
+    foreach ($where as $column => $value) {
+        $column = db_clean($column);
+        if ($value != null) {
+            $where_conditions[] = "$column=?";
+            $where_values[] = $value;
+        } else {
+            $where_conditions[] = "$column IS NULL";
+        }
+    }
+    $where = implode(' AND ', $where_conditions);
+    // Create statement
+    $query = "UPDATE $table SET $columns WHERE $where";
+    /*
+    UPDATE table_name
+    SET column1 = value1, column2 = value2, ...
+    WHERE condition;
+    */
+    $stmt = $pdo->prepare($query);
+    $stmt->execute(array_merge($column_values, $where_values));
+    return $stmt;
+}
+
+function db_insert($table, $values) {
+    global $pdo;
+    $table = db_clean($table);
+    // Clean columns
+    $columns = [];
+    $column_values = array();
+    $vals = array();
+    foreach ($values as $key => $value) {
+        $columns[$key] = db_clean($key);
+        $vals[] = '?';
+        $column_values[] = $value;
+    }
+    $columns = implode(', ', $columns);
+    $vals = implode(', ', $vals);
+    // Create statement
+    $query = "INSERT INTO $table ($columns) VALUES ($vals)";
+    $stmt = $pdo->prepare($query);
+    $stmt->execute($column_values);
+    return $stmt;
+}
+
+function db_get_last_insert_id() {
+    global $pdo;
+    return $pdo->lastInsertId();
+}
+
+function db_remove($table, $id) {
+    global $pdo;
+    $table = db_clean($table);
+    // Create statement
+    $query = "DELETE FROM $table WHERE id=?";
+    $stmt = $pdo->prepare($query);
+    $stmt->execute([$id]);
+    return $stmt;
+}
+
+function db_schema($table) {
+    global $pdo;
+    global $config;
+    // Get values from database
+    $where = ["TABLE_NAME"=>$table,"TABLE_SCHEMA"=>$config["database"]["database"]];
+    $cols = ["COLUMN_NAME","IS_NULLABLE","DATA_TYPE","CHARACTER_MAXIMUM_LENGTH","COLUMN_COMMENT"];
+    $stmt = db_select("INFORMATION_SCHEMA.COLUMNS", $cols, $where);
+    // Convert to usable array
+    $columns = [];
+    while ($row = $stmt->fetch()) {
+        $column = [];
+        $name = $row['COLUMN_NAME'];
+        $data_type = $row['DATA_TYPE'];
+        $comment = $row['COLUMN_COMMENT'];
+        if ($comment != '') {
+            try {
+                $comment = json_decode($comment, true);
+            } catch (Exception $e) {
+                $comment = '';
+            }
+        }
+        if ($comment != '') {
+            $type = $comment['type'];
+        } else {
+            $type = $data_type;
+            $comment = [];
+        }
+        if ($name == 'id') {
+            $type = 'id';
+        }
+        $type = strtolower($type);
+        $data_type = strtolower($data_type);
+        $is_required = $row['IS_NULLABLE'] == 'NO';
+        // Add data to column
+        $column['name'] = $name;
+        $column['data_type'] = $data_type;
+        $column['type'] = $type;
+        $column['data'] = $comment;
+        $column['required'] = $is_required;
+        // Add column to columns
+        $columns[$name] = $column;
+    }
+    return $columns;
+}
+
+function db_table_data($table) {
+    global $pdo;
+    global $config;
+    // Get values from database
+    $where = ["TABLE_NAME"=>$table,"TABLE_SCHEMA"=>$config["database"]["database"]];
+    $cols = ["TABLE_NAME","TABLE_COMMENT"];
+    $stmt = db_select("INFORMATION_SCHEMA.TABLES", $cols, $where);
+    $row = $stmt->fetch();
+    // Convert to usable array
+    $column = [];
+    $name = $row['TABLE_NAME'];
+    $comment = $row['TABLE_COMMENT'];
+    if ($comment != '') {
+        try {
+            $comment = json_decode($comment, true);
+        } catch (Exception $e) {
+            $comment = [];
+        }
+    } else {
+        $comment = [];
+    }
+    // Add slaves
+    $slaves = [];
+    if (isset($comment['slaves']))
+        $slaves = $comment['slaves'];
+    // Create whitelist
+    $user_groups = maj_get_all_names('user_group');
+    function create_whitelist($comment, $user_groups, $is_set = true) {
+        if (!$is_set) {
+            return [];
+        }
+        $whitelist = [];
+        if (isset($comment['whitelist']) && is_array($comment['whitelist'])) {
+            $whitelist = $comment['whitelist'];
+        } else if (isset($comment['blacklist'])) {
+            foreach ($user_groups as $key => $user_group) {
+                if (!in_array($user_group['name'], $comment['blacklist'])) {
+                    $whitelist[] = $user_group['name'];
+                }
+            }
+        } else {
+            foreach ($user_groups as $key => $user_group) {
+                $whitelist[] = $user_group['name'];
+            }
+        }
+        return $whitelist;
+    }
+    // Add data to column
+    $column['name'] = $name;
+    $column['data'] = $comment;
+    $column['slaves'] = $slaves;
+    $column['whitelist'] = create_whitelist($comment, $user_groups);
+    $column['whitelist_display'] = create_whitelist(isset($comment['display']) ? $comment['display'] : [], $user_groups, isset($comment['display']), isset($comment['display']));
+    $column['whitelist_edit'] = create_whitelist(isset($comment['edit']) ? $comment['edit'] : [], $user_groups, isset($comment['edit']), isset($comment['edit']));
+    $column['whitelist_add'] = create_whitelist(isset($comment['add']) ? $comment['add'] : [], $user_groups, isset($comment['add']), isset($comment['add']));
+    // Add column to columns
+    return $column;
+}
+
+function maj_update($table, $values, $id) {
+    global $field_types;
+    $schema = db_schema($table);
+    $update_values = [];
+    foreach ($values as $key => $value) {
+        if (!starts_with($key, '-') && $key != 'id') {
+            $type = $schema[$key]['type'];
+            $fn = get_type_function('encode', $type);
+            $value = $fn($schema[$key], $value, $values);
+            $is_update_value = true;
+            if (($value == '' || $value == null) && isset($field_types[$type]['config']['skip_empty']) && $field_types[$type]['config']['skip_empty']) {
+                $is_update_value = false;
+            }
+            if ($is_update_value) {
+                $update_values[$key] = $value;
+            }
+        }
+    }
+    db_update($table, $update_values, ["id"=>$id]);
+}
+
+$name_cache = [];
+
+function maj_get_name($table, $id) {
+    if (isset($name_cache[$table][$id])) {
+        return $name_cache[$table][$id];
+    }
+    $from_schema = db_schema($table);
+    $name_key = array_slice($from_schema, 1, 1, true);
+    $name_key = reset($name_key);
+    $name_key = $name_key['name'];
+    $stmt = db_select($table, [$name_key], ['id'=>$id]);
+    $row = $stmt->fetch();
+    $fn = get_type_function('decode_raw', $from_schema[$name_key]['type']);
+    $name = $fn($from_schema[$name_key], $row[$name_key]);
+    $name_cache[$table][$id] = $name;
+    return $name;
+}
+
+function maj_get_all_names($table, $where = ['1'=>'1']) {
+    $from_schema = db_schema($table);
+    $name_key = array_slice($from_schema, 1, 1, true);
+    $name_key = reset($name_key);
+    $name_key = $name_key['name'];
+    $names = [];
+    $fn = get_type_function('decode_raw', $from_schema[$name_key]['type']);
+    $stmt = db_select($table, ['id', $name_key], $where);
+    while($row = $stmt->fetch()) {
+        $name = $fn($from_schema[$name_key], $row[$name_key]);
+        $names[$row['id']] = [
+            'id' => $row['id'],
+            'name' => $name
+        ];
+    }
+    return $names;
+}
+
+function get_type_function($page, $type) {
+    global $field_types;
+    if (isset($field_types[$type])) {
+        if (isset($field_types[$type][$page])) {
+            return $field_types[$type][$page];
+        } if ($page == 'decode') {
+            global $content;
+            $content .= create_error("Decode of type is not defined.\n\$field_types[$type][decode]");
+        } else {
+            return get_type_function('decode', $type);
+        }
+    } if ($type == 'varchar') {
+        global $content;
+        $content .= create_error("VARCHAR type is not defined.\n\$field_types[varchar]");
+    } else {
+        return get_type_function($page, 'varchar');
+    }
+}
+
+function check_user_permission($whitelist) {
+    global $user;
+    foreach ($user['groups'] as $group) {
+        if (in_array($group, $whitelist))
+            return true;
+    }
+    return false;
+}
+
+function check_user_permission_force(...$whitelists) {
+    $deny = true;
+    foreach ($whitelists as $whitelist) {
+        if (check_user_permission($whitelist))
+            $deny = false;
+    }
+    if ($deny)
+        die('<h1>Permission Denied!</h1><p>You do not have permission to view this page</p>');
+}
+
+function get_multi_select_names($from, $ids) {
+    $values = [];
+    if ($ids != null) {
+        $values = explode(',', $ids);
+    }
+    $names = [];
+    foreach ($values as $value) {
+        $name = maj_get_name($from, $value);
+        $names[$value] = $name;
+    }
+    return $names;
+}
+
+function remove_directory($dirPath) {
+    if (! is_dir($dirPath)) {
+        return;
+    }
+    if (substr($dirPath, strlen($dirPath) - 1, 1) != '/') {
+        $dirPath .= '/';
+    }
+    $files = glob($dirPath . '*', GLOB_MARK);
+    foreach ($files as $file) {
+        if (is_dir($file)) {
+            remove_directory($file);
+        } else {
+            unlink($file);
+        }
+    }
+    rmdir($dirPath);
+}
+
+function is_assoc(array $arr) {
+    if (array() === $arr) return false;
+    return array_keys($arr) !== range(0, count($arr) - 1);
+}
+
+function create_error($text, $is_for_quintify = false) {
+    global $url;
+    if ($is_for_quintify) {
+        $for = "This error is useful to Quintify.!\nPlease send it to them to help make this product better.";
+    } else {
+        $for = '';
+    }
+    $text = <<<TEXT
+
+    Encountered error: $text
+    URL: $url
+    $for
+
+TEXT;
+    $text = base64_encode($text);
+    $url_text = urlencode($text);
+    $error = <<<HTML
+
+    <h2>Something went wrong.</h2>
+
+    <p>Send this to one of your developers:</p>
+
+    <script type="text/javascript">
+         function selectText(containerid) {
+              if (document.selection) {
+                    var range = document.body.createTextRange();
+                    range.moveToElementText(document.getElementById(containerid));
+                    range.select();
+              } else if (window.getSelection) {
+                    var range = document.createRange();
+                    range.selectNode(document.getElementById(containerid));
+                    window.getSelection().removeAllRanges();
+                    window.getSelection().addRange(range);
+              }
+         }
+    </script>
+
+    <p id="error_text" onclick="selectText('error_text')">$text</p>
+
+    <p><sub><a href="?p=err&text=$url_text">I am a developer</a></sub></p>
+
+HTML;
+    return $error;
+}

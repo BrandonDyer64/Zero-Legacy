@@ -1,0 +1,131 @@
+<?php
+
+if ($page == "list") {
+    if (!isset($_GET['t'])) {
+        $content .= create_error('No table specified');
+    }
+
+    $table_data = db_table_data($table);
+    check_user_permission_force($table_data['whitelist'], $table_data['whitelist_display']);
+
+    $is_can_edit = check_user_permission($table_data['whitelist_edit']);
+    $is_can_add = check_user_permission($table_data['whitelist_add']);
+
+    $table_header = "<th></th>";
+    $table_content = "";
+    $list_content = '';
+    $table_footer = "";
+
+    if (isset($_GET['where'])) {
+        if (is_array($_GET['where'])) {
+            $where = $_GET['where'];
+        } else {
+            $where = json_decode($_GET['where'], true);
+        }
+    } else {
+        $where = ["1"=>"1"];
+    }
+
+    if (isset($_GET['cols'])) {
+        $cols = json_decode($_GET['cols'], true);
+    } else {
+        $cols = ['*'];
+    }
+
+    $schema = db_schema($table);
+    $stmt = db_select($table, $cols, $where, 'ORDER BY id DESC');
+    $i = 0;
+    $first = true;
+    $is_warn_for_id = false;
+    while ($row = $stmt->fetch()) {
+        $i++;
+        $table_row = "";
+        foreach ($row as $key => $value) {
+            $fn = get_type_function('decode_list', $schema[$key]['type']);
+            $value = $fn($schema[$key], $value, '', $row);
+            $table_row .= "<td>$value</td>";
+        }
+        if (!isset($row['id'])) {
+            $row['id'] = 0;
+            // Show a warning about not having an id
+            $is_warn_for_id = true;
+        }
+        $table_content .= <<<HTML
+
+        <tr class='list_table_data_row'>
+            <td align="left" valign="center">
+                <a href="?p=display&t=$table&id={$row['id']}" title="View"><span class="glyphicon glyphicon-eye-open"></span></a>
+                &nbsp;
+                <a href="?p=edit&t=$table&id={$row['id']}" title="Edit"><span class="glyphicon glyphicon-edit"></a>
+                &nbsp;
+                <a href="?p=delete&t=$table&id={$row['id']}" title="Delete"><span class="glyphicon glyphicon-remove"></a>
+            </td>
+            $table_row
+        </tr>
+
+HTML;
+
+        if ($first) {
+            foreach ($row as $key => $value) {
+                $key = column_pretty_print($key);
+                $table_header .= "<th>$key</th>";
+            }
+            $first = false;
+        }
+        if ($i % 20 == 0) {
+            $list_content .= <<<HTML
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <tbody>
+                        <tr class="list_table_header_row">
+                            $table_header
+                        </tr>
+                        $table_content
+                        <tr class="list_table_totals_row">
+                            $table_footer
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+HTML;
+        $table_content = '';
+        }
+    }
+
+    $list_content .= <<<HTML
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <tbody>
+                <tr class="list_table_header_row">
+                    $table_header
+                </tr>
+                $table_content
+                <tr class="list_table_totals_row">
+                    $table_footer
+                </tr>
+            </tbody>
+        </table>
+    </div>
+HTML;
+
+    if ($is_warn_for_id) {
+        debug_warn('This table does not have an ID field');
+    }
+
+    if (!$first) {
+        $content .= <<<HTML
+
+        <h2>List: <b>$table_pretty</b></h2>
+
+        <p><a href="?p=add&t=$table"><span class="glyphicon glyphicon-plus"></span></a></p>
+
+        $list_content
+
+HTML;
+    } else {
+        $content .= <<<HTML
+        <h1><strong>: (</strong> &nbsp; Empty Set</h1>
+        <p><a href="?p=add&t=$table">Create the First One</a></p>
+HTML;
+    }
+}

@@ -1,0 +1,5 @@
+php_flag engine off 
+#This will prevent apache from executing *.php-files
+
+AddType text/plain php
+#this wil display php-files in browser (if not, browser will want to download file!)

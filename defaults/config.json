@@ -1,0 +1,32 @@
+{
+   "name": "Quintify Zero",
+   "token": "",
+   "admin": {
+      "password": "changeme"
+   },
+   "database": {
+      "host": "localhost",
+      "username": "root",
+      "password": "",
+      "database": ""
+   },
+   "logging": {
+      "errors": false,
+      "log": true
+   },
+   "formatting": {
+      "new_line": "<br>"
+   },
+   "updates": {
+      "auto": true,
+      "bleeding_edge": false,
+      "force": false,
+      "examples": true
+   },
+   "login": {
+      "require": true
+   },
+   "files": {
+      "index": "index.php"
+   }
+}

@@ -1,0 +1,14 @@
+{
+    "name": "Time Keeping",
+    "type": "Field Type",
+    "version": "0.0.1 Alpha",
+    "cost": 0.49,
+    "description_short": "Various time keeping types.",
+    "description": "",
+    "files": {
+        "type": [
+            "duration.php",
+            "datetime.php"
+        ]
+    }
+}

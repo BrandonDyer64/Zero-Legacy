@@ -1,0 +1,13 @@
+{
+    "name": "YouTube",
+    "type": "Field Type",
+    "version": "1.0.2 Beta",
+    "cost": 0.99,
+    "description_short": "Embeds YouTube videos.",
+    "description": "Lorem ipsom",
+    "files": {
+        "type": [
+            "youtube.php"
+        ]
+    }
+}

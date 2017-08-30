@@ -1,0 +1,19 @@
+{
+    "name": "Discord",
+    "type": "Bot",
+    "version": "Planned",
+    "cost": 0.99,
+    "description_short": "A Discord bot.",
+    "description": "Connects a Discord bot on your system to your Discord server.",
+    "files": {
+        "type": [
+            "discord_type.php"
+        ],
+        "page":[
+            "discord_bot.php"
+        ],
+        "extra": [
+            "bot.py"
+        ]
+    }
+}

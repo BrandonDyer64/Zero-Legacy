@@ -1,0 +1,81 @@
+<?php
+
+if ($page == "add") {
+
+   $table_data = db_table_data($table);
+   check_user_permission_force($table_data['whitelist'], $table_data['whitelist_add']);
+
+   $schema = db_schema($table);
+
+   if (isset($_POST['-submit'])) {
+      $quantity = 1;
+      if (isset($_POST['-quantity']) && $_POST['-quantity'] > 1) {
+         $quantity = $_POST['-quantity'];
+      }
+      for ($i = 0; $i < $quantity; $i++) {
+         $update_values = array();
+         foreach ($_POST as $key => $value) {
+            if (!starts_with($key, '-') && $key != 'id') {
+               $fn = get_type_function('encode', $schema[$key]['type']);
+               $value = $fn($schema[$key], $value, $_POST, $i);
+               $update_values[$key] = $value;
+            }
+         }
+         db_insert($table, $update_values);
+      }
+      $id = $pdo->lastInsertId();
+      header("Location: ?p=display&t=$table&id=$id");
+   }
+
+   $table_content = '';
+
+   foreach ($schema as $key => $value) {
+      if ($key == 'id') {
+         continue;
+      }
+      $key_pretty = column_pretty_print($key);
+      $fn = get_type_function('edit', $schema[$key]['type']);
+      $input = $fn($key, $schema[$key], '');
+      $table_content .= <<<HTML
+
+      <tr>
+         <td valign="top">
+            $key_pretty:
+         </td>
+         <td>
+            $input
+         </td>
+      </tr>
+
+HTML;
+   }
+
+   $content .= <<<HTML
+
+   <h2>Add: $table_pretty</h2>
+   <p><a href="?p=list&t=$table"><span class="glyphicon glyphicon-th-list"></span></a></p>
+   <form method="post">
+      <table class="table">
+         <tbody>
+            $table_content
+            <tr>
+               <td></td>
+               <td>
+                  <input style="width: 44%;" type="number" name="-quantity" placeholder="Copies">
+               </td>
+            </tr>
+            <tr>
+               <td>
+                  <input type="submit" name="-submit" value="Submit">
+               </td>
+               <td>
+                  <input type="button" value="Reset" onclick="if (confirm('Are you sure?')) {location.reload()}">
+               </td>
+            </tr>
+         </tbody>
+      </table>
+   </form>
+
+HTML;
+
+}

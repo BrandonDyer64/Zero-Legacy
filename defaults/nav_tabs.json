@@ -1,0 +1,14 @@
+[
+   {
+      "name": "Home",
+      "url": "/zero"
+   },
+   {
+      "name": "Users",
+      "url":"/zero?p=list&t=user"
+   },
+   {
+      "name": "Zero",
+      "url": "http://quintify.com/qds/sites/zero"
+   }
+]

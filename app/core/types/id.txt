@@ -1,0 +1,24 @@
+<?php
+
+$field_type = "id";
+
+
+$field_types[$field_type]['edit'] = function($name, $schema, $value = null, $focus = false) {
+   global $pdo;
+   $focus = $focus ? 'autofocus' : '';
+   $value = htmlspecialchars($value);
+   $content = <<<HTML
+   <input type="text" name="$name" value="$value" placeholder="$name" $focus>
+HTML;
+   return $content;
+};
+
+$field_types[$field_type]['encode'] = function($schema, $value, $values) {
+   return $value;
+};
+
+$field_types[$field_type]['decode'] = function($schema, $value, $focus_link = '') {
+   return <<<HTML
+   <span class="text_dark" id="feild_id" onclick="copyElemToClipboard('#feild_id')">$value</span>
+HTML;
+};

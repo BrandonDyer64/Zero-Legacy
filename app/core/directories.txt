@@ -1,0 +1,23 @@
+<?php
+
+// Create all of the needed directories
+$required_directories = [
+      "examples",
+      "examples/config",
+      "config",
+      "config/plugins",
+      "plugins",
+      "css",
+      "js"
+   ];
+
+foreach ($required_directories as $directory) {
+   if (!file_exists($directory)) {
+      mkdir($directory);
+      chmod($directory, 0777);
+   }
+   if (!file_exists("examples/$directory")) {
+      mkdir("examples/$directory");
+      chmod("examples/$directory", 0777);
+   }
+}

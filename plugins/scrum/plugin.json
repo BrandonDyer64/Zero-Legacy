@@ -1,0 +1,19 @@
+{
+    "name": "Scrum Board",
+    "type": "Page",
+    "version": "Planned",
+    "cost": 1.99,
+    "description_short": "A scrum board.",
+    "description": "",
+    "files": {
+        "page":[
+            "scrum_board.php"
+        ]
+    },
+    "home_links": [
+        {
+            "name": "Scrum Boards",
+            "url": "?p=scrum"
+        }
+    ]
+}

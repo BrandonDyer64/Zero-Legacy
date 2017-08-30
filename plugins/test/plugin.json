@@ -1,0 +1,28 @@
+{
+    "name": "Test",
+    "type": "Test",
+    "version": "0.0.0",
+    "cost": 0.99,
+    "description_short": "Just a test.",
+    "description": "Nothing to see here",
+    "files": {
+        "type": [
+            "test_type.php"
+        ],
+        "js": {
+            "list": [
+                "test_list.js"
+            ],
+            "display": [
+                "test_display.js",
+                "test_display_2.js"
+            ],
+            "all": [
+                "test.js"
+            ]
+        },
+        "page":[
+            "test_page.php"
+        ]
+    }
+}

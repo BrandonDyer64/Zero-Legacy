@@ -1,0 +1,53 @@
+<?php
+
+session_start();
+
+$config_file_name = "config/config.json";
+$defaults_host = "http://dev.quintify.com/qds/sites/zero";
+
+function make_config($file, $text, $example, $force = false) {
+   $example_text_post = $example ? ".example.txt" : "";
+   $example_text_pre = $example ? "examples/" : "";
+   file_put_contents($example_text_pre . $file . $example_text_post, $text);
+   chmod($example_text_pre . $file . $example_text_post, 0777);
+   if (!file_exists($file) || $force) {
+      file_put_contents($file, $text);
+      chmod($file, 0777);
+   }
+}
+
+function make_all_configs($example = false) {
+   global $config_file_name;
+   global $defaults_host;
+   // Config
+   make_config($config_file_name, file_get_contents($defaults_host . "/defaults/config.json"), $example);
+   make_config("config/nav_tabs.json", file_get_contents($defaults_host . "/defaults/nav_tabs.json"), $example);
+   make_config("config/standard_field_names.json", file_get_contents($defaults_host . "/defaults/standard_field_names.json"), $example);
+   make_config("config/home_modules.json", file_get_contents($defaults_host . "/defaults/home_modules.json"), $example);
+   make_config("config/quick_links.json", file_get_contents($defaults_host . "/defaults/quick_links.json"), $example);
+   make_config("config/plugins.json", file_get_contents($defaults_host . "/defaults/plugins.json"), $example);
+   // HTAccess
+   make_config("config/.htaccess", "deny from all", $example);
+   // CSS
+   make_config("css/wm.min.css", file_get_contents($defaults_host . "/defaults/wm.min.css"), $example, true);
+   make_config("css/zero.css", file_get_contents($defaults_host . "/defaults/zero.css"), $example, true);
+   // JS
+   make_config("js/zero.js", file_get_contents($defaults_host . "/defaults/zero.js"), $example, true);
+   // Image
+   make_config("favicon.ico", file_get_contents($defaults_host . "/defaults/favicon.ico"), $example);
+   make_config("zero_logo.png", file_get_contents($defaults_host . "/defaults/zero_logo_1.png"), $example);
+}
+
+if (file_exists($config_file_name)) {
+   $config = json_decode(file_get_contents($config_file_name), true);
+} else {
+   mkdir("config");
+   chmod("config", 0777);
+
+   make_all_configs(false);
+
+   echo "Config file added. Please add your database credentials and other desired settings.";
+   //exit;
+}
+
+$nl = $config["formatting"]["new_line"];

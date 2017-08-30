@@ -1,0 +1,194 @@
+<?php
+
+$bleeding_edge_text = $config["updates"]["bleeding_edge"] ? "Bleeding Edge" : "";
+
+$js_html = '';
+foreach ($js_to_include as $file) {
+   $js_html .= <<<HTML
+   <script src="$file"></script>
+HTML;
+}
+
+if (isset($config['files']['css'])) {
+   foreach ($config['files']['css'] as $file) {
+      $css_to_include[] = $file;
+   }
+}
+
+$css_html = '';
+foreach ($css_to_include as $file) {
+   if (starts_with($file,'http')) {
+      $css_html .= <<<HTML
+         <link rel='stylesheet' href='$file' type='text/css'>
+HTML;
+   } else {
+      $css_html .= <<<HTML
+         <link rel='stylesheet' href='css/$file' type='text/css'>
+HTML;
+   }
+}
+
+// Render embed
+if (isset($_GET['embed'])) {
+   echo <<<HTML
+
+<!DOCTYPE HTML>
+<html lang='en'>
+<head>
+   <link rel='stylesheet' href='css/zero.css' type='text/css'>
+</head>
+<body>
+   <div id='container'>
+      <div id="content">
+         <div id="maincontent">
+            $content
+         </div>
+      </div>
+   </div>
+</body>
+</html>
+
+HTML;
+   exit;
+}
+
+
+// Render page
+$html = <<<HTML
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>${config["name"]}</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400" rel="stylesheet">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel='stylesheet' href='css/zero.css' type='text/css'>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span> 
+      </button>
+      <a class="navbar-brand" href="?p=home"><span class="glyphicon glyphicon-home"></span> &nbsp; ${config["name"]}</a>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav">
+        $nav_tabs_html
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+         <li><a href="?p=account">Account</a></li>
+         $quick_links_html
+         <li><a href="?p=logout"><span class="glyphicon glyphicon-log-out"></span> Log Out</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<div class="container">
+  $content
+  <hr>
+  <div class="row footer">
+    <div class="col-sm-4">
+      <a class="text_dark" href="?p=version">Quintify Zero - ${zero_version} ${bleeding_edge_text}</a>
+    </div>
+    <div class="col-sm-4">
+      $warning_html
+    </div>
+    <div class="col-sm-4">
+      <a href="?">Zero</a><br>
+      <a href="?">Documentation</a><br>
+      <a href="?">API</a><br>
+    </div>
+  </div>
+  <br>
+</div>
+<script src="js/zero.js"></script>
+$js_html
+</body>
+</html>
+HTML;
+
+/*$html = <<<HTML
+
+<!DOCTYPE HTML>
+<html lang='en'>
+<head>
+   <title>
+      ${config["name"]}
+   </title>
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400" rel="stylesheet">
+   <link rel='stylesheet' href='css/wm.min.css' type='text/css'>
+   <link rel='stylesheet' href='css/zero.css' type='text/css'>
+   $css_html
+</head>
+<body>
+   <div id='container' class=''>
+      <div id='header'>
+         <div id="overDiv" style="position:absolute; visibility:hidden; z-index:1000;"></div>
+         <div class="top_header_wrapper">
+            <div class='web_app_customer_name'><img src="zero_logo.png" width="19" height="19">&nbsp;{$config["name"]}</div>
+            <div class='search_box'>
+               <p>Powered by <a href="$update_host" target="_blank">Quintify Zero</a></p>
+            </div>
+            <div class="clear_both"></div>
+            <div id='ddcolortabs' style='margin-left: 1px;'>
+               <ul>
+                  $nav_tabs_html
+               </ul>
+            </div>
+            <div id='ddcolortabsline'>&nbsp;</div>
+            <div style="overflow: auto;" class='logged'>
+               <div class="logged_message">$logged_message</div>
+               <div class="logged_links">
+                  <a href="?p=account">Account</a> | <b>Quick Links:</b> $quick_links_html
+               </div>
+            </div>
+         </div>
+      </div>
+      <div id="wrapper">
+         <div id="content">
+            <div id="maincontent">
+               $content
+            </div>
+            <br>
+            <div id="footer">
+               <p>&nbsp;</p><p><a href="/zero">Home</a></p>
+               <p><a href="/zero?p=logout">Log out</a></p>
+               <hr>
+               <p>$warning_html</p>
+               <p><a class="text_dark" href="?p=version">Quintify Zero - ${zero_version} ${bleeding_edge_text}</a></p>
+            </div>
+         </div>
+      </div>
+   </div>
+   <script
+           src="https://code.jquery.com/jquery-3.2.1.min.js"
+           integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+           crossorigin="anonymous"></script>
+   <script
+           src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
+           integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
+           crossorigin="anonymous"></script>
+   <script src="js/zero.js"></script>
+   $js_html
+</body>
+</html>
+
+HTML;*/
+
+if (isset($_GET['api'])) {
+   echo json_encode($content_api, JSON_PRETTY_PRINT);
+   exit;
+}
+
+echo $html;

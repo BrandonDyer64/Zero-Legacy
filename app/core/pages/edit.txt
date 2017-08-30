@@ -1,0 +1,73 @@
+<?php
+
+if ($page == "edit") {
+
+   $table_data = db_table_data($table);
+   check_user_permission_force($table_data['whitelist'], $table_data['whitelist_edit']);
+
+   $schema = db_schema($table);
+
+   if (isset($_POST['-submit'])) {
+      maj_update($table, $_POST, $id);
+      header("Location: ?p=display&t=$table&id=$id");
+   }
+
+   $table_content = "";
+
+   $stmt = db_select($_GET['t'], ["*"], ["id"=>$id]);
+
+   $focus = '';
+   if (isset($_GET['focus'])) {
+      $focus = $_GET['focus'];
+   }
+
+   $row = $stmt->fetch();
+
+   foreach ($row as $key => $value) {
+      if ($key == 'id') {
+         continue;
+      }
+      $key_pretty = column_pretty_print($key);
+      $fn = get_type_function('edit', $schema[$key]['type']);
+      $input = $fn($key, $schema[$key], $value, $key == $focus);
+      $table_content .= <<<HTML
+
+      <tr>
+         <td valign="top">
+            $key_pretty:
+         </td>
+         <td>
+            $input
+         </td>
+      </tr>
+
+HTML;
+   }
+
+   $content .= <<<HTML
+
+   <h2>Edit: $table_pretty</h2>
+   <p>
+      <a href="?p=list&t=$table"><span class="glyphicon glyphicon-th-list"></span></a>
+      &nbsp;
+      <a href="?p=display&t=$table&id=$id"><span class="glyphicon glyphicon-eye-open"></span></a>
+   </p>
+   <form method="post">
+      <table class="table">
+         <tbody>
+            $table_content
+            <tr>
+               <td>
+                  <input type="submit" name="-submit" value="Save">
+               </td>
+               <td>
+                  <input type="button" value="Reset" onclick="if (confirm('Are you sure?')) {location.reload()}">
+               </td>
+            </tr>
+         </tbody>
+      </table>
+   </form>
+
+HTML;
+
+}

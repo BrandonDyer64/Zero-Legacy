@@ -1,0 +1,40 @@
+<?php
+
+$plugins_list = json_decode(file_get_contents("config/plugins.json"),true);
+
+$plugin_files = [];
+$plugin_home_links = [];
+$plugin_nolog_pages = [];
+
+foreach ($plugins_list as $plugin_name) {
+    //if (!file_exists("plugins/$plugin_name/plugin.json"))
+     //   continue;
+    $manifest = json_decode(file_get_contents("plugins/$plugin_name/plugin.json"), true);
+    if (!$manifest) {
+        echo "The plugin \"$plugin_name\" is faulty. Please uninstall or update it!<br>";
+        continue;
+    }
+    $files = $manifest['files'];
+    $convert = function($files) use (&$convert, $plugin_name) {
+        foreach ($files as $key => $file) {
+            if (is_array($file)) {
+                $files[$key] = $convert($file);
+            } else {
+                $files[$key] = "plugins/$plugin_name/$file";
+            }
+        }
+        return $files;
+    };
+    $files = $convert($files);
+    $plugin_files = array_merge_recursive($plugin_files, $files);
+    if (isset($manifest['home_links'])) {
+        foreach ($manifest['home_links'] as $link) {
+            $plugin_home_links[] = $link;
+        }
+    }
+    if (isset($manifest['nolog'])) {
+        foreach ($manifest['nolog'] as $link) {
+            $plugin_nolog_pages[] = $link;
+        }
+    }
+}

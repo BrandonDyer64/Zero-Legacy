@@ -1,0 +1,20 @@
+<?php
+
+const SALT = 'E6nKLb74JRXHUK94uNhBFLgtYFukY9fv5t5teM7PeU8Lg8EmLzM4aUmKrFUeEZkm';
+
+if (isset($_GET['t'])) {
+   $table = $_GET['t'];
+   $table_pretty = table_pretty_print($table);
+}
+
+if (isset($_GET['id'])) {
+   $id = $_GET['id'];
+}
+
+$url = get_url();
+
+$_404 = <<<HTML
+
+   <h3>404 - Not Found</h3>
+
+HTML;

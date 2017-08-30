@@ -1,0 +1,23 @@
+<?php
+
+if ($page == 'error' || $page == 'err') {
+   $content .= <<<HTML
+
+   <form method="post">
+      <textarea rows="5" cols="30" name="text" placeholder="Paste the error message here"></textarea>
+      <br>
+      <input type="submit" name="submit" value="View">
+   </form>
+
+HTML;
+   if (isset($_REQUEST['text'])) {
+      $text = $_REQUEST['text'];
+      $text = base64_decode($text);
+      $text = str_replace("\n", '<br>', $text);
+      $content .= <<<HTML
+
+      <p id="error_text" style="max-width: none;">$text</p>
+
+HTML;
+   }
+}

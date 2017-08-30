@@ -1,0 +1,14 @@
+<?php
+
+if ($page == 'qscript' || $page == 'z') {
+   if (isset($_GET['script'])) {
+      $script_file = 'qscript/' . $_GET['script'] . '.php';
+      if (file_exists($script_file)) {
+         include($script_file);
+      } else {
+         $content .= create_error("Script file does not exist");
+      }
+   } else {
+      $content .= "Script browser";
+   }
+}

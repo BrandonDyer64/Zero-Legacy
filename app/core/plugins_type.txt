@@ -1,0 +1,7 @@
+<?php
+
+if (isset($plugin_files['type'])) {
+    foreach ($plugin_files['type'] as $file) {
+        include($file);
+    }
+}

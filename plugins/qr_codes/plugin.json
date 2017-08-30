@@ -1,0 +1,22 @@
+{
+    "name": "QR Codes",
+    "type": "Field Type",
+    "version": "1.0.0",
+    "cost": 1.99,
+    "description_short": "Automatic QR code generation.",
+    "description": "Lorem Ipsom",
+    "files": {
+        "type": [
+            "qr_type.php"
+        ],
+        "page":[
+            "qr_print.php"
+        ]
+    },
+    "home_links": [
+        {
+            "name": "Print QR Codes",
+            "url": "?p=qr_print"
+        }
+    ]
+}

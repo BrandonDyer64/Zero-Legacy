@@ -1,0 +1,15 @@
+
+<h2>How to Set Up Your First Table</h2>
+
+<h3>Create the User Table</h3>
+
+<p>Run this SQL:</p>
+
+<pre>
+CREATE TABLE user_group (
+   id INT NOT NULL AUTO_INCREMENT,
+   name VARCHAR(50) NOT NULL,
+   PRIMARY KEY (id),
+   UNIQUE INDEX (name)
+);
+</pre>

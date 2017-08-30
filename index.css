@@ -1,0 +1,8 @@
+iframe, object, embed {
+   max-width: 100%;
+   overflow: hidden;
+}
+    
+iframe {
+   width:100%;
+}

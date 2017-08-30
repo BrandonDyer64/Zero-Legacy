@@ -1,0 +1,113 @@
+<?php
+
+if ($page == "login") {
+
+   if (isset($_POST["submit"])) {
+      if ($_POST["username"] == "admin" && $_POST["password"] == $config["admin"]["password"]) {
+         $_SESSION["logged_in"] = true;
+         $_SESSION["username"] = "admin";
+         $_SESSION['user_groups'] = ['admin'];
+         if (isset($_GET['p']) && $_GET['p'] == "login") {
+            header("Location: ?p=home");
+         } else {
+            header("Refresh:0");
+         }
+      } else {
+         $stmt = db_select('user', ['*'], ['username'=>$_POST['username'], 'password'=>md5($_POST['password'] . SALT . $_POST['username'])]);
+         $_SESSION["logged_in"] = false;
+         while ($row = $stmt->fetch()) {
+            $groups = get_multi_select_names('user_group', $row['user_groups']);
+            $_SESSION["logged_in"] = true;
+            $_SESSION['username'] = $row['username'];
+            $_SESSION['user_id'] = $row['id'];
+            $_SESSION['email'] = $row['email'];
+            $_SESSION['token'] = $row['password'];
+            $_SESSION['user_groups'] = $groups;
+         }
+         if (isset($_GET['p']) && $_GET['p'] == "login") {
+            header("Location: ?p=home");
+         } else {
+            header("Refresh:0");
+         }
+      }
+   } else if (isset($_POST["submit_register"])) {
+      $stmt = db_select('user',['*'],['username'=>$_POST['username']]);
+      if ($stmt->fetch()) {
+         $content .= "<p>Username taken</p>";
+      } else {
+         $stmt = db_select('user_group',['id'],['name'=>'user']);
+         $row = $stmt->fetch();
+         $user_group_id = $row['id'];
+         db_insert('user', [
+               'username'=>$_POST['username'],
+               'password'=>md5($_POST['password'] . SALT . $_POST['username']),
+               'email'=>$_POST['email'],
+               'user_groups'=>"$user_group_id"
+            ]);
+         $content .= "<p>Registered</p>";
+      }
+   }
+
+   $content .= <<<HTML
+
+   <div>
+      <div class="error error_message">You must be logged in to access this page.</div>
+
+      <h2>Log in</h2>
+
+      <form action="#" name="login_form" method="post">
+         <table class="login" cellpadding="4">
+            <tbody>
+            <tr>
+               <td>Username:</td>
+               <td>
+                  <input type="text" name="username" value="" maxlength="20" class="text" style="background-image: url(&quot;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGP6zwAAAgcBApocMXEAAAAASUVORK5CYII=&quot;); cursor: auto;" autocomplete="off">
+               </td>
+            </tr>
+            <tr>
+               <td>Password:</td>
+               <td>
+                  <input type="password" name="password" value="" maxlength="20" class="text" style="background-image: url(&quot;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGP6zwAAAgcBApocMXEAAAAASUVORK5CYII=&quot;); cursor: auto;" autocomplete="off">
+               </td>
+            </tr>
+            <!--<tr><td colspan="2"><input type="checkbox" name="remember_username">&nbsp;&nbsp;Remember my username on this computer</td></tr>-->
+            <tr><td colspan="2"><center><input type="submit" name="submit" value="Login" class="button"></center></td></tr>
+            </tbody>
+         </table>
+      </form>
+      <p><a href="?p=forgot_password">Forgot your password?</a></p>
+      <p><a href="#" onclick="document.getElementById('register_form').style.display = 'block';">Register</a></p>
+   </div>
+   <div id="register_form" style="display: none;">
+      <h2>Register</h2>
+
+      <form action="#" name="register_form" method="post">
+         <table class="login" cellpadding="4">
+            <tbody>
+            <tr>
+               <td>Username:</td>
+               <td>
+                  <input type="text" name="username" value="" maxlength="20" class="text" style="background-image: url(&quot;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGP6zwAAAgcBApocMXEAAAAASUVORK5CYII=&quot;); cursor: auto;" autocomplete="off">
+               </td>
+            </tr>
+            <tr>
+               <td>Password:</td>
+               <td>
+                  <input type="password" name="password" value="" class="text" style="background-image: url(&quot;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGP6zwAAAgcBApocMXEAAAAASUVORK5CYII=&quot;); cursor: auto;" autocomplete="off">
+               </td>
+            </tr>
+            <tr>
+               <td>Email:</td>
+               <td>
+                  <input type="email" name="email" value="" class="text" placeholder="We Don't Spam" style="background-image: url(&quot;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGP6zwAAAgcBApocMXEAAAAASUVORK5CYII=&quot;); cursor: auto;" autocomplete="off">
+               </td>
+            </tr>
+            <!--<tr><td colspan="2"><input type="checkbox" name="remember_username">&nbsp;&nbsp;Remember my username on this computer</td></tr>-->
+            <tr><td colspan="2"><center><input type="submit" name="submit_register" value="Register" class="button"></center></td></tr>
+            </tbody>
+         </table>
+      </form>
+   </div>
+
+HTML;
+}

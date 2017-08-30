@@ -1,0 +1,19 @@
+{
+    "name": "Table Catalog",
+    "type": "Page",
+    "version": "Planned",
+    "cost": 0,
+    "description_short": "Install useful premade tables.",
+    "description": "View and intall tables hand made by the Quintify team to fit businesses of all types.",
+    "files": {
+        "page":[
+            "table_catalog.php"
+        ]
+    },
+    "home_links": [
+        {
+            "name": "Table Catalog",
+            "url": "?p=table_catalog"
+        }
+    ]
+}

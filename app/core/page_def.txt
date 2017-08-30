@@ -1,0 +1,22 @@
+<?php
+
+if (isset($_REQUEST["p"])) {
+   $page = $_REQUEST["p"];
+} else {
+   $page = "home";
+}
+
+switch ($page) {
+   case 'mainmenu':
+      $page = "home";
+      break;
+}
+
+if ($config["login"]["require"]) {
+   if (!$is_logged_in) {
+   	debug_warn('Not logged in',true);
+      if ($page !== 'forgot_password' && !in_array($page, $plugin_nolog_pages)) {
+         $page = "login";
+      }
+   }
+}

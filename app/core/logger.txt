@@ -1,0 +1,27 @@
+<?php
+$debug_log = "";
+$warnings = [];
+
+function debug($text) {
+  global $debug_log;
+  global $nl;
+  $debug_log .= $text . $nl;
+}
+
+function debug_warn($text, $priority = false, $url = false) {
+   global $warnings;
+   $warning = [
+         'text' => $text,
+         'priority' => $priority
+      ];
+   if ($url) {
+      $warning['url'] = $url;
+   }
+   $warnings[] = $warning;
+}
+
+if ($config["logging"]["errors"]) {
+   error_reporting(E_ALL);
+   ini_set("display_errors", 1);
+   debug_warn("Error Reporting Enabled");
+}

@@ -1,0 +1,21 @@
+<?php
+
+if ($page == "delete") {
+
+   if (isset($_POST['submit'])) {
+      db_remove($table, $id);
+      header("Location: ?p=list&t=$table");
+   }
+
+   $content .= <<<HTML
+
+   <h2>Delete: $table_pretty</h2>
+   <form method="post">
+      <h3 style="color: blue;">Are You Sure?</h3>
+      <input type="submit" name="submit" value="Yes">
+      <input type="button" value="No" onclick="window.history.back()">
+   </form>
+
+HTML;
+
+}

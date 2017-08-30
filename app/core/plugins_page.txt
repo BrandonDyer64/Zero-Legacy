@@ -1,0 +1,8 @@
+<?php
+
+if (isset($plugin_files['page'])) {
+    foreach ($plugin_files['page'] as $file) {
+    	if (file_exists($file))
+        	include_once($file);
+    }
+}

@@ -1,0 +1,68 @@
+<?php
+
+if ($page == 'account') {
+   if (isset($_POST['-submit'])) {
+      $values = [
+         'username' => $_POST['username'],
+         'email' => $_POST['email'],
+         'password' => $_POST['password']
+      ];
+      maj_update('user',$values,$user['id']);
+   }
+   $groups = implode(', ', $user['groups']);
+   $content .= <<<HTML
+   <form method="post">
+      <table cellpadding="4">
+         <tbody>
+         <tr>
+            <td>User ID:</td>
+            <td>
+               ${user['id']}
+            </td>
+         </tr>
+         <tr>
+            <td>Username:</td>
+            <td>
+               <input type="text" name="username" value="${user['username']}">
+            </td>
+         </tr>
+         <tr>
+            <td>Email:</td>
+            <td>
+               <input type="email" name="email" value="${user['email']}">
+            </td>
+         </tr>
+         <tr>
+            <td>Token:</td>
+            <td>
+               <span class="hide_until_hover">${user['token']}</span><br>
+               <input type="hidden" name="token" value="${user['token']}">
+            </td>
+            <td>
+               <small>
+                  <b>Warning:</b> Anyone with this token can log in as you.<br>
+                  Neither <b>Quintify</b> nor an admin from <b>${config['name']}</b> will ask you for this.<br>
+                  If someone does please report it to <b>support@quintify.com</b>.
+               </small>
+            </td>
+         </tr>
+         <tr>
+            <td>User Groups:</td>
+            <td>
+               <span>$groups</span>
+            </td>
+         </tr>
+         <tr>
+            <td>New Password:</td>
+            <td>
+               <input type="password" name="password" placeholder="password">
+            </td>
+         </tr>
+         <tr>
+            <td><input type="submit" name="-submit" value="Submit" class="button"></td>
+         </tr>
+         </tbody>
+      </table>
+   </form>
+HTML;
+}

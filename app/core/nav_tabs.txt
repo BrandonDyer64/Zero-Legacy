@@ -1,0 +1,14 @@
+<?php
+
+$nav_tabs_html = "";
+
+if ($page != "login") {
+    $stmt = db_select('nav_tab',['*'],['1'=>'1'], 'ORDER BY sort_order');
+
+    while ($nav_tab = $stmt->fetch()) {
+        $groups = get_multi_select_names('user_group', $nav_tab['user_groups']);
+        if (!check_user_permission($groups))
+            continue;
+        $nav_tabs_html .= "<li><a href='${nav_tab["url"]}' title='Clients'><span>${nav_tab["name"]}</span></a></li>\n";
+    }
+}

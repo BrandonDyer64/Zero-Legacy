@@ -1,0 +1,19 @@
+{
+    "name": "Hive Mind",
+    "type": "Page",
+    "version": "Planned",
+    "cost": 3.99,
+    "description_short": "Lorem Ipsum",
+    "description": "",
+    "files": {
+        "page":[
+            "hive_mind.php"
+        ]
+    },
+    "home_links": [
+        {
+            "name": "Hive Mind",
+            "url": "?p=hive_mind"
+        }
+    ]
+}

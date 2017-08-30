@@ -1,0 +1,26 @@
+<?php
+
+$quick_links_html = '';
+
+if ($_SESSION['logged_in'] && isset($_SESSION['user_id'])) {
+
+	$quick_links = json_decode(file_get_contents("config/quick_links.json"), true);
+
+	$stmt = db_select('quick_link', ['*'], ['user'=>$_SESSION['user_id']]);
+
+	while ($row = $stmt->fetch()) {
+		$quick_links[] = $row;
+	}
+
+	$quick_links_html = array();
+
+	foreach($quick_links as $quick_link) {
+	   $quick_links_html[] = "<a href='${quick_link["url"]}'>${quick_link["name"]}</a>";
+	}
+
+	$quick_links_html[] = <<<HTML
+<a href='?p=list&t=quick_link&where={"user":"${user["id"]}"}'>Manage</a>
+HTML;
+
+	$quick_links_html = '<li>'.implode("</li><li>", $quick_links_html).'</li>';
+}

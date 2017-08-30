@@ -1,0 +1,31 @@
+{
+    "name": "Bill of Lading",
+    "type": "Document",
+    "version": "0.0.1 Beta",
+    "cost": 1.99,
+    "description_short": "Generates Bill of Lading.",
+    "description": "Creates the Bill of Lading table and allows automated generation.",
+    "files": {
+        "page":[
+            "bill_of_lading.php"
+        ],
+        "display_top": [
+            "display_link.php"
+        ],
+        "home": [
+            "bill_of_lading_setup.php"
+        ],
+        "css": [
+            "document.css"
+        ],
+        "install": [
+            "install.php"
+        ]
+    },
+    "home_links": [
+        {
+            "name": "Bill of Lading",
+            "url": "?p=list&t=bill_of_lading"
+        }
+    ]
+}

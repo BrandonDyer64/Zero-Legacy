@@ -1,0 +1,37 @@
+<?php
+
+$field_type = "text";
+
+$field_types[$field_type]['edit'] = function($name, $schema, $value = null, $focus = false) {
+   global $pdo;
+   $focus = $focus ? 'autofocus' : '';
+   $value = htmlspecialchars($value);
+   $content = <<<HTML
+   <textarea name="$name" value="$value" placeholder="$name" cols="52" rows="4" style="font-family: monospace;" $focus>$value</textarea>
+HTML;
+   return $content;
+};
+
+$field_types[$field_type]['encode'] = function($schema, $value, $values) {
+   return $value;
+};
+
+$field_types[$field_type]['decode'] = function($schema, $value, $focus_link = '') {
+   $value = htmlspecialchars($value);
+   $value = str_replace("\n", '<br>', $value);
+   return <<<HTML
+   <a href="$focus_link" class="text_dark">$value</a>
+HTML;
+};
+
+$field_types[$field_type]['decode_list'] = function($schema, $value) {
+   if ($value == '' || $value == null) {
+      return '';
+   }
+   $value = explode("\n", $value);
+   return htmlspecialchars("${value[0]}...");
+};
+
+$field_types[$field_type]['decode_raw'] = function($schema, $value, $focus_link = '') {
+   return $value;
+};

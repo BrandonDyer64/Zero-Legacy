@@ -1,0 +1,65 @@
+<?php
+
+if ($page == 'version') {
+   check_user_permission_force(['admin']);
+   $host_version = json_decode(file_get_contents($update_host_default."/version.json"), true);
+   $host_version_bleed = json_decode(file_get_contents($update_host_bleeding_edge."/version.json"), true);
+   $master_plugin_list = json_decode(file_get_contents($update_host."/plugins/plugins.json"), true);
+   $plugin_install_form = '';
+   foreach ($master_plugin_list as $value) {
+      $plugin_install_form .= "<option value='$value'>$value</option>";
+   }
+   $plugin_install_form = <<<HTML
+      <a href="?p=version&update_plugins">Update Plugins</a>
+      <br><br>
+      <form method="post">
+         <select name="plugin">
+            $plugin_install_form
+         </select>
+         <input type="submit" name="submit_plugin" value="Install Plugin">
+      <form>
+      <br><br>
+      <form method="post">
+         <input type="hidden" name="plugin" value="plugin_manager">
+         <input type="submit" name="submit_plugin" value="Install Plugin Manager">
+      </form>
+HTML;
+   if (in_array('plugin_manager', $plugins_list)) {
+      $plugin_install_form = '<a href="?p=plugins">Manage Plugins</a>';
+   }
+   if (isset($_POST['submit_plugin'])) {
+      $success = zero_plugin_add($_POST['plugin']);
+      if (!zero_plugin_update($_POST['plugin']))
+         $success = false;
+      $content .= "Plugin install: ${_POST['plugin']}: " . ($success ? 'Success' : 'Fail');
+   }
+   $status = $host_version_info['number'] == $zero_version_number ? 'Up to Date' : 'Behind - <a href="?update">Update</a>';
+   if ($host_version_info['number'] < $zero_version_number) {
+      $status = 'Ahead - <a href="?update">Retrograde</a>';
+   }
+   $content .= <<<HTML
+
+   <h3>Your System</h3>
+   <table>
+      <tr><td class="display_vert_table_left_header">Version:</td><td>${zero_version}</td></tr>
+      <tr><td class="display_vert_table_left_header">Version Number:</td><td>${zero_version_number}</td></tr>
+      <tr><td class="display_vert_table_left_header">Status:</td><td>$status</td></tr>
+   </table>
+   <h3>Host</h3>
+   <table>
+      <tr><td class="display_vert_table_left_header">Version:</td><td>${host_version['code']}</td></tr>
+      <tr><td class="display_vert_table_left_header">Version Number:</td><td>${host_version['number']}</td></tr>
+   </table>
+   <h3>Host - Bleeding Edge</h3>
+   <table>
+      <tr><td class="display_vert_table_left_header">Version:</td><td>${host_version_bleed['code']}</td></tr>
+      <tr><td class="display_vert_table_left_header">Version Number:</td><td>${host_version_bleed['number']}</td></tr>
+   </table>
+   <br>
+   <br>
+   <a href="?update">Force Update</a>
+   <br><br>
+   $plugin_install_form
+
+HTML;
+}

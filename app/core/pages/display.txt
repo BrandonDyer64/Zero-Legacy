@@ -1,0 +1,76 @@
+<?php
+
+if ($page == "display") {
+
+    $table_data = db_table_data($table);
+    check_user_permission_force($table_data['whitelist'], $table_data['whitelist_display']);
+
+    $is_can_edit = check_user_permission($table_data['whitelist_edit']);
+    $is_can_add = check_user_permission($table_data['whitelist_add']);
+
+    $table_content = "";
+
+    $stmt = db_select($_GET['t'], ["*"], ["id"=>$_GET['id']]);
+    $schema = db_schema($table);
+    $row = $stmt->fetch();
+
+    foreach ($row as $key => $value) {
+        $fn = get_type_function('decode', $schema[$key]['type']);
+        $focus_link = "?p=edit&t=$table&id=$id&focus=$key";
+        $value = $fn($schema[$key], $value, $focus_link, $row);
+        $key_pretty = column_pretty_print($key);
+        $content_api[$key] = ["name"=>$key_pretty,"value"=>$value];
+        $table_content .= <<<HTML
+
+        <tr>
+            <td class="display_vert_table_left_header">
+                $key_pretty:
+            </td>
+            <td>
+                $value
+            </td>
+        </tr>
+
+HTML;
+    }
+
+    $links = [''];
+
+    if (isset($plugin_files['display_top'])) {
+        foreach ($plugin_files['display_top'] as $file) {
+            if (file_exists($file))
+                include_once($file);
+        }
+    }
+
+    $links = implode(' | ', $links);
+
+    $content .= <<<HTML
+
+    <h2>Display: <strong>$table_pretty</strong></h2>
+    <p>
+        <a href="?p=edit&t=$table&id=$id"><span class="glyphicon glyphicon-edit"></span></a>
+        &nbsp;
+        <a href="?p=list&t=$table"><span class="glyphicon glyphicon-th-list"></span></a>
+        &nbsp;
+        <a href="?p=add&t=$table"><span class="glyphicon glyphicon-plus"></span></a>
+        $links
+    </p>
+
+    <table class="table">
+        <tbody>
+            <tr><th>Field</th><th>Value</th></tr>
+            $table_content
+        </tbody>
+    </table>
+
+HTML;
+
+    if (isset($plugin_files['display_bottom'])) {
+        foreach ($plugin_files['display_bottom'] as $file) {
+            if (file_exists($file))
+                include_once($file);
+        }
+    }
+
+}

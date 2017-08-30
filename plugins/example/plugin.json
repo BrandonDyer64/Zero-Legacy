@@ -1,0 +1,40 @@
+{
+    "name": "Example",
+    "type": "Example",
+    "version": "1.2.3 Beta",
+    "cost": 0.99,
+    "description_short": "Example.",
+    "description": "Lorem Ipsum",
+    "files": {
+        "type": [
+            "test_type.php",
+            "example_type.php"
+        ],
+        "page":[
+            "test_page.php",
+            "example_page"
+        ],
+        "js": {
+            "list": [
+                "test_list.js"
+            ],
+            "display": [
+                "test_display.js",
+                "test_display_2.js"
+            ],
+            "all": [
+                "test.js"
+            ]
+        }
+    },
+    "home_links": [
+        {
+            "name": "Example",
+            "url": "?p=example2"
+        },
+        {
+            "name": "Example 2",
+            "url": "?p=example2"
+        }
+    ]
+}

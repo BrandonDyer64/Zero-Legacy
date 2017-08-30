@@ -1,0 +1,20 @@
+
+<h2>How to Set Up Your First Table</h2>
+
+<h3>Create the User Table</h3>
+
+<p>Run this SQL:</p>
+
+<pre>
+CREATE TABLE user (
+   id INT NOT NULL AUTO_INCREMENT,
+   username VARCHAR(50) NOT NULL,
+   password VARCHAR(32) NOT NULL COMMENT '{"type":"password"}',
+   email VARCHAR(255) NOT NULL,
+   user_groups TEXT COMMENT '{"type":"multi_select","from":"user_group"}',
+   PRIMARY KEY (id),
+   UNIQUE INDEX (username)
+) COMMENT = '{"whitelist":["admin","user_manager"],"display":{"whitelist":["user_viewer"]},"add":{"whitelist":"all"}}';
+</pre>
+
+<p>All of the other information, such as permissions, will be in other tables.</p>

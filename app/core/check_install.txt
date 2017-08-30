@@ -1,0 +1,5 @@
+<?php
+
+$continue = true;
+
+if (!file_exists("config"))

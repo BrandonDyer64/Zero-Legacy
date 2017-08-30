@@ -1,0 +1,26 @@
+{
+    "name": "Plugin Manager",
+    "type": "Page",
+    "version": "1.2.1 Beta",
+    "cost": 0,
+    "description_short": "Easily manage your system's plugins.",
+    "description": "",
+    "files": {
+        "page":[
+            "plugins.php",
+            "plugin_config.php",
+            "plugin_display.php",
+            "plugin_catalog.php"
+        ]
+    },
+    "home_links": [
+        {
+            "name": "Manage Plugins",
+            "url": "?p=plugins"
+        },
+        {
+            "name": "Plugin Catalog",
+            "url": "?p=plugin_catalog"
+        }
+    ]
+}

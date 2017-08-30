@@ -1,0 +1,42 @@
+<?php
+
+$host = $config['database']['host'];
+$db   = $config['database']['database'];
+$user = $config['database']['username'];
+$pass = $config['database']['password'];
+$charset = 'utf8';
+
+$dsn = "mysql:host=$host;dbname=$db;charset=$charset";
+$opt = [
+   PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+   PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+   PDO::ATTR_EMULATE_PREPARES   => false,
+];
+$pdo = new PDO($dsn, $user, $pass, $opt);
+
+function run_remote_sql($file) {
+	global $pdo;
+	global $update_host;
+	$queries = explode(';', file_get_contents("$update_host/sql/$file.sql"));
+	foreach ($queries as $query) {
+		if (trim($query) == '')
+			continue;
+		$stmt = $pdo->prepare($query);
+		$stmt->execute();
+	}
+}
+
+function table_exists($table) {
+	global $pdo;
+	$query = "SHOW TABLES LIKE '$table'";
+	$stmt = $pdo->query($query);
+	$row = $stmt->fetch();
+	return (bool)$row;
+}
+
+if ($pdo) {
+	
+	if (!table_exists('user')) {
+		run_remote_sql('startup');
+	}
+}

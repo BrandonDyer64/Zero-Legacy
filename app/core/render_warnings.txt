@@ -1,0 +1,25 @@
+<?php
+
+$warning_html = "";
+
+foreach ($warnings as $warning) {
+   $warning_html_this = '';
+   if ($warning['priority']) {
+      $warning_html_this .= <<<HTML
+      <span style="display: inline-block; font-size: 14px;" class="pulsate-fwd">&#9888;</span> <b>${warning['text']}</b>
+      {$nl}
+HTML;
+   } else {
+      $warning_html_this .= "&#9888; ${warning['text']}{$nl}";
+   }
+   if (isset($warning['url'])) {
+      $warning_html_this = <<<HTML
+      <a class="text_dark" href="${warning['url']}">$warning_html_this</a>
+HTML;
+   }
+   if ($warning['priority']) {
+      $warning_html = $warning_html_this . $warning_html;
+   } else {
+      $warning_html .= $warning_html_this;
+   }
+}

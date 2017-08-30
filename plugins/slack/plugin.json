@@ -1,0 +1,13 @@
+{
+    "name": "Slack",
+    "type": "Integration",
+    "version": "Planned",
+    "cost": 0.99,
+    "description_short": "",
+    "description": "",
+    "files": {
+        "type": [
+            "youtube.php"
+        ]
+    }
+}

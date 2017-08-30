@@ -1,0 +1,128 @@
+<?php
+
+if ($config["updates"]["bleeding_edge"]) {
+	debug_warn("Bleeding Edge Updates Enabled");
+}
+
+if (!$config["updates"]["auto"]) {
+	debug_warn("Automatic Updates Disabled");
+}
+
+$update_host_default = "http://quintify.com/qds/sites/zero/";
+$update_host_bleeding_edge = "http://dev.quintify.com/qds/sites/zero";
+if ($config["updates"]["bleeding_edge"]) {
+	$update_host = $update_host_bleeding_edge;
+} else {
+	$update_host = $update_host_default;
+}
+$host_version_info = json_decode(file_get_contents($update_host."/version.json"), true);
+
+function zero_update() {
+	global $config;
+	global $update_host;
+	global $host_version_info;
+	global $zero_version;
+	global $zero_version_number;
+	$date = date("Y-m-d h:i:sa");
+	$new_file = file_get_contents($update_host."/app");
+	if ($new_file != "") {
+		file_put_contents($config["files"]["index"], $new_file);
+		chmod($config["files"]["index"], 0777);
+		make_all_configs(true);
+		file_put_contents("config/update_log.txt", "$date $zero_version [$zero_version_number] -> ${host_version_info['code']} [${host_version_info['number']}]\n", FILE_APPEND);
+		return true;
+	}
+	return false;
+}
+
+function zero_plugin_update($plugin_name) {
+	remove_directory("plugins/$plugin_name");
+	mkdir("plugins/$plugin_name");
+	global $update_host;
+	$get_plugin_file = function($file_name) use ($plugin_name, $update_host) {
+		return file_get_contents("$update_host/plugins/$plugin_name/$file_name");
+	};
+	$put_plugin_file = function($file_name, $content) use ($plugin_name, $update_host) {
+		file_put_contents("plugins/$plugin_name/$file_name", $content);
+	};
+	$manifest = $get_plugin_file("plugin.json");
+	if (!$manifest) {
+		return false;
+	}
+	$put_plugin_file("plugin.json", $manifest);
+	$manifest = json_decode($manifest, true);
+	$load_files = function($arr) use(&$load_files, $get_plugin_file, $put_plugin_file) {
+		foreach ($arr as $files) {
+			if (is_assoc($files)) {
+				$load_files($files);
+			} else {
+				foreach ($files as $file) {
+					$put_plugin_file($file, $get_plugin_file($file));
+				}
+			}
+		}
+	};
+	$load_files($manifest['files']);
+	include("plugins/$plugin_name/install.php");
+	return true;
+}
+
+function zero_update_all_plugins() {
+	global $content;
+	$plugins = json_decode(file_get_contents("config/plugins.json"));
+	$content .= '<p>Updates:<br>';
+	foreach ($plugins as $plugin_name) {
+		$success = zero_plugin_update($plugin_name);
+		$content .= "$plugin_name : " . ($success ? "Success" : "Fail") . '<br>';
+	}
+	$content .= '</p>';
+}
+
+function zero_plugin_remove($plugin_name) {
+	$plugins = json_decode(file_get_contents("config/plugins.json"), true);
+	$key = array_search($plugin_name, $plugins);
+	unset($plugins[$key]);
+	file_put_contents("config/plugins.json", json_encode($plugins));
+	$plugin_config = json_decode(file_get_contents("plugins/$plugin_name/plugin.json"), true);
+	if (!(isset($plugin_config['custom']) && $plugin_config['custom'])) {
+		remove_directory("plugins/$plugin_name");
+	}
+}
+
+function zero_plugin_add($plugin_name) {
+	global $update_host;
+	$plugins = json_decode(file_get_contents("config/plugins.json"), true);
+	if (!in_array($plugin_name, $plugins))
+		$plugins[] = $plugin_name;
+	else
+		return false;
+	file_put_contents("config/plugins.json", json_encode($plugins));
+	$plugin_config = file_get_contents("$update_host/plugins/$plugin_name/config.json");
+	file_put_contents("config/plugins/$plugin_name.json", $plugin_config);
+	return true;
+}
+
+$is_update_available = $host_version_info["number"] != $zero_version_number;
+
+if (($config["updates"]["auto"] && $is_update_available) 
+			|| $config["updates"]["force"]
+			|| isset($_GET['update'])) {
+	$update_success = zero_update();
+	if ($update_success) {
+		if (isset($_GET['update'])) {
+			header("Location: ?p=version");
+			exit;
+		}
+		$is_update_available = false;
+	} else {
+      debug("Update failed! Please contact Quintify if this issue persists.");
+   }
+}
+
+if (isset($_GET['update_plugins'])) {
+	zero_update_all_plugins();
+}
+
+if ($is_update_available) {
+	debug_warn("Update Available", true, '?p=version');
+}
