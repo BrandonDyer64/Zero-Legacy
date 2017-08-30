@@ -97,7 +97,7 @@ $html = <<<HTML
   <hr>
   <div class="row footer">
     <div class="col-sm-4">
-      <a class="text_dark" href="?p=version">Quintify Zero - ${zero_version} ${bleeding_edge_text}</a>
+      <a class="text_dark" href="?p=version">Zero Database - ${zero_version} ${bleeding_edge_text}</a>
     </div>
     <div class="col-sm-4">
       $warning_html
@@ -138,7 +138,7 @@ HTML;
          <div class="top_header_wrapper">
             <div class='web_app_customer_name'><img src="zero_logo.png" width="19" height="19">&nbsp;{$config["name"]}</div>
             <div class='search_box'>
-               <p>Powered by <a href="$update_host" target="_blank">Quintify Zero</a></p>
+               <p>Powered by <a href="$update_host" target="_blank">Zero</a></p>
             </div>
             <div class="clear_both"></div>
             <div id='ddcolortabs' style='margin-left: 1px;'>
@@ -166,7 +166,7 @@ HTML;
                <p><a href="/zero?p=logout">Log out</a></p>
                <hr>
                <p>$warning_html</p>
-               <p><a class="text_dark" href="?p=version">Quintify Zero - ${zero_version} ${bleeding_edge_text}</a></p>
+               <p><a class="text_dark" href="?p=version">Zero - ${zero_version} ${bleeding_edge_text}</a></p>
             </div>
          </div>
       </div>
