@@ -8,11 +8,15 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
   <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css">
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,700" rel="stylesheet">
   <style>
   body {
-      font: 400 15px Lato, sans-serif;
+      /*font: 400 15px Lato, sans-serif;*/
+      font-family: 'Open Sans', sans-serif;
+      font-weight: 300;
       line-height: 1.8;
       color: #818181;
   }
@@ -31,7 +35,7 @@
       margin-bottom: 30px;
   }  
   .jumbotron {
-      background-color: #f4511e;
+      background-color: #0055ff;
       color: #fff;
       padding: 100px 25px;
       font-family: Montserrat, sans-serif;
@@ -43,11 +47,11 @@
       background-color: #f6f6f6;
   }
   .logo-small {
-      color: #f4511e;
+      color: #0055ff;
       font-size: 50px;
   }
   .logo {
-      color: #f4511e;
+      color: #0055ff;
       font-size: 200px;
   }
   .thumbnail {
@@ -62,13 +66,13 @@
   }
   .carousel-control.right, .carousel-control.left {
       background-image: none;
-      color: #f4511e;
+      color: #0055ff;
   }
   .carousel-indicators li {
-      border-color: #f4511e;
+      border-color: #0055ff;
   }
   .carousel-indicators li.active {
-      background-color: #f4511e;
+      background-color: #0055ff;
   }
   .item h4 {
       font-size: 19px;
@@ -81,7 +85,7 @@
       font-style: normal;
   }
   .panel {
-      border: 1px solid #f4511e; 
+      border: 1px solid #0055ff; 
       border-radius:0 !important;
       transition: box-shadow 0.5s;
   }
@@ -89,13 +93,13 @@
       box-shadow: 5px 0px 40px rgba(0,0,0, .2);
   }
   .panel-footer .btn:hover {
-      border: 1px solid #f4511e;
+      border: 1px solid #0055ff;
       background-color: #fff !important;
-      color: #f4511e;
+      color: #0055ff;
   }
   .panel-heading {
       color: #fff !important;
-      background-color: #f4511e !important;
+      background-color: #0055ff !important;
       padding: 25px;
       border-bottom: 1px solid transparent;
       border-top-left-radius: 0px;
@@ -115,12 +119,12 @@
   }
   .panel-footer .btn {
       margin: 15px 0;
-      background-color: #f4511e;
+      background-color: #0055ff;
       color: #fff;
   }
   .navbar {
       margin-bottom: 0;
-      background-color: #f4511e;
+      background-color: #0055ff;
       z-index: 9999;
       border: 0;
       font-size: 12px !important;
@@ -133,17 +137,21 @@
       color: #fff !important;
   }
   .navbar-nav li a:hover, .navbar-nav li.active a {
-      color: #f4511e !important;
-      background-color: #fff !important;
+      /*color: #0055ff !important;*/
+      background-color: #6688ff !important;
   }
   .navbar-default .navbar-toggle {
       border-color: transparent;
       color: #fff !important;
   }
+  .panel-pricing .list-group {
+    margin: auto;
+    text-align: justify;
+  }
   footer .glyphicon {
       font-size: 20px;
       margin-bottom: 20px;
-      color: #f4511e;
+      color: #0055ff;
   }
   .slideanim {visibility:hidden;}
   .slide {
@@ -369,63 +377,56 @@
     <h4>Choose a payment plan that works for you</h4>
   </div>
   <div class="row slideanim">
-    <div class="col-sm-4 col-xs-12">
-      <div class="panel panel-default text-center">
-        <div class="panel-heading">
-          <h1>Basic</h1>
-        </div>
-        <div class="panel-body">
-          <p><strong>20</strong> Lorem</p>
-          <p><strong>15</strong> Ipsum</p>
-          <p><strong>5</strong> Dolor</p>
-          <p><strong>2</strong> Sit</p>
-          <p><strong>Endless</strong> Amet</p>
-        </div>
-        <div class="panel-footer">
-          <h3>$19</h3>
-          <h4>per month</h4>
-          <button class="btn btn-lg">Sign Up</button>
-        </div>
-      </div>      
-    </div>     
-    <div class="col-sm-4 col-xs-12">
-      <div class="panel panel-default text-center">
-        <div class="panel-heading">
-          <h1>Pro</h1>
-        </div>
-        <div class="panel-body">
-          <p><strong>50</strong> Lorem</p>
-          <p><strong>25</strong> Ipsum</p>
-          <p><strong>10</strong> Dolor</p>
-          <p><strong>5</strong> Sit</p>
-          <p><strong>Endless</strong> Amet</p>
-        </div>
-        <div class="panel-footer">
-          <h3>$29</h3>
-          <h4>per month</h4>
-          <button class="btn btn-lg">Sign Up</button>
-        </div>
-      </div>      
-    </div>       
-    <div class="col-sm-4 col-xs-12">
-      <div class="panel panel-default text-center">
-        <div class="panel-heading">
-          <h1>Premium</h1>
-        </div>
-        <div class="panel-body">
-          <p><strong>100</strong> Lorem</p>
-          <p><strong>50</strong> Ipsum</p>
-          <p><strong>25</strong> Dolor</p>
-          <p><strong>10</strong> Sit</p>
-          <p><strong>Endless</strong> Amet</p>
-        </div>
-        <div class="panel-footer">
-          <h3>$49</h3>
-          <h4>per month</h4>
-          <button class="btn btn-lg">Sign Up</button>
-        </div>
-      </div>      
-    </div>    
+    <?php
+        $values = [
+          [
+            "title"=>"Basic",
+            'total'=>'total',
+            "tier"=>"5",
+            "price"=>"$99",
+          ],
+          [
+            "title"=>"Standard",
+            'total'=>'total',
+            "tier"=>"10",
+            "price"=>"$199",
+          ],
+          [
+            "title"=>"Premium",
+            'total'=>'',
+            "tier"=>"u",
+            "price"=>"$499",
+          ]
+        ];
+        foreach ($values as $info) {
+          echo <<< HTML
+            <div class="col-sm-4 col-xs-12">
+              <div class="panel panel-default text-center panel-pricing">
+                <div class="panel-heading">
+                  <h1>${info['title']}</h1>
+                </div>
+                <div class="panel-body">
+                  <!--<p><strong>100</strong> Lorem</p>
+                  <p><strong>50</strong> Ipsum</p>
+                  <p><strong>25</strong> Dolor</p>
+                  <p><strong>10</strong> Sit</p>
+                  <p><strong>Endless</strong> Amet</p>-->
+                  <table class="list-group">
+                    <tr><td><i class="fa fa-check"></i></td><td>&nbsp;Unlimited Server Access</td></tr>
+                    <tr><td><i class="fa fa-check"></i></td><td>&nbsp;Unlimited Servers</td></tr>
+                    <tr><td><i class="fa fa-check"></i></td><td>&nbsp;Unlimited Commands</td></tr>
+                    <tr><td><i class="fa fa-check"></i></td><td>&nbsp;Unlimited Community Access</td></tr>
+                  </table>
+                </div>
+                <div class="panel-footer">
+                  <h3><strong>${info['price']}</strong><small>/month</small></h3>
+                  <button class="btn btn-lg">Sign Up</button>
+                </div>
+              </div>      
+            </div>
+HTML;
+        }
+        ?>    
   </div>
 </div>
 

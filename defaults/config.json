@@ -1,5 +1,5 @@
 {
-   "name": "Quintify Zero",
+   "name": "Zero Database",
    "token": "",
    "admin": {
       "password": "changeme"
@@ -8,7 +8,7 @@
       "host": "localhost",
       "username": "root",
       "password": "",
-      "database": ""
+      "database": "zero"
    },
    "logging": {
       "errors": false,

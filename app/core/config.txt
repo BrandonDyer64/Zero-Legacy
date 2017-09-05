@@ -18,6 +18,9 @@ function make_config($file, $text, $example, $force = false) {
 function make_all_configs($example = false) {
    global $config_file_name;
    global $defaults_host;
+   if ($defaults_host == '') {
+      $defaults_host = $update_host_default;
+   }
    // Config
    make_config($config_file_name, file_get_contents($defaults_host . "/defaults/config.json"), $example);
    make_config("config/nav_tabs.json", file_get_contents($defaults_host . "/defaults/nav_tabs.json"), $example);
@@ -37,6 +40,17 @@ function make_all_configs($example = false) {
    make_config("zero_logo.png", file_get_contents($defaults_host . "/defaults/zero_logo_1.png"), $example);
 }
 
+$update_host_default = "http://zerodatabase.com/host";
+$update_host_bleeding_edge = "http://zerodatabase.com/dev";
+if (isset($config['updates']['host'])) {
+   $update_host = $config['updates']['host'];
+} else if ($config["updates"]["bleeding_edge"]) {
+   $update_host = $update_host_bleeding_edge;
+} else {
+   $update_host = $update_host_default;
+}
+$defaults_host = "$update_host";
+
 if (file_exists($config_file_name)) {
    $config = json_decode(file_get_contents($config_file_name), true);
 } else {
@@ -50,12 +64,3 @@ if (file_exists($config_file_name)) {
 }
 
 $nl = $config["formatting"]["new_line"];
-
-$update_host_default = "http://165.227.18.19/host";
-$update_host_bleeding_edge = "http://165.227.18.19/dev";
-if ($config["updates"]["bleeding_edge"]) {
-   $update_host = $update_host_bleeding_edge;
-} else {
-   $update_host = $update_host_default;
-}
-$defaults_host = "$update_host";
