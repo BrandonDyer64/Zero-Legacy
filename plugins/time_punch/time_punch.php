@@ -33,6 +33,8 @@ if (check_user_permission($time_punch_config['groups'])) {
 	<p>
 		$time_span
 		<a href="?time_punch=$clock_link">Clock $clock_link</a>
+		 &bull;  
+		<a href='?p=list&t=time_punch_entry&where={"user":${user["id"]}}'>My Clock</a>
 	</p>
 	<script>
 	var start = new Date("${row['time_start']}");
