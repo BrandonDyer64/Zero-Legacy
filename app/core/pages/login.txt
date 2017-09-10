@@ -47,7 +47,80 @@ if ($page == "login") {
          $content .= "<p>Registered</p>";
       }
    }
+   $content .= <<<HTML
 
+   <div class="container-center animated slideInDown">
+      <div class="view-header">
+          <div class="header-icon">
+              <i class="pe page-header-icon pe-7s-unlock"></i>
+          </div>
+          <div class="header-title">
+              <h3>Login</h3>
+              <small>
+                  Please enter your credentials to login.
+              </small>
+          </div>
+      </div>
+
+      <div class="panel panel-filled">
+          <div class="panel-body">
+              <form action="#" name="login_form" method="post" id="loginForm" novalidate="" _lpchecked="1">
+                  <div class="form-group">
+                      <label class="control-label" for="username">Username</label>
+                      <input type="text" placeholder="username" title="Please enter you username" required="" value="" name="username" id="username" class="form-control" style="background-image: url(&quot;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAASCAYAAABSO15qAAAAAXNSR0IArs4c6QAAAPhJREFUOBHlU70KgzAQPlMhEvoQTg6OPoOjT+JWOnRqkUKHgqWP4OQbOPokTk6OTkVULNSLVc62oJmbIdzd95NcuGjX2/3YVI/Ts+t0WLE2ut5xsQ0O+90F6UxFjAI8qNcEGONia08e6MNONYwCS7EQAizLmtGUDEzTBNd1fxsYhjEBnHPQNG3KKTYV34F8ec/zwHEciOMYyrIE3/ehKAqIoggo9inGXKmFXwbyBkmSQJqmUNe15IRhCG3byphitm1/eUzDM4qR0TTNjEixGdAnSi3keS5vSk2UDKqqgizLqB4YzvassiKhGtZ/jDMtLOnHz7TE+yf8BaDZXA509yeBAAAAAElFTkSuQmCC&quot;); background-repeat: no-repeat; background-attachment: scroll; background-size: 16px 18px; background-position: 98% 50%; cursor: auto;" autocomplete="off">
+                  </div>
+                  <div class="form-group">
+                      <label class="control-label" for="password">Password</label>
+                      <input type="password" title="Please enter your password" placeholder="******" required="" value="" name="password" id="password" class="form-control" style="background-image: url(&quot;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAASCAYAAABSO15qAAAAAXNSR0IArs4c6QAAAPhJREFUOBHlU70KgzAQPlMhEvoQTg6OPoOjT+JWOnRqkUKHgqWP4OQbOPokTk6OTkVULNSLVc62oJmbIdzd95NcuGjX2/3YVI/Ts+t0WLE2ut5xsQ0O+90F6UxFjAI8qNcEGONia08e6MNONYwCS7EQAizLmtGUDEzTBNd1fxsYhjEBnHPQNG3KKTYV34F8ec/zwHEciOMYyrIE3/ehKAqIoggo9inGXKmFXwbyBkmSQJqmUNe15IRhCG3byphitm1/eUzDM4qR0TTNjEixGdAnSi3keS5vSk2UDKqqgizLqB4YzvassiKhGtZ/jDMtLOnHz7TE+yf8BaDZXA509yeBAAAAAElFTkSuQmCC&quot;); background-repeat: no-repeat; background-attachment: scroll; background-size: 16px 18px; background-position: 98% 50%;" autocomplete="off">
+                  </div>
+                  <div>
+                      <input type="submit" name="submit" class="btn btn-accent" value="Login">
+                      <a class="btn btn-default" href="#" onclick="document.getElementById('register_form').style.display = 'block';">Register</a>
+                  </div>
+              </form>
+          </div>
+      </div>
+
+      <div id="register_form" style="display: none;">
+         <div class="view-header">
+             <div class="header-icon">
+                 <i class="pe page-header-icon pe-7s-unlock"></i>
+             </div>
+             <div class="header-title">
+                 <h3>Register</h3>
+             </div>
+         </div>
+
+         <div class="panel panel-filled">
+             <div class="panel-body">
+                 <form action="#" name="register_form" method="post" id="registerForm" novalidate="" _lpchecked="1">
+                     <div class="form-group">
+                         <label class="control-label" for="username">Username</label>
+                         <input type="text" placeholder="username" title="Please enter you username" required="" value="" name="username" id="username" class="form-control" style="background-image: url(&quot;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAASCAYAAABSO15qAAAAAXNSR0IArs4c6QAAAPhJREFUOBHlU70KgzAQPlMhEvoQTg6OPoOjT+JWOnRqkUKHgqWP4OQbOPokTk6OTkVULNSLVc62oJmbIdzd95NcuGjX2/3YVI/Ts+t0WLE2ut5xsQ0O+90F6UxFjAI8qNcEGONia08e6MNONYwCS7EQAizLmtGUDEzTBNd1fxsYhjEBnHPQNG3KKTYV34F8ec/zwHEciOMYyrIE3/ehKAqIoggo9inGXKmFXwbyBkmSQJqmUNe15IRhCG3byphitm1/eUzDM4qR0TTNjEixGdAnSi3keS5vSk2UDKqqgizLqB4YzvassiKhGtZ/jDMtLOnHz7TE+yf8BaDZXA509yeBAAAAAElFTkSuQmCC&quot;); background-repeat: no-repeat; background-attachment: scroll; background-size: 16px 18px; background-position: 98% 50%; cursor: auto;" autocomplete="off">
+                         <span class="help-block small">Your unique username to app</span>
+                     </div>
+                     <div class="form-group">
+                         <label class="control-label" for="email">Email</label>
+                         <input type="text" placeholder="example@gmail.com" title="Please enter you email" required="" value="" name="email" id="username" class="form-control" style="background-image: url(&quot;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAASCAYAAABSO15qAAAAAXNSR0IArs4c6QAAAPhJREFUOBHlU70KgzAQPlMhEvoQTg6OPoOjT+JWOnRqkUKHgqWP4OQbOPokTk6OTkVULNSLVc62oJmbIdzd95NcuGjX2/3YVI/Ts+t0WLE2ut5xsQ0O+90F6UxFjAI8qNcEGONia08e6MNONYwCS7EQAizLmtGUDEzTBNd1fxsYhjEBnHPQNG3KKTYV34F8ec/zwHEciOMYyrIE3/ehKAqIoggo9inGXKmFXwbyBkmSQJqmUNe15IRhCG3byphitm1/eUzDM4qR0TTNjEixGdAnSi3keS5vSk2UDKqqgizLqB4YzvassiKhGtZ/jDMtLOnHz7TE+yf8BaDZXA509yeBAAAAAElFTkSuQmCC&quot;); background-repeat: no-repeat; background-attachment: scroll; background-size: 16px 18px; background-position: 98% 50%; cursor: auto;" autocomplete="off">
+                         <span class="help-block small">Your email address</span>
+                     </div>
+                     <div class="form-group">
+                         <label class="control-label" for="password">Password</label>
+                         <input type="password" title="Please enter your password" placeholder="******" required="" value="" name="password" id="password" class="form-control" style="background-image: url(&quot;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAASCAYAAABSO15qAAAAAXNSR0IArs4c6QAAAPhJREFUOBHlU70KgzAQPlMhEvoQTg6OPoOjT+JWOnRqkUKHgqWP4OQbOPokTk6OTkVULNSLVc62oJmbIdzd95NcuGjX2/3YVI/Ts+t0WLE2ut5xsQ0O+90F6UxFjAI8qNcEGONia08e6MNONYwCS7EQAizLmtGUDEzTBNd1fxsYhjEBnHPQNG3KKTYV34F8ec/zwHEciOMYyrIE3/ehKAqIoggo9inGXKmFXwbyBkmSQJqmUNe15IRhCG3byphitm1/eUzDM4qR0TTNjEixGdAnSi3keS5vSk2UDKqqgizLqB4YzvassiKhGtZ/jDMtLOnHz7TE+yf8BaDZXA509yeBAAAAAElFTkSuQmCC&quot;); background-repeat: no-repeat; background-attachment: scroll; background-size: 16px 18px; background-position: 98% 50%;" autocomplete="off">
+                         <span class="help-block small">Your strong password</span>
+                     </div>
+                     <div>
+                         <input type="submit" name="submit_register" class="btn btn-accent" value="Register">
+                     </div>
+                 </form>
+             </div>
+         </div>
+      </div>
+
+   </div>
+
+HTML;
+/*
    $content .= <<<HTML
 
    <div>
@@ -110,4 +183,5 @@ if ($page == "login") {
    </div>
 
 HTML;
+*/
 }

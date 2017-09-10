@@ -1,10 +1,25 @@
 body {
-  font-family: 'Open Sans', sans-serif;
-  font-weight: 300;
+	font-family: 'Open Sans', sans-serif;
+	font-weight: 300;
+}
+
+a {
+	color: #0055ff;
 }
 
 .navbar {
-  border-radius: 0;
+	border-radius: 0;
+	background-color: #0055ff;
+	border: none;
+}
+
+.navbar li a, .navbar .navbar-brand {
+	color: #fff !important;
+}
+
+.navbar-nav li a:hover, .navbar-nav li.active a {
+	/*color: #0055ff !important;*/
+	background-color: #6688ff !important;
 }
 
 .text_dark, .text-dark {
@@ -13,6 +28,16 @@ body {
 
 .footer, .footer a {
 	color: #ccc;
+}
+
+.container-center {
+    max-width: 400px;
+    margin: auto;
+    padding: 20px;
+}
+
+.panel-filled {
+	background-color: #eee;
 }
 
 ::placeholder {

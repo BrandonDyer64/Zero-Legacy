@@ -40,6 +40,10 @@ function make_all_configs($example = false) {
    make_config("zero_logo.png", file_get_contents($defaults_host . "/defaults/zero_logo_1.png"), $example);
 }
 
+if (file_exists($config_file_name)) {
+   $config = json_decode(file_get_contents($config_file_name), true);
+}
+
 $update_host_default = "http://zerodatabase.com/host";
 $update_host_bleeding_edge = "http://zerodatabase.com/dev";
 if (isset($config['updates']['host'])) {
@@ -51,9 +55,7 @@ if (isset($config['updates']['host'])) {
 }
 $defaults_host = "$update_host";
 
-if (file_exists($config_file_name)) {
-   $config = json_decode(file_get_contents($config_file_name), true);
-} else {
+if (!file_exists($config_file_name)) {
    mkdir("config");
    chmod("config", 0777);
 

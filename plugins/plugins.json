@@ -1,6 +1,7 @@
 [
 	"plugin_manager",
 	"table_catalog",
+	"slave_tables",
 	"time_punch",
 	"qr_codes",
 	"bill_of_lading",

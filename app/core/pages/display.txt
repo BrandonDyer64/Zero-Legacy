@@ -35,6 +35,7 @@ HTML;
     }
 
     $links = [''];
+    $tabs = [];
 
     if (isset($plugin_files['display_top'])) {
         foreach ($plugin_files['display_top'] as $file) {
@@ -44,6 +45,34 @@ HTML;
     }
 
     $links = implode(' | ', $links);
+
+    $tab_html = '';
+    $tab_button_html = '';
+
+    $i = 0;
+    foreach ($tabs as $tab) {
+        $tab_html .= <<<HTML
+        <div  id="tab$i" class="tab-pane fade">
+            <h3>${tab['name']}</h3>
+            ${tab['html']}
+        </div>
+HTML;
+        $tab_button_html .= <<<HTML
+        <li><a data-toggle="tab" href="#tab$i">${tab['name']}</a></li>
+HTML;
+        $i++;
+    }
+
+    $tab_html = <<<HTML
+    <div class="tab-content">
+        $tab_html
+    </div>
+HTML;
+    $tab_button_html = <<<HTML
+    <ul class="nav nav-tabs">
+        $tab_button_html
+    </ul>
+HTML;
 
     $content .= <<<HTML
 
@@ -63,6 +92,9 @@ HTML;
             $table_content
         </tbody>
     </table>
+
+    $tab_button_html
+    $tab_html
 
 HTML;
 

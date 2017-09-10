@@ -29,13 +29,21 @@ if ($page == "add") {
 
    $table_content = '';
 
+   if (isset($_GET['d'])) {
+      $defaults = json_decode($_GET['d'], true);
+   }
+
    foreach ($schema as $key => $value) {
       if ($key == 'id') {
          continue;
       }
       $key_pretty = column_pretty_print($key);
       $fn = get_type_function('edit', $schema[$key]['type']);
-      $input = $fn($key, $schema[$key], '');
+      $value = '';
+      if (isset($defaults[$key])) {
+         $value = $defaults[$key];
+      }
+      $input = $fn($key, $schema[$key], $value);
       $table_content .= <<<HTML
 
       <tr>

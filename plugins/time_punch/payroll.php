@@ -4,6 +4,7 @@ if ($page == 'payroll') {
 	if (isset($_POST['start']) && isset($_POST['end'])) {
 		$first_day = date('Y-m-d H:i:s', strtotime($_POST['start']));
 		$last_day = date('Y-m-d H:i:s', strtotime($_POST['end']));
+		$today = date('Y-m-d');
 		$stmt = db_select('time_punch_entry',['*'],[
 				'time_start'=>['>=',$first_day],
 				'time_end'=>['<=',$last_day]
@@ -31,7 +32,8 @@ if ($page == 'payroll') {
 					<td>$username</td>
 					<td>\$$pay</td>
 					<td>$hours</td>
-					<td>\$$wage/hr <a href="?p=edit&t=user_payroll_info&id=${row['id']}">edit</a></td>				
+					<td>\$$wage/hr <a href="?p=edit&t=user_payroll_info&id=${row['id']}">edit</a></td>
+					<td><a id="paid${value['id']}" onclick="$('#paid${value['id']}').css('color','green');$('#paid${value['id']}').html('Paid <span class=\'glyphicon glyphicon-ok\'></span>');" href='?p=add&t=employee_payment&d={"employee":"${value["id"]}","hours":"$hours","amount":"$pay","wage":"$wage","date_paid":"$today"}' target="_blank">Paid <span class="glyphicon glyphicon-remove"></span></a></td>			
 				</tr>
 HTML;
 			} else {
@@ -43,7 +45,7 @@ HTML;
 		<h2>Payroll</h2>
 		<table class="table">
 			<tr>
-				<th>User</th><th>Pay</th><th>Hours</th><th>Wage</th>
+				<th>User</th><th>Pay</th><th>Hours</th><th>Wage</th><th>Paid?</th>
 			</tr>
 			$table_html
 		</table>

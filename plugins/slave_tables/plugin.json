@@ -1,0 +1,19 @@
+{
+    "name": "Slave Tables",
+    "type": "Extension",
+    "version": "0.0.0 Alpha",
+    "cost": 1.99,
+    "description_short": "Enhance your Tables' interconnectivity with Slave Tables",
+    "description": "This plugin let's your employees punch into work directly from their home page.",
+    "files": {
+        "display_top": [
+            "display_tabs.php"
+        ],
+        "install": [
+            "install.php"
+        ]
+    },
+    "depend": [
+        "time_keeping"
+    ]
+}

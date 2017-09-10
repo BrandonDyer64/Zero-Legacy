@@ -14,3 +14,13 @@ CREATE TABLE user_payroll_info (
    PRIMARY KEY (id),
    UNIQUE INDEX (user)
 ) COMMENT = '{"whitelist":["admin"]}';
+
+CREATE TABLE employee_payment (
+   id INT NOT NULL AUTO_INCREMENT,
+   employee INT NOT NULL COMMENT '{"type":"select","from":"user"}',
+   date_paid DATE,
+   amount DECIMAL(10,2),
+   hours DECIMAL(10,4),
+   wage DECIMAL(10,4),
+   PRIMARY KEY (id)
+) COMMENT = '{"whitelist":["admin"]}';
