@@ -1,0 +1,20 @@
+{
+    "name": "Bottle Tracker",
+    "type": "Page",
+    "version": "0.0.1",
+    "cost": 5.99,
+    "description_short": "Track bottles with ease!",
+    "description": "Press a big green button to track when bottles are filled!",
+    "files": {
+        "page": [
+            "bottle.php"
+        ],
+        "js": [
+            "script.js"
+        ],
+        "css": [
+            "button.css"
+        ]
+
+    }
+}
