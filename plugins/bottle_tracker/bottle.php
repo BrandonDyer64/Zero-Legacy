@@ -11,6 +11,7 @@ if ($page == 'bottle') {
 			BOTTLE
 		</a>
 	</div>
+
 	<script src="plugins/bottle_tracker/script.js">
 	</script>
 HTML;
