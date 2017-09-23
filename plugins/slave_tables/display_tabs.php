@@ -18,21 +18,21 @@ while ($row = $stmt->fetch()) {
     }
 
     $schema = db_schema($t);
-    $stmt = db_select($t, $cols, $where, 'ORDER BY id DESC');
+    $stmt2 = db_select($t, $cols, $where, 'ORDER BY id DESC');
     $i = 0;
     $first = true;
     $is_warn_for_id = false;
     $list_html = '';
-    while ($row = $stmt->fetch()) {
+    while ($row2 = $stmt2->fetch()) {
         $i++;
-        $t_row = "";
-        foreach ($row as $key => $value) {
+        $t_row2 = "";
+        foreach ($row2 as $key => $value) {
             $fn = get_type_function('decode_list', $schema[$key]['type']);
-            $value = $fn($schema[$key], $value, '', $row);
-            $t_row .= "<td>$value</td>";
+            $value = $fn($schema[$key], $value, '', $row2);
+            $t_row2 .= "<td>$value</td>";
         }
-        if (!isset($row['id'])) {
-            $row['id'] = 0;
+        if (!isset($row2['id'])) {
+            $row2['id'] = 0;
             // Show a warning about not having an id
             $is_warn_for_id = true;
         }
@@ -40,19 +40,19 @@ while ($row = $stmt->fetch()) {
 
         <tr class='list_table_data_row'>
             <td align="left" valign="center">
-                <a href="?p=display&t=$t&id={$row['id']}" title="View"><span class="glyphicon glyphicon-eye-open"></span></a>
+                <a href="?p=display&t=$t&id={$row2['id']}" title="View"><span class="glyphicon glyphicon-eye-open"></span></a>
                 &nbsp;
-                <a href="?p=edit&t=$t&id={$row['id']}" title="Edit"><span class="glyphicon glyphicon-edit"></a>
+                <a href="?p=edit&t=$t&id={$row2['id']}" title="Edit"><span class="glyphicon glyphicon-edit"></a>
                 &nbsp;
-                <a href="?p=delete&t=$t&id={$row['id']}" title="Delete"><span class="glyphicon glyphicon-remove"></a>
+                <a href="?p=delete&t=$t&id={$row2['id']}" title="Delete"><span class="glyphicon glyphicon-remove"></a>
             </td>
-            $t_row
+            $t_row2
         </tr>
 
 HTML;
 
         if ($first) {
-            foreach ($row as $key => $value) {
+            foreach ($row2 as $key => $value) {
                 $key = column_pretty_print($key);
                 $t_header .= "<th>$key</th>";
             }
@@ -67,7 +67,7 @@ HTML;
                             $t_header
                         </tr>
                         $t_list_html
-                        <tr class="list_table_totals_row">
+                        <tr class="list_table_totals_row2">
                             $t_footer
                         </tr>
                     </tbody>

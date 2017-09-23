@@ -40,5 +40,5 @@ CREATE TABLE nav_tab (
 )COMMENT = '{"whitelist":["admin","user_manager"],"display":{"whitelist":["user_viewer"]},"add":{"whitelist":[]]}}';
 
 INSERT INTO nav_tab (name,user_groups,url) VALUES ('Home','2,1','?p=home');
-INSERT INTO nav_tab (name,user_groups,url) VALUES ('Users','2,4,5','?p=list&t=user');
-INSERT INTO nav_tab (name,user_groups,url) VALUES ('Zero','2,1','http://quintify.com/qds/sites/zero');
+INSERT INTO nav_tab (name,user_groups,url) VALUES ('Users','1,4,5','?p=list&t=user');
+INSERT INTO nav_tab (name,user_groups,url) VALUES ('Zero','2,1','http://zerodatabase.com');

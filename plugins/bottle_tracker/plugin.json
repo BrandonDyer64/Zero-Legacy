@@ -7,14 +7,26 @@
     "description": "Press a big green button to track when bottles are filled!",
     "files": {
         "page": [
-            "bottle.php"
+            "bottle.php",
+            "bottle_graph.php"
         ],
         "js": [
             "script.js"
         ],
         "css": [
             "button.css"
+        ],
+        "install": [
+            "install.php"
+        ],
+        "display_top": [
+            "display_link.php"
         ]
-
-    }
+    },
+    "home_links": [
+        {
+            "name": "Bottle",
+            "url": "?p=bottle"
+        }
+    ]
 }

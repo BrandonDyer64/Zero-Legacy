@@ -1,0 +1,13 @@
+{
+    "name": "Compress",
+    "type": "Page",
+    "version": "0.0.1",
+    "cost": 5.99,
+    "description_short": "Serachable Compression",
+    "description": "",
+    "files": {
+        "type": [
+            "compress.php"
+        ]
+    }
+}

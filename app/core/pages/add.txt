@@ -24,7 +24,12 @@ if ($page == "add") {
          db_insert($table, $update_values);
       }
       $id = $pdo->lastInsertId();
-      header("Location: ?p=display&t=$table&id=$id");
+      if (!isset($_GET['api'])) {
+         header("Location: ?p=display&t=$table&id=$id");
+      } else {
+         $content_api['success'] = true;
+         $content_api['id'] = $id;
+      }
    }
 
    $table_content = '';
