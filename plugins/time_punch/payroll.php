@@ -5,10 +5,25 @@ if ($page == 'payroll') {
 		$first_day = date('Y-m-d H:i:s', strtotime($_POST['start']));
 		$last_day = date('Y-m-d H:i:s', strtotime($_POST['end']));
 		$today = date('Y-m-d');
-		$stmt = db_select('time_punch_entry',['*'],[
-				'time_start'=>['>=',$first_day],
-				'time_end'=>['<=',$last_day]
-			]);
+
+		if (check_user_permission(['admin'])){
+
+            $stmt = db_select('time_punch_entry',['*'],[
+                'time_start'=>['>=',$first_day],
+                'time_end'=>['<=',$last_day]
+            ]);
+
+        } else {
+
+            $stmt = db_select('time_punch_entry',['*'],[
+                'time_start'=>['>=',$first_day],
+                'user'=> $user['id'],
+                'time_end'=>['<=',$last_day]
+            ]);
+
+        }
+
+
 		$users = [];
 		while ($row = $stmt->fetch()) {
 			if (!isset($users[$row['user']]['hours']))
