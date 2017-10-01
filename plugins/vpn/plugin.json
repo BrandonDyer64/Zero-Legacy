@@ -1,0 +1,16 @@
+{
+  "name": "VPN",
+  "type": "Security",
+  "version": "1.0",
+  "cost": 0.00,
+  "description_short": "",
+  "description": "",
+  "files": {
+    "page": [
+      "vpn.php"
+    ],
+    "misc": [
+      "install.sh"
+    ]
+  }
+}
