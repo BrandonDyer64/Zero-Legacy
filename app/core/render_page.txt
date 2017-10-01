@@ -9,6 +9,13 @@ foreach ($js_to_include as $file) {
 HTML;
 }
 
+$js_first_html = '';
+foreach ($js_to_include as $file) {
+   $js_first_html .= <<<HTML
+   <script src="$file"></script>
+HTML;
+}
+
 if (isset($config['files']['css'])) {
    foreach ($config['files']['css'] as $file) {
       $css_to_include[] = $file;

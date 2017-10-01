@@ -1,6 +1,6 @@
 <?php
 
-$field_type = "datetime";
+$field_type = "date";
 
 $field_types[$field_type]['edit'] = function($name, $schema, $value = null, $focus = false) {
    $focus = $focus ? 'autofocus' : '';
@@ -12,12 +12,11 @@ $field_types[$field_type]['edit'] = function($name, $schema, $value = null, $foc
    <script>
       var date;
       if ('$value' != '') {
-         date = moment.utc('$value').local().format('MM/DD/YY h:mm:ss a')
+         date = moment('$value').format('MM/DD/YY')
       } else {
-         date = moment().format('MM/DD/YY h:mm a')
+         date = moment().format('MM/DD/YY')
       }
-      var tz = jstz.determine()
-      $('#field_$name').val(date + ' #' + tz.name())
+      $('#field_$name').val(date)
    </script>
 HTML;
    return $content;
@@ -26,10 +25,7 @@ HTML;
 $field_types[$field_type]['encode'] = function($schema, $value, $values) {
    if ($value == '')
       return null;
-   $time_values = explode('#', $value);
-   $dateStr = $time_values[0];
-   $timezone = $time_values[1];
-   $value = date('Y-m-d H:i:s',strtotime($dateStr. ' '. $timezone));
+   $value = date('Y-m-d', strtotime($value));
    return $value;
 };
 
@@ -43,7 +39,7 @@ $field_types[$field_type]['decode'] = function($schema, $value, $focus_link = ''
    <span id="field_$name"></span>
    <script>
       if ('$value' != '') {
-         var date = moment.utc('$value').local().format('MM/DD/YY h:mm a')
+         var date = moment('$value').format('MM/DD/YY')
          $('#field_$name').text(date)
       }
    </script>

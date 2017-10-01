@@ -17,7 +17,8 @@ $field_types[$field_type]['decode'] = function($schema, $value, $focus_link = ''
    }
    $start = strtotime($values[$schema['data']['start']]);
    $end = strtotime($values[$schema['data']['end']]);
-   return date('H:i:s', $end - $start);
+   //return date('H:i:s', $end - $start);
+   return round(($end - $start) / 3600, 2);
 };
 
 /*$field_types[$field_type]['decode_list'] = function($schema, $value, $focus_link='', $values=[]) {

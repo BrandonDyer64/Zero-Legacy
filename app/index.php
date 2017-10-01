@@ -35,6 +35,7 @@ $content = <<<PHP
 \$content = "";
 \$content_api = array();
 \$js_to_include = [];
+\$js_to_include_first = [];
 \$css_to_include = [];
 
 PHP;

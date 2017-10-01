@@ -73,22 +73,7 @@ HTML;
             $first = false;
         }
         if ($i % 20 == 0) {
-            $list_content .= <<<HTML
-            <div class="table-responsive">
-                <table class="table table-striped table-hover">
-                    <tbody>
-                        <tr class="list_table_header_row">
-                            $table_header
-                        </tr>
-                        $table_content
-                        <tr class="list_table_totals_row">
-                            $table_footer
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-HTML;
-        $table_content = '';
+            $table_content .= $table_header;
         }
     }
 

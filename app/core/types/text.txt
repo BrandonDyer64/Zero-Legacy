@@ -7,7 +7,7 @@ $field_types[$field_type]['edit'] = function($name, $schema, $value = null, $foc
    $focus = $focus ? 'autofocus' : '';
    $value = htmlspecialchars($value);
    $content = <<<HTML
-   <textarea name="$name" value="$value" placeholder="$name" cols="52" rows="4" style="font-family: monospace;" $focus>$value</textarea>
+   <textarea name="$name" value="$value" placeholder="$name" class="form-control" cols="52" rows="4" style="font-family: monospace;" $focus>$value</textarea>
 HTML;
    return $content;
 };

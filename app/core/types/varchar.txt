@@ -8,7 +8,7 @@ $field_types[$field_type]['edit'] = function($name, $schema, $value = null, $foc
    $focus = $focus ? 'autofocus' : '';
    $value = htmlspecialchars($value);
    $content = <<<HTML
-   <input type="text" name="$name" value="$value" placeholder="$name" $focus>
+   <input type="text" name="$name" value="$value" placeholder="$name" class="form-control" $focus>
 HTML;
    return $content;
 };

@@ -8,7 +8,8 @@
     "files": {
         "type": [
             "duration.php",
-            "datetime.php"
+            "datetime.php",
+            "date.php"
         ]
     }
 }
