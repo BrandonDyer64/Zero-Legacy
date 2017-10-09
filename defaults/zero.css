@@ -40,6 +40,30 @@ a {
 	background-color: #eee;
 }
 
+.panel-black {
+	border-color: #222;
+}
+
+.panel-black>.panel-heading {
+	border-color: #222;
+	background-color: #333;
+	color: white;
+}
+
+.panel-black a {
+	color: black;
+	font-weight: bold;
+}
+
+.black-deck {
+	color: black;
+}
+
+.black-deck a {
+	color: black;
+	font-weight: bold;
+}
+
 ::placeholder {
 	color: #ddd;
 }

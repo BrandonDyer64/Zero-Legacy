@@ -1,0 +1,16 @@
+{
+    "name": "Black",
+    "type": "Premium Service",
+    "version": "000",
+    "cost": 0,
+    "description_short": "Invite Only, Black Tier Service",
+    "description": "",
+    "files": {
+        "page":[
+            "black.php"
+        ],
+        "home": [
+            "home.php"
+        ]
+    }
+}

@@ -44,7 +44,7 @@ HTML;
 
    $content .= <<<HTML
 
-   <h2>Edit: $table_pretty</h2>
+   <h2>Edit: <strong>$table_pretty</strong></h2>
    <p>
       <a href="?p=list&t=$table"><span class="glyphicon glyphicon-th-list"></span></a>
       &nbsp;

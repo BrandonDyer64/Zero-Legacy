@@ -188,7 +188,6 @@
   }
   @media screen and (max-width: 768px) {
     .col-sm-4 {
-      text-align: center;
       margin: 25px 0;
     }
     .btn-lg {
@@ -326,6 +325,40 @@
   }
 }
 
+p {
+    text-align: justify;
+}
+
+.text-center p {
+    text-align: center;
+}
+
+.fine-print p {
+    line-height: 1em;
+    color: #aaa;
+}
+
+.black-deck-link {
+	color: black;
+}
+
+.black-deck .panel-heading {
+	background-color: black !important;
+}
+
+.black-deck .panel {
+	border-color: black;
+}
+
+.black-deck .btn {
+	background-color: black;
+}
+
+.black-deck .btn:hover {
+	color: black;
+	border-color: black;
+}
+
   </style>
 </head>
 <body id="myPage" data-spy="scroll" data-target=".navbar" data-offset="60">
@@ -353,113 +386,16 @@
 <div class="jumbotron text-center">
   <div class="container">
     <h1>Zero</h1> 
-    <p>We Love <span class="glyphicon glyphicon-heart pulsate-fwd"></span> Databases</p>
+    <p>We Love <span class="glyphicon glyphicon-heart pulsate-fwd"></span> Databases<hr><small>By Magentex, Inc.</small></p>
   </div>
 </div>
 
 <!-- Container (About Section) -->
 <div id="about" class="container-fluid">
-  <div class="row">
-    <div class="col-sm-8">
-      <h2>About Company Page</h2><br>
-      <h4>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</h4><br>
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-      <br><a href="#pricing" class="btn btn-default btn-lg">Sign Up</a>
-    </div>
-    <div class="col-sm-4">
-      <span class="glyphicon glyphicon-signal logo"></span>
-    </div>
-  </div>
-</div>
-
-<div class="container-fluid bg-grey">
+  <h2>Industry Leading Database Display</h2>
   <div class="row">
     <div class="col-sm-4">
-      <div class="slideanim">
-       <h3>Add: <strong>Bill of Lading</strong></h3>
-       <p><a href="?p=list&amp;t=bill_of_lading"><span class="glyphicon glyphicon-th-list"></span></a></p>
-       <form method="post">
-          <table class="table">
-             <tbody>
-          </tr>
-
-          <tr>
-             <td valign="top">
-                Shipping Address:
-             </td>
-             <td>
-                   <select name="shipping_address" value="0">
-          <option value="1">1234 Street St</option>
-       </select>
-       &nbsp;
-       <a href="?p=list&amp;t=shipping_address"><span class="glyphicon glyphicon-th-list"></span></a>
-       &nbsp;
-       <a href="?p=add&amp;t=shipping_address"><span class="glyphicon glyphicon-plus"></span></a>
-             </td>
-          </tr>
-
-          <tr>
-             <td valign="top">
-                Carrier:
-             </td>
-             <td>
-                   <select name="carrier" value="0">
-          <option value="1">Carrier C</option><option value="2">Carrier B</option><option value="3">Carrier A</option><option value="4">Company</option><option value="5">Company A</option>
-       </select>
-       &nbsp;
-       <a href="?p=list&amp;t=shipping_carrier"><span class="glyphicon glyphicon-th-list"></span></a>
-       &nbsp;
-       <a href="?p=add&amp;t=shipping_carrier"><span class="glyphicon glyphicon-plus"></span></a>
-             </td>
-          </tr>
-
-          <tr>
-             <td valign="top">
-                Vehicle Number:
-             </td>
-             <td>
-                   <input type="text" name="vehicle_number" value="" placeholder="vehicle_number">
-             </td>
-          </tr>
-
-          <tr>
-             <td valign="top">
-                Freight Charges Prepaid:
-             </td>
-             <td>
-                   <input type="checkbox" name="freight_charges_prepaid" unchecked="">
-             </td>
-          </tr>
-                <tr>
-                   <td></td>
-                   <td>
-                      <input style="width: 44%;" type="number" name="-quantity" placeholder="Copies">
-                   </td>
-                </tr>
-             </tbody>
-          </table>
-       </form>
-      </div>
-    </div>
-    <div class="col-sm-8">
-      <h2>Industry Leading Forms</h2><br>
-      <h4><strong>MISSION:</strong> Our mission lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</h4><br>
-      <p><strong>VISION:</strong> Our vision Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-    </div>
-  </div>
-</div>
-
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-sm-8">
-      <h2>Top of the Line List Pages</h2><br>
-      <h4><strong>MISSION:</strong> Our mission lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</h4><br>
-      <p><strong>VISION:</strong> Our vision Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-    </div>
-    <div class="col-sm-4">
-      <div class="slideanim">
+      <div class="slide">
         <h3>List: <b>Time Punch Entry</b></h3>
 
           <p><a href="?p=add&t=time_punch_entry"><span class="glyphicon glyphicon-plus"></span></a></p>
@@ -512,6 +448,120 @@
           </table>
         </div>
       </div>
+    </div>
+    <div class="col-sm-4">
+      <div class="slide">
+         <h3>Add: <b>Bill Of Lading</b></h3>
+         <p><a href="?p=list&amp;t=bill_of_lading" data-toggle="tooltip" data-placement="right" title="List Bill of Ladings"><span class="glyphicon glyphicon-th-list"></span></a></p>
+         <form method="post" class="form-horizontal">
+            
+            <div class="form-group">
+              <label class="control-label col-sm-2">Date Recorded:</label>
+              <div class="col-sm-10">
+                     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+         <script src="https://cdnjs.cloudflare.com/ajax/libs/jstimezonedetect/1.0.6/jstz.min.js"></script>
+         <input id="field_date_recorded" type="text" name="date_recorded" value="" placeholder="date_recorded" class="form-control" data-toggle="tooltip" data-placement="top" title="Today's Date">
+         <script>
+            $(function(){
+              var date = moment().format('MM/DD/YY')
+              $('#field_date_recorded').val(date)
+              $('#date_value').text(date)
+            })
+         </script>
+         <script type="text/javascript">
+           $(function(){
+            $('#field_date_recorded').on('input',function(){
+              $('#date_value').text($('#field_date_recorded').val())
+            })
+           })
+         </script>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="control-label col-sm-2">Shipping Address:</label>
+              <div class="col-sm-10">
+                     <div class="input-group">
+            <select name="shipping_address" value="0" class="form-control" data-toggle="tooltip" data-placement="top" title="Select Shipping Address">
+               <option value="0">Select...</option>
+               <option>Here</option>
+               <option>There</option>
+            </select>
+            <div class="input-group-btn">
+              <a href="?p=list&amp;t=shipping_address" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="List Shipping Addresses"><span class="glyphicon glyphicon-th-list"></span></a>
+              <a href="?p=add&amp;t=shipping_address" class="btn btn-default" data-toggle="tooltip" data-placement="right" title="Add a Shipping Address"><span class="glyphicon glyphicon-plus"></span></a>
+            </div>
+         </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="control-label col-sm-2">Charges:</label>
+              <div class="col-sm-10">
+                <input type="number" name="total_charges" id="charges_field" value="1024" placeholder="total_charges" class="form-control" data-toggle="tooltip" data-placement="top" title="Total Charges Amount">
+              </div>
+            </div>
+            <script type="text/javascript">
+             $(function(){
+              $('#charges_field').on('input',function(){
+                $('#charges_value').text($('#charges_field').val())
+              })
+             })
+            </script>
+            <div class="form-group">
+               <div class="col-sm-offset-2 col-sm-10">
+                <input style="width: 44%;" type="number" name="-quantity" placeholder="Copies" class="form-control" data-toggle="tooltip" data-placement="right" title="Duplicates to Create">
+               </div>
+            </div>
+            <div class="form-group">
+               <div class="col-sm-offset-2 col-sm-10">
+                 <input type="submit" class="btn btn-default" name="-submit" value="Submit" data-toggle="tooltip" data-placement="bottom" title="Add This Bill of Lading to the Database">
+                 <input type="button" class="btn btn-link" value="Reset" onclick="if (confirm('Are you sure?')) {location.reload()}" data-toggle="tooltip" data-placement="right" title="Reset the Form">
+               </div>
+            </div>
+         </form>
+      </div>
+    </div>
+    <div class="col-sm-4">
+  		<div class="slide">
+          <h3>Display: <strong>Bill Of Lading</strong></h3>
+          <p>
+              <a href="?p=edit&amp;t=bill_of_lading&amp;id=1005"><span class="glyphicon glyphicon-edit"></span></a>
+              &nbsp;
+              <a href="?p=list&amp;t=bill_of_lading"><span class="glyphicon glyphicon-th-list"></span></a>
+              &nbsp;
+              <a href="?p=add&amp;t=bill_of_lading"><span class="glyphicon glyphicon-plus"></span></a>
+               |  <a href="?p=bill_of_lading&amp;id=1005">View Document</a>
+          </p>
+
+          <div class="">
+                            <div class="row">
+                      <label class="control-label col-sm-2" style="text-align: right;">ID:</label>
+                      <div class="col-sm-10">
+                          <span class="text_dark" id="id_value">1001</span>
+                      </div>
+                    </div>
+                    <br>              <div class="row">
+                      <label class="control-label col-sm-2" style="text-align: right;">Date Recorded:</label>
+                      <div class="col-sm-10">
+                          <span id="date_value">---</span>
+                </div>
+              </div>
+              <br>              <div class="row">
+                <label class="control-label col-sm-2" style="text-align: right;">Shipping Address:</label>
+                <div class="col-sm-10">
+                    <span id="shipping_address_value">None</span>
+                </div>
+              </div>
+              <br>              <div class="row">
+                <label class="control-label col-sm-2" style="text-align: right;">Charges:</label>
+                <div class="col-sm-10">
+                    <span id="charges_value">1024</span>
+                </div>
+              </div>
+              <br>
+          </div>
+        </div>
     </div>
   </div>
 </div>
@@ -599,28 +649,28 @@
 <!-- Container (Services Section) -->
 <div id="services" class="container-fluid text-center bg-grey-dark">
   <h2>At The Core</h2>
-  <p>What comes with every new system</p>
+  <p>What comes with your new system</p>
   <br>
   <div class="row">
     <div class="col-sm-3">
       <i class="fa fa-5x fa-server text-light sr-icons logo-small"></i>
-      <h4>Space</h4>
-      <p>More Than 10GB of Storage</p>
+      <h4>Spacious</h4>
+      <p>With one request you can get as much space as your business needs</p>
     </div>
     <div class="col-sm-3">
-      <span class="glyphicon glyphicon-user logo-small"></span>
-      <h4>LOVE</h4>
-      <p>Lorem ipsum dolor sit amet..</p>
+      <span class="glyphicon glyphicon-lock logo-small"></span>
+      <h4>Secure</h4>
+      <p>Top developers work round the clock to keep your data secure</p>
     </div>
     <div class="col-sm-3">
-      <span class="glyphicon glyphicon-wrench logo-small"></span>
-      <h4>CODE</h4>
-      <p>2 Hours of Professional Custom Code With Standard Subscription</p>
+      <span class="glyphicon glyphicon-cog logo-small"></span>
+      <h4>Custom</h4>
+      <p> Custom Code Built for Your Business</p>
     </div>
     <div class="col-sm-3">
-      <span class="glyphicon glyphicon-leaf logo-small"></span>
-      <h4>GREEN</h4>
-      <p>Go Green With our Paperless Solution</p>
+      <span class="glyphicon glyphicon-duplicate logo-small"></span>
+      <h4>Safe</h4>
+      <p>With Standard subscription backups are made every week</p>
     </div>
   </div>
 </div>
@@ -631,27 +681,33 @@
     <h2>Pricing</h2>
     <h4>Choose a payment plan that works for you</h4>
   </div>
-  <div class="row slideanim">
+  <div class="row">
     <?php
         $values = [
           [
             "title"=>"Basic",
-            'total'=>'total',
-            "tier"=>"5",
-            "price"=>"$99",
+            "price"=>"49",
+            "dev_cost"=>"99",
+            "plugins"=>"remove",
+            "vpn"=>"remove",
+            "consult"=>"0",
           ],
           [
             "title"=>"Standard",
-            'total'=>'total',
-            "tier"=>"10",
-            "price"=>"$199",
+            "price"=>"249",
+            "dev_cost"=>"79",
+            "plugins"=>"ok",
+            "vpn"=>"remove",
+            "consult"=>"1",
           ],
           [
             "title"=>"Premium",
-            'total'=>'',
-            "tier"=>"u",
-            "price"=>"$499",
-          ]
+            "price"=>"499",
+            "dev_cost"=>"59",
+            "plugins"=>"ok",
+            "vpn"=>"ok",
+            "consult"=>"3",
+          ],
         ];
         foreach ($values as $info) {
           echo <<< HTML
@@ -661,21 +717,17 @@
                   <h1>${info['title']}</h1>
                 </div>
                 <div class="panel-body">
-                  <!--<p><strong>100</strong> Lorem</p>
-                  <p><strong>50</strong> Ipsum</p>
-                  <p><strong>25</strong> Dolor</p>
-                  <p><strong>10</strong> Sit</p>
-                  <p><strong>Endless</strong> Amet</p>-->
                   <table class="list-group">
-                    <tr><td><i class="fa fa-check"></i></td><td>&nbsp;Unlimited Server Access</td></tr>
-                    <tr><td><i class="fa fa-check"></i></td><td>&nbsp;Unlimited Servers</td></tr>
-                    <tr><td><i class="fa fa-check"></i></td><td>&nbsp;Unlimited Commands</td></tr>
-                    <tr><td><i class="fa fa-check"></i></td><td>&nbsp;Unlimited Community Access</td></tr>
+                    <tr><td><span class="glyphicon glyphicon-ok"></span></td><td>&nbsp;Database</td></tr>
+                    <tr><td><span><b>\$${info['dev_cost']}</b></span></td><td>&nbsp;Per Hour of Custom Code</td></tr>
+                    <tr><td><span class="glyphicon glyphicon-${info['plugins']}"></span></td><td>&nbsp;Free Plugins</td></tr>
+                    <tr><td><span class="glyphicon glyphicon-${info['vpn']}"></span></td><td>&nbsp;Business Class VPN</td></tr>
+                    <tr><td><span><b>${info['consult']}</b></span></td><td>&nbsp;In-Person Consultations Per Year*</td></tr>
                   </table>
                 </div>
                 <div class="panel-footer">
-                  <h3><strong>${info['price']}</strong><small>/month</small></h3>
-                  <button class="btn btn-lg">Sign Up</button>
+                  <h3><strong>\$${info['price']}</strong><small>/month</small></h3>
+                  <a href="#contact" class="btn btn-lg" data-toggle="collapse" data-target="#contact">Contact</a>
                 </div>
               </div>      
             </div>
@@ -683,37 +735,104 @@ HTML;
         }
         ?>    
   </div>
+  <div class="row">
+	<a href="javascript: void(0);" class="btn btn-lg black-deck-link pull-right" data-toggle="collapse" data-target="#black-deck"><span class="glyphicon glyphicon-menu-down"></span> | Black</a>
+	<div class="col-sm-3"></div>
+	<div class="col-sm-6 collapse black-deck" id="black-deck">
+      <div class="panel panel-default text-center panel-pricing">
+        <div class="panel-heading">
+          <h1>Black</h1>
+        </div>
+        <div class="panel-body">
+          <table class="list-group">
+            <tr><td><span class="glyphicon glyphicon-ok"></span></td><td>&nbsp;Database</td></tr>
+            <tr><td><span class="glyphicon glyphicon-ok"></span></td><td>&nbsp;$59 Per Hour of Custom Code</td></tr>
+            <tr><td><span class="glyphicon glyphicon-ok"></span></td><td>&nbsp;Free Plugins</td></tr>
+            <tr><td><span class="glyphicon glyphicon-ok"></span></td><td>&nbsp;Business Class <b>Global</b> VPN</td></tr>
+            <tr><td><span class="glyphicon glyphicon-ok"></span></td><td>&nbsp;<b>Unlimited</b> In-Person Consultations*</td></tr>
+            <tr><td><a href="https://www.prioritypass.com/en/airport-lounges" target="_blank"><span class="glyphicon glyphicon-ok"></span></a></td><td>&nbsp;<a href="https://www.prioritypass.com/en/airport-lounges" target="_blank"><b>Priority Pass</b> Lounge Network</a></td></tr>
+            <tr><td><span class="glyphicon glyphicon-ok"></span></td><td>&nbsp;Custom Point of Sale System</td></tr>
+            <tr><td><span class="glyphicon glyphicon-ok"></span></td><td>&nbsp;Direct Developer Access</td></tr>
+            <tr><td><span class="glyphicon glyphicon-ok"></span></td><td>&nbsp;24/7 Help Line</td></tr>
+            <tr><td><span class="glyphicon glyphicon-ok"></span></td><td>&nbsp;Custom Testing Server</td></tr>
+            <tr><td><span class="glyphicon glyphicon-ok"></span></td><td>&nbsp;Daily Backups</td></tr>
+            <tr><td><span class="glyphicon glyphicon-ok"></span></td><td>&nbsp;Separate SQL Server</td></tr>
+            <tr><td><span class="glyphicon glyphicon-ok"></span></td><td>&nbsp;Dedicated Analytics Server</td></tr>
+            <tr><td><span class="glyphicon glyphicon-ok"></span></td><td>&nbsp;Flexible Payment Options</td></tr>
+          </table>
+        </div>
+        <div class="panel-footer">
+          <h3><strong>$15,000</strong><small>/year</small></h3>
+          <p>You must be a member of the Premium tier before being considered for Black.</p>
+          <span class="btn btn-lg">Invite Only</span>
+        </div>
+      </div>      
+    </div>
+  </div>
+  <div class="row fine-print">
+    <p>
+        <small>Rates and values are subject to change. These values will not change before the end of the 24th month. All tiers include a $20 activation fee.</small>
+    </p>
+    <p>
+        <small>*An in-person consultation involves bringing an employee of Magentex to your business. Each consultation will add $1200 to your next invoice after being scheduled. A consultation must be scheduled at least 2 months in advance.</small>
+    </p>
+  </div>
 </div>
 
-<!-- Container (Contact Section) -
-<div id="contact" class="container-fluid bg-grey">
+<!-- Container (Contact Section) -->
+<div id="contact" class="container collapse">
   <h2 class="text-center">CONTACT</h2>
   <div class="row">
     <div class="col-sm-5">
       <p>Contact us and we'll get back to you within 24 hours.</p>
-      <p><span class="glyphicon glyphicon-map-marker"></span> Chicago, US</p>
-      <p><span class="glyphicon glyphicon-phone"></span> +00 1515151515</p>
-      <p><span class="glyphicon glyphicon-envelope"></span> myemail@something.com</p>
+      <p><span class="glyphicon glyphicon-map-marker"></span> San Francisco, US</p>
+      <p><span class="glyphicon glyphicon-phone"></span> +1 (510)435-3453</p>
+      <p><span class="glyphicon glyphicon-envelope"></span> brandondyer64@gmail.com</p>
     </div>
-    <div class="col-sm-7 slideanim">
-      <div class="row">
-        <div class="col-sm-6 form-group">
-          <input class="form-control" id="name" name="name" placeholder="Name" type="text" required>
+    <form method="post">
+        <div class="col-sm-7">
+          <div class="row">
+            <div class="col-sm-6 form-group">
+              <input class="form-control" id="name" name="name" placeholder="Name" type="text" required>
+            </div>
+            <div class="col-sm-6 form-group">
+              <input class="form-control" id="email" name="email" placeholder="Email" type="email" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <input class="form-control" id="description" name="description" placeholder="Type of Business" type="text" required>
+          </div>
+          <textarea class="form-control" id="comments" name="comments" placeholder="Comments" rows="5"></textarea><br>
+          <div class="row">
+            <div class="col-sm-12 form-group">
+              <input class="btn btn-default pull-right" type="submit" value="Send" name="submit_contact">
+            </div>
+          </div>
         </div>
-        <div class="col-sm-6 form-group">
-          <input class="form-control" id="email" name="email" placeholder="Email" type="email" required>
-        </div>
-      </div>
-      <textarea class="form-control" id="comments" name="comments" placeholder="Comment" rows="5"></textarea><br>
-      <div class="row">
-        <div class="col-sm-12 form-group">
-          <button class="btn btn-default pull-right" type="submit">Send</button>
-        </div>
-      </div>
-    </div>
+    </form>
+    <?php
+    if (isset($_POST['submit_contact'])) {
+        $text = <<<TXT
+===============================================================================
+name: ${_POST['name']}
+email: ${_POST['email']}
+description: ${_POST['description']}
+comments: ${_POST['comments']}
+
+
+
+TXT;
+        $headers = "MIME-Version: 1.0" . "\r\n";
+        $headers .= "Content-type: text/html; charset=iso-8859-1" . "\r\n";
+        $headers .= "From: contact@zerodatabase.com" . "\r\n" .
+        "Reply-To: contact@zerodatabase.com" . "\r\n" .
+        "X-Mailer: PHP/" . phpversion();
+        file_put_contents("contact/${_POST['email']}.txt", $text, FILE_APPEND);
+        mail ('brandondyer64@gmail.com', 'Zero Contact Request', str_replace("\n", "<br>", $text), $headers);
+    }
+    ?>
   </div>
 </div>
--->
 <!-- Add Google Maps -
 <div id="googleMap" style="height:400px;width:100%;"></div>
 <script>
@@ -737,6 +856,12 @@ Read more at: https://www.w3schools.com/graphics/google_maps_basic.asp
   </a>
   <p>Product of <a href="http://magentex.biz/" title="See our other products">Magentex</a></p>
 </footer>
+
+<script>
+$(document).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip();   
+});
+</script>
 
 <script>
 $(document).ready(function(){

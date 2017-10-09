@@ -11,13 +11,15 @@ if ($page == "login") {
             $_SESSION['user_groups'] = ['admin'];
             if (isset($_GET['p']) && $_GET['p'] == "login") {
                 header("Location: ?p=home");
+                exit;
             } else {
-                $login_fail = true;
+                header("Refresh: 0");
+                exit;
             }
         } else {
             $stmt = db_select('user', ['*'], ['username'=>$_POST['username'], 'password'=>md5($_POST['password'] . SALT . $_POST['username'])]);
             $_SESSION["logged_in"] = false;
-            while ($row = $stmt->fetch()) {
+            if ($row = $stmt->fetch()) {
                 $groups = get_multi_select_names('user_group', $row['user_groups']);
                 $_SESSION["logged_in"] = true;
                 $_SESSION['username'] = $row['username'];
@@ -25,9 +27,13 @@ if ($page == "login") {
                 $_SESSION['email'] = $row['email'];
                 $_SESSION['token'] = $row['password'];
                 $_SESSION['user_groups'] = $groups;
-            }
-            if (isset($_GET['p']) && $_GET['p'] == "login") {
-                header("Location: ?p=home");
+                if (isset($_GET['p']) && $_GET['p'] == "login") {
+                    header("Location: ?p=home");
+                    exit;
+                } else {
+                    header("Refresh: 0");
+                    exit;
+                }
             } else {
                 $login_fail = true;
             }

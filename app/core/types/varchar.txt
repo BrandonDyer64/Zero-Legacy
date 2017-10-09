@@ -19,6 +19,9 @@ $field_types[$field_type]['encode'] = function($schema, $value, $values) {
 
 $field_types[$field_type]['decode'] = function($schema, $value, $focus_link = '') {
    $value = htmlspecialchars($value);
+   if (trim($value) == '') {
+      return '';
+   }
    return <<<HTML
    <a href="$focus_link" class="text_dark">$value</a>
 HTML;
