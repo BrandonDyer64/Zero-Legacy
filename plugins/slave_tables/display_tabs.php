@@ -1,16 +1,20 @@
 <?php
 
 $stmt = db_select('slave_table',['*'],['master'=>$table]);
+
 while ($row = $stmt->fetch()) {
 	$t = $row['slave'];
 	$slave_field = $row['field'];
+	$table_field = $row['table_field'];
 	$t_header = "<th></th>";
     $t_list_html = "";
     $list_list_html = '';
     $t_footer = "";
-
-    $where = [$slave_field=>$id];
-
+    if ($table_field == null || $table_field == "") {
+        $where = [$slave_field=>$id];
+    } else {
+        $where = [$slave_field=>$id, $table_field=>$table];
+    }
     if (isset($_GET['cols'])) {
         $cols = json_decode($_GET['cols'], true);
     } else {
