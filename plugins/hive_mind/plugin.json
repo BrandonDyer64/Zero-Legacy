@@ -7,7 +7,15 @@
     "description": "",
     "files": {
         "page":[
-            "hive_mind.php"
+            "hive_mind.php",
+            "hive_mind_question.php",
+            "hive_mind_ask.php"
+        ],
+        "home": [
+            "home.php"
+        ],
+        "install": [
+            "install.php"
         ]
     },
     "home_links": [

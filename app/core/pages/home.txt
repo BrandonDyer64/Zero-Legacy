@@ -45,6 +45,9 @@ if ($page == "home") {
         <div class="col-sm-4">
             $home_plugins_html
         </div>
+        <div class="col-sm-4">
+            
+        </div>
     </div>
 
 HTML;
