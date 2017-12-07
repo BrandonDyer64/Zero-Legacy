@@ -30,7 +30,14 @@ function zero_update() {
 
 function zero_plugin_update($plugin_name) {
 	remove_directory("plugins/$plugin_name");
-	mkdir("plugins/$plugin_name");
+	// mkdir("plugins/$plugin_name");
+	$plugin_dirs = explode('/', $plugin_name);
+	$dir_full= 'plugins';
+	foreach ($plugin_dirs as $dir) {
+		$dir_full .= "/$dir";
+		mkdir($dir_full);
+		// chmod($dir_full, 777);
+	}
 	global $update_host;
 	$get_plugin_file = function($file_name) use ($plugin_name, $update_host) {
 		return file_get_contents("$update_host/plugins/$plugin_name/$file_name");

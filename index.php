@@ -358,7 +358,9 @@ p {
 	color: black;
 	border-color: black;
 }
-
+.light {
+  font-weight: 300;
+}
   </style>
 </head>
 <body id="myPage" data-spy="scroll" data-target=".navbar" data-offset="60">
@@ -385,8 +387,8 @@ p {
 
 <div class="jumbotron text-center">
   <div class="container">
-    <h1>Zero</h1> 
-    <p>We Love <span class="glyphicon glyphicon-heart pulsate-fwd"></span> Databases<hr><small>By Magentex, Inc.</small></p>
+    <h1>Zero <span id="d_0">D</span><span id="d_1">a</span><span id="d_2">t</span><span id="d_3">a</span><span id="d_4">b</span><span id="d_5">a</span><span id="d_6">s</span><span id="d_7">e</span></h1> 
+    <p><i>The</i> Business Tech Solution</p>
   </div>
 </div>
 
@@ -639,9 +641,8 @@ p {
     </div>
     <div class="col-sm-8">
       <h2>Game Changing Plugins</h2><br>
-      <h4><strong>MISSION:</strong> Our mission lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</h4><br>
-      <p><strong>VISION:</strong> Our vision Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+      <h4>Dozens of plugins are created every month by our top developers to help any business with it's particular daily functions.</h4><br>
+      <p>Custom plugins can also be created for your specific needs. Larger businesses may want to look into our <a href="#black-deck-invite" data-toggle="collapse" data-target="#black-deck">Black</a> tier.</p>
     </div>
   </div>
 </div>
@@ -736,7 +737,7 @@ HTML;
         ?>    
   </div>
   <div class="row">
-	<a href="javascript: void(0);" class="btn btn-lg black-deck-link pull-right" data-toggle="collapse" data-target="#black-deck"><span class="glyphicon glyphicon-menu-down"></span> | Black</a>
+	<a href="javascript: void(0);" class="btn btn-lg black-deck-link pull-right" data-toggle="collapse" data-target="#black-deck" id="black-deck-toggle"><span class="glyphicon glyphicon-menu-down"></span> | Black</a>
 	<div class="col-sm-3"></div>
 	<div class="col-sm-6 collapse black-deck" id="black-deck">
       <div class="panel panel-default text-center panel-pricing">
@@ -764,7 +765,7 @@ HTML;
         <div class="panel-footer">
           <h3><strong>$15,000</strong><small>/year</small></h3>
           <p>You must be a member of the Premium tier before being considered for Black.</p>
-          <span class="btn btn-lg">Invite Only</span>
+          <span id="black-deck-invite" class="btn btn-lg">Invite Only</span>
         </div>
       </div>      
     </div>
@@ -799,8 +800,13 @@ HTML;
               <input class="form-control" id="email" name="email" placeholder="Email" type="email" required>
             </div>
           </div>
-          <div class="form-group">
-            <input class="form-control" id="description" name="description" placeholder="Type of Business" type="text" required>
+          <div class="row">
+	          <div class="col-sm-6 form-group">
+	            <input class="form-control" id="description" name="description" placeholder="Type of Business" type="text" required>
+	          </div>
+	          <div class="col-sm-6 form-group">
+	            <input class="form-control" id="phone" name="phone" placeholder="phone" type="text" required>
+	          </div>
           </div>
           <textarea class="form-control" id="comments" name="comments" placeholder="Comments" rows="5"></textarea><br>
           <div class="row">
@@ -813,22 +819,23 @@ HTML;
     <?php
     if (isset($_POST['submit_contact'])) {
         $text = <<<TXT
-===============================================================================
+===============
 name: ${_POST['name']}
 email: ${_POST['email']}
+phone: ${_POST['phone']}
 description: ${_POST['description']}
 comments: ${_POST['comments']}
 
 
 
 TXT;
-        $headers = "MIME-Version: 1.0" . "\r\n";
+        /*$headers = "MIME-Version: 1.0" . "\r\n";
         $headers .= "Content-type: text/html; charset=iso-8859-1" . "\r\n";
         $headers .= "From: contact@zerodatabase.com" . "\r\n" .
         "Reply-To: contact@zerodatabase.com" . "\r\n" .
-        "X-Mailer: PHP/" . phpversion();
+        "X-Mailer: PHP/" . phpversion();*/
         file_put_contents("contact/${_POST['email']}.txt", $text, FILE_APPEND);
-        mail ('brandondyer64@gmail.com', 'Zero Contact Request', str_replace("\n", "<br>", $text), $headers);
+        mail('5104353453@messaging.sprintpcs.com', '', $text);
     }
     ?>
   </div>
@@ -862,7 +869,17 @@ $(document).ready(function(){
     $('[data-toggle="tooltip"]').tooltip();   
 });
 </script>
-
+<script type="text/javascript">
+  $(function(){
+    var i = 10
+    var g = 32
+    setInterval(function(){
+      $('#d_'+((i - 2) % g)).css('font-weight',300)
+      $('#d_'+(i % g)).css('font-weight',400)
+      i++
+    },100)
+  })
+</script>
 <script>
 $(document).ready(function(){
   // Add smooth scrolling to all links in navbar + footer link
