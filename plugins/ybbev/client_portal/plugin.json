@@ -1,0 +1,27 @@
+{
+    "name": "Client Portal",
+    "type": "YB Bev",
+    "version": "0",
+    "cost": 0,
+    "description_short": "",
+    "description": "",
+    "files": {
+        "page":[
+            "client_login.php",
+            "client_portal.php",
+            "client_portal_creator.php"
+        ],
+        "display_top": [
+            "display_link.php"
+        ],
+        "install": [
+            "install.php"
+        ]
+    },
+    "home_links": [
+        {
+            "name": "Client Portal",
+            "url": "?p=list&t=client_portal"
+        }
+    ]
+}

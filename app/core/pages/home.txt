@@ -1,54 +1,23 @@
 <?php
 
 if ($page == "home") {
-    // Render modules
-    $modules_html = "";
-    $modules = json_decode(file_get_contents("config/home_modules.json"), true);
-    if (is_array($plugin_home_links) && count($plugin_home_links) > 0) {
-        $modules[] = [
-            "name" => "Plugin Links",
-            "links" => $plugin_home_links
-        ];
-    }
-    foreach ($modules as $module) {
-        /*
-        <div class="panel panel-default">
-          <div class="panel-heading">Panel Heading</div>
-          <div class="panel-body">Panel Content</div>
-        </div>
-        */
-        $modules_html .= "<div class=\"panel panel-default\"><div class=\"panel-heading\">${module["name"]}</div>";
-        $modules_html .= "<div class=\"panel-body\"><ul>";
-        foreach ($module["links"] as $link) {
-            $modules_html .= "<li><a href=\"${link["url"]}\">${link["name"]}</a></li>";
-        }
-        $modules_html .= "</ul></div></div>";
-    }
     $content_b = $content;
     $content = '';
     if (isset($plugin_files['home'])) {
          foreach ($plugin_files['home'] as $file) {
             if (file_exists($file))
                 include_once($file);
+                if (trim($content) != '') {
+                  $cards[] = [
+                    'size' => 3,
+                    'html' => $content
+                  ];
+                  $content = '';
+                }
          }
     }
     $home_plugins_html = $content;
     $content = $content_b;
     unset($content_b);
-    $content .= <<<HTML
-    <div class="row">
-        <div class="col-sm-4">
-            <div>
-                $modules_html
-            </div>
-        </div>
-        <div class="col-sm-4">
-            $home_plugins_html
-        </div>
-        <div class="col-sm-4">
-            
-        </div>
-    </div>
 
-HTML;
 }

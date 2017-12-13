@@ -1,0 +1,41 @@
+﻿@{
+    ViewBag.Title = "EmailTemplate";
+}
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="page-title-box">
+            <ol class="breadcrumb pull-right">
+                <li><a href="#">Minton</a></li>
+                <li><a href="#">Extras</a></li>
+                <li class="active">Email Templates</li>
+            </ol>
+            <h4 class="page-title">Email Templates</h4>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card-box">
+            <div class="row">
+                <div class="col-md-4">
+                    <h4 class="m-t-0 m-b-20 header-title"><b>Basic action email</b></h4>
+                    <a href="@Url.Action("Action", "Pages")" target="_blank"> <img src="~/images/email/1.png" class="img-responsive" alt=""> </a>
+                </div>
+                <div class="col-md-4">
+                    <h4 class="m-t-0 m-b-20 header-title"><b>Email alert</b> </h4>
+                    <a href="@Url.Action("EmailAlert","Pages")" target="_blank"> <img src="~/images/email/2.png" class="img-responsive" alt=""> </a>
+                </div>
+                <div class="col-md-4">
+                    <h4 class="m-t-0 m-b-20 header-title"><b>Billing email</b></h4>
+                    <a href="@Url.Action("BillingEmail","Pages")" target="_blank"> <img src="~/images/email/3.png" class="img-responsive" alt=""> </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    @Scripts.Render("~/bundle/core-app")
+}

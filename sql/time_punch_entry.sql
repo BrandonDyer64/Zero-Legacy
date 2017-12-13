@@ -26,3 +26,18 @@ CREATE TABLE employee_payment (
    wage DECIMAL(10,4),
    PRIMARY KEY (id)
 ) COMMENT = '{"whitelist":["admin"]}';
+
+CREATE TABLE client (
+   id INT NOT NULL AUTO_INCREMENT,
+   name VARCHAR(32),
+   PRIMARY KEY (id)
+) COMMENT = '{"whitelist":["admin"]}';
+
+CREATE TABLE labor_invoice (
+   id INT NOT NULL AUTO_INCREMENT,
+   client INT NOT NULL COMMENT '{"type":"select","from":"client"}',
+   date_paid DATE,
+   amount DECIMAL(10,2),
+   mark_up DECIMAL(10,2),
+   PRIMARY KEY (id)
+) COMMENT = '{"whitelist":["admin"]}';

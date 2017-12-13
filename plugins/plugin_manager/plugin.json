@@ -16,11 +16,15 @@
     "home_links": [
         {
             "name": "Manage Plugins",
-            "url": "?p=plugins"
+            "url": "?p=plugins",
+            "groups": ["admin"],
+            "module": "administration"
         },
         {
             "name": "Plugin Catalog",
-            "url": "?p=plugin_catalog"
+            "url": "?p=plugin_catalog",
+            "groups": ["admin"],
+            "module": "administration"
         }
     ]
 }

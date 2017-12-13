@@ -1,6 +1,7 @@
 <?php
 
 $bleeding_edge_text = $config["updates"]["bleeding_edge"] ? "Bleeding Edge" : "";
+$theme = 'material-vertical';
 
 $js_html = '';
 foreach ($js_to_include as $file) {
@@ -35,6 +36,112 @@ HTML;
    }
 }
 
+// Render modules
+$modules_html = "";
+$modules = [];
+if (is_array($plugin_home_links) && count($plugin_home_links) > 0) {
+    foreach ($plugin_home_links as $link) {
+      if (isset($link['groups'])) {
+        if (!check_user_permission($link['groups'])) {
+          continue;
+        }
+      }
+      if (isset($link['module'])) {
+        $modules[$link['module']][] = $link;
+      } else {
+        $modules['misc'][] = $link;
+      }
+    }
+}
+$modules['misc'][] = ['name'=>'Zero Database','url'=>'http://zerodatabase.com'];
+if (check_user_permission(['admin'])) {
+  $modules['administration'][] = ['name'=>'Users','url'=>'?p=list&t=user'];
+  $modules['administration'][] = ['name'=>'Zero Version','url'=>'?p=version'];
+}
+$module_icons = [
+  'administration' => 'user',
+  'misc' => 'plus',
+  'inventory' => 'dropbox',
+  'sales' => 'money'
+];
+foreach ($modules as $module_name => $links) {
+    /*
+    <div class="panel panel-default">
+      <div class="panel-heading">Panel Heading</div>
+      <div class="panel-body">Panel Content</div>
+    </div>
+    */
+    $module_icon = "arrow-circle-right";
+    if (isset($module_icons[$module_name])) {
+      $module_icon = $module_icons[$module_name];
+    }
+    $module_name = table_pretty_print($module_name);
+    $modules_html .= <<<HTML
+    <li class="has_sub">
+        <a href="javascript:void(0);" class="waves-effect waves-primary"><i class="ti-$module_icon"></i> <span> $module_name </span>
+            <span class="menu-arrow"></span></a>
+        <ul class="list-unstyled">
+HTML;
+    foreach ($links as $link) {
+        $modules_html .= "<li><a href=\"${link["url"]}\">${link["name"]}</a></li>";
+    }
+    $modules_html .= "</ul></li>";
+}
+
+$modules_html = <<<HTML
+<div class="left side-menu">
+    <div class="sidebar-inner slimscrollleft">
+        <!--- Divider -->
+        <div id="sidebar-menu">
+            <ul>
+              <li>
+                  <a href="?p=home" class="waves-effect waves-primary">
+                    <i class="ti-dashboard"></i>
+                    <span> Dashboard </span>
+                  </a>
+              </li>
+              $modules_html
+            </ul>
+          </ul>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <div class="clearfix"></div>
+</div>
+HTML;
+
+if (trim($content) != '') {
+  $content = <<<HTML
+  <div class="col-md-12">
+    <div class="card-box">
+      $content
+    </div>
+  </div>
+HTML;
+}
+
+// Render Cards
+foreach ($cards as $card) {
+  $size = '12';
+  if (isset($card['size'])) {
+    $size = $card['size'];
+  }
+  $card_title = '';
+  if (isset($card['title'])) {
+    $card_title = "<h3>${card['title']}</h3>";
+  }
+  $content .= <<<HTML
+  <!-- CARD BEGIN -->
+  <div class="col-md-$size">
+    <div class="card-box">
+      $card_title
+      ${card['html']}
+    </div>
+  </div>
+  <!-- CARD END -->
+HTML;
+}
+
 // Render embed
 if (isset($_GET['embed'])) {
    echo <<<HTML
@@ -59,9 +166,411 @@ HTML;
    exit;
 }
 
+if (!isset($page_title)) {
+  $page_title = "Zero Database";
+}
+
 
 // Render page
 $html = <<<HTML
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <meta name="description" content="A fully featured admin theme which can be used to build CRM, CMS, etc.">
+        <meta name="author" content="Coderthemes">
+
+        <link rel="shortcut icon" href="http://zerodatabase.com/host/cdn/Minton/Admin/$theme/assets/images/favicon_1.ico">
+
+        <title>${config["name"]}</title>
+
+        <link href="http://zerodatabase.com/host/cdn/Minton/Admin/plugins/switchery/switchery.min.css" rel="stylesheet" />
+        <link href="http://zerodatabase.com/host/cdn/Minton/Admin/plugins/jquery-circliful/css/jquery.circliful.css" rel="stylesheet" type="text/css" />
+
+        <link href="http://zerodatabase.com/host/cdn/Minton/Admin/$theme/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+        <link href="http://zerodatabase.com/host/cdn/Minton/Admin/$theme/assets/css/icons.css" rel="stylesheet" type="text/css">
+        <link href="http://zerodatabase.com/host/cdn/Minton/Admin/$theme/assets/css/style.css" rel="stylesheet" type="text/css">
+
+        <script src="http://zerodatabase.com/host/cdn/Minton/Admin/$theme/assets/js/modernizr.min.js"></script>
+
+
+
+    </head>
+
+
+    <body class="fixed-left">
+
+        <!-- Begin page -->
+        <div id="wrapper">
+
+            <!-- Top Bar Start -->
+            <div class="topbar">
+
+                <!-- LOGO -->
+                <div class="topbar-left">
+                    <div class="text-center">
+                        <a href="?p=home" class="logo"><i class="mdi mdi-radar"></i> <span>${config["name"]}</span></a>
+                    </div>
+                </div>
+
+                <!-- Button mobile view to collapse sidebar menu -->
+                <nav class="navbar-custom">
+
+                    <ul class="list-inline float-right mb-0">
+
+                        <li class="list-inline-item notification-list hide-phone">
+                            <a class="nav-link waves-light waves-effect" href="#" id="btn-fullscreen">
+                                <i class="mdi mdi-crop-free noti-icon"></i>
+                            </a>
+                        </li>
+
+                        <li class="list-inline-item notification-list">
+                            <a class="nav-link right-bar-toggle waves-light waves-effect" href="#">
+                                <i class="mdi mdi-dots-horizontal noti-icon"></i>
+                            </a>
+                        </li>
+
+                        <li class="list-inline-item dropdown notification-list">
+                            <a class="nav-link dropdown-toggle arrow-none waves-light waves-effect" data-toggle="dropdown" href="#" role="button"
+                               aria-haspopup="false" aria-expanded="false">
+                                <i class="mdi mdi-bell noti-icon"></i>
+                                <span class="badge badge-pink noti-icon-badge">4</span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right dropdown-arrow dropdown-menu-lg" aria-labelledby="Preview">
+                                <!-- item-->
+                                <div class="dropdown-item noti-title">
+                                    <h5 class="font-16"><span class="badge badge-danger float-right">5</span>Notification</h5>
+                                </div>
+
+                                <!-- item-->
+                                <a href="javascript:void(0);" class="dropdown-item notify-item">
+                                    <div class="notify-icon bg-success"><i class="mdi mdi-comment-account"></i></div>
+                                    <p class="notify-details">Robert S. Taylor commented on Admin<small class="text-muted">1 min ago</small></p>
+                                </a>
+
+                                <!-- item-->
+                                <a href="javascript:void(0);" class="dropdown-item notify-item">
+                                    <div class="notify-icon bg-info"><i class="mdi mdi-account"></i></div>
+                                    <p class="notify-details">New user registered.<small class="text-muted">1 min ago</small></p>
+                                </a>
+
+                                <!-- item-->
+                                <a href="javascript:void(0);" class="dropdown-item notify-item">
+                                    <div class="notify-icon bg-danger"><i class="mdi mdi-airplane"></i></div>
+                                    <p class="notify-details">Carlos Crouch liked <b>Admin</b><small class="text-muted">1 min ago</small></p>
+                                </a>
+
+                                <!-- All-->
+                                <a href="javascript:void(0);" class="dropdown-item notify-item notify-all">
+                                    View All
+                                </a>
+
+                            </div>
+                        </li>
+
+                        <li class="list-inline-item dropdown notification-list">
+                            <a class="nav-link dropdown-toggle waves-effect waves-light nav-user" data-toggle="dropdown" href="#" role="button"
+                               aria-haspopup="false" aria-expanded="false">
+                                <!--<img src="http://zerodatabase.com/host/cdn/Minton/Admin/$theme/assets/images/users/avatar-1.jpg" alt="user" class="rounded-circle">-->
+                                 ${user['username']}
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right profile-dropdown " aria-labelledby="Preview">
+                                <!-- item-->
+                                <div class="dropdown-item noti-title">
+                                    <h5 class="text-overflow"><small>Welcome  ${user['username']}!</small> </h5>
+                                </div>
+
+                                <!-- item-->
+                                <a href="javascript:void(0);" class="dropdown-item notify-item">
+                                    <i class="mdi mdi-account-star-variant"></i> <span>Profile</span>
+                                </a>
+
+                                <!-- item-->
+                                <a href="javascript:void(0);" class="dropdown-item notify-item">
+                                    <i class="mdi mdi-settings"></i> <span>Settings</span>
+                                </a>
+
+                                <!-- item-->
+                                <a href="javascript:void(0);" class="dropdown-item notify-item">
+                                    <i class="mdi mdi-lock-open"></i> <span>Lock Screen</span>
+                                </a>
+
+                                <!-- item-->
+                                <a href="javascript:void(0);" class="dropdown-item notify-item">
+                                    <i class="mdi mdi-logout"></i> <span>Logout</span>
+                                </a>
+
+                            </div>
+                        </li>
+
+                    </ul>
+
+                    <ul class="list-inline menu-left mb-0">
+                        <li class="float-left">
+                            <button class="button-menu-mobile open-left waves-light waves-effect">
+                                <i class="mdi mdi-menu"></i>
+                            </button>
+                        </li>
+                        <li class="hide-phone app-search">
+                            <form role="search" class="">
+                                <input type="text" placeholder="Search..." class="form-control">
+                                <a href=""><i class="fa fa-search"></i></a>
+                            </form>
+                        </li>
+                    </ul>
+
+                </nav>
+
+            </div>
+            <!-- Top Bar End -->
+
+
+            <!-- ========== Left Sidebar Start ========== -->
+            $modules_html
+
+            <!-- Left Sidebar End -->
+
+
+
+
+            <!-- ============================================================== -->
+            <!-- Start right Content here -->
+            <!-- ============================================================== -->
+            <div class="content-page">
+                <!-- Start content -->
+                <div class="content">
+                    <div class="container-fluid">
+
+                        <!-- Page-Title -->
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="page-title-box">
+                                    <h4 class="page-title">$page_title</h4>
+                                    <ol class="breadcrumb float-right">
+                                        <li class="breadcrumb-item"><a href="#">Minton</a></li>
+                                        <li class="breadcrumb-item active">Dashboard</li>
+                                    </ol>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                          $content
+                        </div>
+
+                    </div>
+                    <!-- end container -->
+                </div>
+                <!-- end content -->
+
+                <footer class="footer">
+                    <!--2016 - 2017 © Minton <span class="hide-phone">- Coderthemes.com</span>-->
+                    2017 © Magentex<span class="hide-phone"> - Zero Database - ${zero_version} ${bleeding_edge_text}</span>
+                </footer>
+
+            </div>
+            <!-- ============================================================== -->
+            <!-- End Right content here -->
+            <!-- ============================================================== -->
+
+
+            <!-- Right Sidebar -->
+            <div class="side-bar right-bar">
+                <div class="">
+                    <ul class="nav nav-tabs tabs-bordered nav-justified">
+                        <li class="nav-item">
+                            <a href="#home-2" class="nav-link active" data-toggle="tab" aria-expanded="false">
+                                Activity
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#messages-2" class="nav-link" data-toggle="tab" aria-expanded="true">
+                                Settings
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="home-2">
+                            <div class="timeline-2">
+                                <div class="time-item">
+                                    <div class="item-info">
+                                        <small class="text-muted">5 minutes ago</small>
+                                        <p><strong><a href="#" class="text-info">John Doe</a></strong> Uploaded a photo <strong>"DSC000586.jpg"</strong></p>
+                                    </div>
+                                </div>
+
+                                <div class="time-item">
+                                    <div class="item-info">
+                                        <small class="text-muted">30 minutes ago</small>
+                                        <p><a href="" class="text-info">Lorem</a> commented your post.</p>
+                                        <p><em>"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam laoreet tellus ut tincidunt euismod. "</em></p>
+                                    </div>
+                                </div>
+
+                                <div class="time-item">
+                                    <div class="item-info">
+                                        <small class="text-muted">59 minutes ago</small>
+                                        <p><a href="" class="text-info">Jessi</a> attended a meeting with<a href="#" class="text-success">John Doe</a>.</p>
+                                        <p><em>"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam laoreet tellus ut tincidunt euismod. "</em></p>
+                                    </div>
+                                </div>
+
+                                <div class="time-item">
+                                    <div class="item-info">
+                                        <small class="text-muted">1 hour ago</small>
+                                        <p><strong><a href="#" class="text-info">John Doe</a></strong>Uploaded 2 new photos</p>
+                                    </div>
+                                </div>
+
+                                <div class="time-item">
+                                    <div class="item-info">
+                                        <small class="text-muted">3 hours ago</small>
+                                        <p><a href="" class="text-info">Lorem</a> commented your post.</p>
+                                        <p><em>"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam laoreet tellus ut tincidunt euismod. "</em></p>
+                                    </div>
+                                </div>
+
+                                <div class="time-item">
+                                    <div class="item-info">
+                                        <small class="text-muted">5 hours ago</small>
+                                        <p><a href="" class="text-info">Jessi</a> attended a meeting with<a href="#" class="text-success">John Doe</a>.</p>
+                                        <p><em>"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam laoreet tellus ut tincidunt euismod. "</em></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="tab-pane" id="messages-2">
+
+                            <div class="row m-t-20">
+                                <div class="col-8">
+                                    <h5 class="m-0 font-15">Notifications</h5>
+                                    <p class="text-muted m-b-0"><small>Do you need them?</small></p>
+                                </div>
+                                <div class="col-4 text-right">
+                                    <input type="checkbox" checked data-plugin="switchery" data-color="#3bafda" data-size="small"/>
+                                </div>
+                            </div>
+
+                            <div class="row m-t-20">
+                                <div class="col-8">
+                                    <h5 class="m-0 font-15">API Access</h5>
+                                    <p class="m-b-0 text-muted"><small>Enable/Disable access</small></p>
+                                </div>
+                                <div class="col-4 text-right">
+                                    <input type="checkbox" checked data-plugin="switchery" data-color="#3bafda" data-size="small"/>
+                                </div>
+                            </div>
+
+                            <div class="row m-t-20">
+                                <div class="col-8">
+                                    <h5 class="m-0 font-15">Auto Updates</h5>
+                                    <p class="m-b-0 text-muted"><small>Keep up to date</small></p>
+                                </div>
+                                <div class="col-4 text-right">
+                                    <input type="checkbox" checked data-plugin="switchery" data-color="#3bafda" data-size="small"/>
+                                </div>
+                            </div>
+
+                            <div class="row m-t-20">
+                                <div class="col-8">
+                                    <h5 class="m-0 font-15">Online Status</h5>
+                                    <p class="m-b-0 text-muted"><small>Show your status to all</small></p>
+                                </div>
+                                <div class="col-4 text-right">
+                                    <input type="checkbox" checked data-plugin="switchery" data-color="#3bafda" data-size="small"/>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /Right-bar -->
+
+        </div>
+        <!-- END wrapper -->
+
+
+
+        <script>
+            var resizefunc = [];
+        </script>
+
+        <!-- Plugins  -->
+        <script src="http://zerodatabase.com/host/cdn/Minton/Admin/$theme/assets/js/jquery.min.js"></script>
+        <script src="http://zerodatabase.com/host/cdn/Minton/Admin/$theme/assets/js/popper.min.js"></script><!-- Popper for Bootstrap -->
+        <script src="http://zerodatabase.com/host/cdn/Minton/Admin/$theme/assets/js/bootstrap.min.js"></script>
+        <script src="http://zerodatabase.com/host/cdn/Minton/Admin/$theme/assets/js/detect.js"></script>
+        <script src="http://zerodatabase.com/host/cdn/Minton/Admin/$theme/assets/js/fastclick.js"></script>
+        <script src="http://zerodatabase.com/host/cdn/Minton/Admin/$theme/assets/js/jquery.slimscroll.js"></script>
+        <script src="http://zerodatabase.com/host/cdn/Minton/Admin/$theme/assets/js/jquery.blockUI.js"></script>
+        <script src="http://zerodatabase.com/host/cdn/Minton/Admin/$theme/assets/js/waves.js"></script>
+        <script src="http://zerodatabase.com/host/cdn/Minton/Admin/$theme/assets/js/wow.min.js"></script>
+        <script src="http://zerodatabase.com/host/cdn/Minton/Admin/$theme/assets/js/jquery.nicescroll.js"></script>
+        <script src="http://zerodatabase.com/host/cdn/Minton/Admin/$theme/assets/js/jquery.scrollTo.min.js"></script>
+        <script src="http://zerodatabase.com/host/cdn/Minton/Admin/plugins/switchery/switchery.min.js"></script>
+
+        <!-- Counter Up  -->
+        <script src="http://zerodatabase.com/host/cdn/Minton/Admin/plugins/waypoints/lib/jquery.waypoints.min.js"></script>
+        <script src="http://zerodatabase.com/host/cdn/Minton/Admin/plugins/counterup/jquery.counterup.min.js"></script>
+
+        <!-- circliful Chart -->
+        <script src="http://zerodatabase.com/host/cdn/Minton/Admin/plugins/jquery-circliful/js/jquery.circliful.min.js"></script>
+        <script src="http://zerodatabase.com/host/cdn/Minton/Admin/plugins/jquery-sparkline/jquery.sparkline.min.js"></script>
+
+        <!-- skycons -->
+        <script src="http://zerodatabase.com/host/cdn/Minton/Admin/plugins/skyicons/skycons.min.js" type="text/javascript"></script>
+
+        <!-- Page js  -->
+        <script src="http://zerodatabase.com/host/cdn/Minton/Admin/$theme/assets/pages/jquery.dashboard.js"></script>
+
+        <!-- Custom main Js -->
+        <script src="http://zerodatabase.com/host/cdn/Minton/Admin/$theme/assets/js/jquery.core.js"></script>
+        <script src="http://zerodatabase.com/host/cdn/Minton/Admin/$theme/assets/js/jquery.app.js"></script>
+
+        <!-- FooTable -->
+        <script src="http://zerodatabase.com/host/cdn/Minton/Admin/plugins/footable/js/footable.all.min.js"></script>
+        <script src="http://zerodatabase.com/host/cdn/Minton/Admin/$theme/assets/pages/jquery.footable.js"></script>
+
+
+        <script type="text/javascript">
+            jQuery(document).ready(function($) {
+                $('.counter').counterUp({
+                    delay: 100,
+                    time: 1200
+                });
+                $('.circliful-chart').circliful();
+            });
+
+            // BEGIN SVG WEATHER ICON
+            if (typeof Skycons !== 'undefined'){
+                var icons = new Skycons(
+                        {"color": "#3bafda"},
+                        {"resizeClear": true}
+                        ),
+                        list  = [
+                            "clear-day", "clear-night", "partly-cloudy-day",
+                            "partly-cloudy-night", "cloudy", "rain", "sleet", "snow", "wind",
+                            "fog"
+                        ],
+                        i;
+
+                for(i = list.length; i--; )
+                    icons.set(list[i], list[i]);
+                icons.play();
+            };
+
+        </script>
+
+
+    </body>
+</html>
+HTML;
+
+/*$html = <<<HTML
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -71,19 +580,23 @@ $html = <<<HTML
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400" rel="stylesheet">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel='stylesheet' href='css/ace.css' type='text/css'>
   <link rel='stylesheet' href='css/zero.css' type='text/css'>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="js/ace.elements.min.js"></script>
+  <script src="js/ace.min.js"></script>
 </head>
 <body>
-<nav class="navbar navbar-inverse">
+<div class="navbar navbar-inverse">
   <div class="container-fluid">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
-        <span class="icon-bar"></span> 
+        <span class="icon-bar"></span>
       </button>
       <a class="navbar-brand" href="?p=home"><span class="glyphicon glyphicon-home"></span> &nbsp; ${config["name"]}</a>
     </div>
@@ -98,7 +611,10 @@ $html = <<<HTML
       </ul>
     </div>
   </div>
-</nav>
+</div>
+
+$modules_html
+
 <div class="container">
   $content
   <hr>
@@ -121,7 +637,7 @@ $html = <<<HTML
 $js_html
 </body>
 </html>
-HTML;
+HTML;*/
 
 /*$html = <<<HTML
 

@@ -37,6 +37,7 @@ $content = <<<PHP
 \$js_to_include = [];
 \$js_to_include_first = [];
 \$css_to_include = [];
+\$cards = [];
 
 PHP;
 
