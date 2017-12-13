@@ -10,7 +10,11 @@
             "time_punch.php"
         ],
         "page": [
-            "payroll.php"
+            "payroll.php",
+            "invoice.php"
+        ],
+        "display_top": [
+            "display_link.php"
         ],
         "config": [
             "config.json"
@@ -20,7 +24,14 @@
         {
             "name": "Payroll",
             "url": "?p=payroll",
-            "groups": ["admin"]
+            "groups": ["admin"],
+            "module": "administration"
+        },
+        {
+            "name": "Clients",
+            "url": "?p=list&t=client",
+            "groups": ["admin"],
+            "module": "administration"
         }
     ],
     "depend": [

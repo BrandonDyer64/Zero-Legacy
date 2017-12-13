@@ -32,9 +32,12 @@ function make_all_configs($example = false) {
    make_config("config/.htaccess", "deny from all", $example);
    // CSS
    make_config("css/wm.min.css", file_get_contents($defaults_host . "/defaults/wm.min.css"), $example, true);
+   make_config("css/ace.css", file_get_contents($defaults_host . "/defaults/ace.css"), $example, true);
    make_config("css/zero.css", file_get_contents($defaults_host . "/defaults/zero.css"), $example, true);
    // JS
    make_config("js/zero.js", file_get_contents($defaults_host . "/defaults/zero.js"), $example, true);
+   make_config("js/ace.elements.min.js", file_get_contents($defaults_host . "/defaults/ace.elements.min.js"), $example, true);
+   make_config("js/ace.min.js", file_get_contents($defaults_host . "/defaults/ace.min.js"), $example, true);
    // Image
    make_config("favicon.ico", file_get_contents($defaults_host . "/defaults/favicon.ico"), $example);
    make_config("zero_logo.png", file_get_contents($defaults_host . "/defaults/zero_logo_1.png"), $example);

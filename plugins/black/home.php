@@ -6,7 +6,6 @@ if (check_user_permission(['admin'])) {
 	$help_name = $help_line['name'];
 	$help_number = $help_line['number'];
 	$content .= <<<HTML
-	<h3>&nbsp;</h3>
 	<div class="panel panel-black">
 		<div class="panel-heading">Zero Black</div>
 		<div class="panel-body">

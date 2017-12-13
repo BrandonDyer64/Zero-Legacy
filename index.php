@@ -31,9 +31,9 @@
       color: #303030;
       font-weight: 400;
       margin-bottom: 30px;
-  }  
+  }
   .jumbotron {
-      background-color: #0055ff;
+      background-color: #222;
       color: #fff;
       padding: 100px 25px;
   }
@@ -47,11 +47,11 @@
       background-color: #f0f0f0;
   }
   .logo-small {
-      color: #0055ff;
+      color: #222;
       font-size: 50px;
   }
   .logo {
-      color: #0055ff;
+      color: #222;
       font-size: 200px;
   }
   .thumbnail {
@@ -66,13 +66,13 @@
   }
   .carousel-control.right, .carousel-control.left {
       background-image: none;
-      color: #0055ff;
+      color: #222;
   }
   .carousel-indicators li {
-      border-color: #0055ff;
+      border-color: #222;
   }
   .carousel-indicators li.active {
-      background-color: #0055ff;
+      background-color: #222;
   }
   .item h4 {
       font-size: 19px;
@@ -85,7 +85,7 @@
       font-style: normal;
   }
   .panel {
-      border: 1px solid #0055ff; 
+      border: 1px solid #222;
       border-radius:0 !important;
       transition: box-shadow 0.5s;
   }
@@ -93,13 +93,13 @@
       box-shadow: 5px 0px 40px rgba(0,0,0, .2);
   }
   .panel-footer .btn:hover {
-      border: 1px solid #0055ff;
+      border: 1px solid #222;
       background-color: #fff !important;
-      color: #0055ff;
+      color: #222;
   }
   .panel-heading {
       color: #fff !important;
-      background-color: #0055ff !important;
+      background-color: #222 !important;
       padding: 25px;
       border-bottom: 1px solid transparent;
       border-top-left-radius: 0px;
@@ -119,12 +119,12 @@
   }
   .panel-footer .btn {
       margin: 15px 0;
-      background-color: #0055ff;
+      background-color: #222;
       color: #fff;
   }
   .navbar {
       margin-bottom: 0;
-      background-color: #0055ff;
+      background-color: #222;
       z-index: 9999;
       border: 0;
       font-size: 12px !important;
@@ -133,10 +133,13 @@
       border-radius: 0;
   }
   .navbar li a, .navbar .navbar-brand {
-      color: #fff !important;
+      /*color: #fff !important;*/
+      background: linear-gradient(to right, #5588ff , #fff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
   }
   .navbar-nav li a:hover, .navbar-nav li.active a {
-      /*color: #0055ff !important;*/
+      /*color: #222 !important;*/
       background-color: #6688ff !important;
   }
   .navbar-default .navbar-toggle {
@@ -150,7 +153,7 @@
   footer .glyphicon {
       font-size: 20px;
       margin-bottom: 20px;
-      color: #0055ff;
+      color: #222;
   }
   .slideanim {visibility:hidden;}
   .slide {
@@ -170,7 +173,7 @@
     0% {
       opacity: 0;
       transform: translateY(70%);
-    } 
+    }
     100% {
       opacity: 1;
       transform: translateY(0%);
@@ -180,7 +183,7 @@
     0% {
       opacity: 0;
       -webkit-transform: translateY(70%);
-    } 
+    }
     100% {
       opacity: 1;
       -webkit-transform: translateY(0%);
@@ -361,7 +364,12 @@ p {
 .light {
   font-weight: 300;
 }
-  </style>
+.top_of_the_page {
+  background: linear-gradient(to right, #5588ff , #fff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+</style>
 </head>
 <body id="myPage" data-spy="scroll" data-target=".navbar" data-offset="60">
 
@@ -371,7 +379,7 @@ p {
       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
-        <span class="icon-bar"></span>                        
+        <span class="icon-bar"></span>
       </button>
       <a class="navbar-brand" href="#myPage">ZERO</a>
     </div>
@@ -387,7 +395,7 @@ p {
 
 <div class="jumbotron text-center">
   <div class="container">
-    <h1>Zero <span id="d_0">D</span><span id="d_1">a</span><span id="d_2">t</span><span id="d_3">a</span><span id="d_4">b</span><span id="d_5">a</span><span id="d_6">s</span><span id="d_7">e</span></h1> 
+    <h1 class="top_of_the_page">Zero <span id="d_0">D</span><span id="d_1">a</span><span id="d_2">t</span><span id="d_3">a</span><span id="d_4">b</span><span id="d_5">a</span><span id="d_6">s</span><span id="d_7">e</span></h1>
     <p><i>The</i> Business Tech Solution</p>
   </div>
 </div>
@@ -456,7 +464,7 @@ p {
          <h3>Add: <b>Bill Of Lading</b></h3>
          <p><a href="?p=list&amp;t=bill_of_lading" data-toggle="tooltip" data-placement="right" title="List Bill of Ladings"><span class="glyphicon glyphicon-th-list"></span></a></p>
          <form method="post" class="form-horizontal">
-            
+
             <div class="form-group">
               <label class="control-label col-sm-2">Date Recorded:</label>
               <div class="col-sm-10">
@@ -688,23 +696,23 @@ p {
           [
             "title"=>"Basic",
             "price"=>"49",
-            "dev_cost"=>"99",
+            "dev_cost"=>"0",
             "plugins"=>"remove",
             "vpn"=>"remove",
             "consult"=>"0",
           ],
           [
             "title"=>"Standard",
-            "price"=>"249",
-            "dev_cost"=>"79",
+            "price"=>"99",
+            "dev_cost"=>"10",
             "plugins"=>"ok",
             "vpn"=>"remove",
             "consult"=>"1",
           ],
           [
             "title"=>"Premium",
-            "price"=>"499",
-            "dev_cost"=>"59",
+            "price"=>"199",
+            "dev_cost"=>"20",
             "plugins"=>"ok",
             "vpn"=>"ok",
             "consult"=>"3",
@@ -720,7 +728,7 @@ p {
                 <div class="panel-body">
                   <table class="list-group">
                     <tr><td><span class="glyphicon glyphicon-ok"></span></td><td>&nbsp;Database</td></tr>
-                    <tr><td><span><b>\$${info['dev_cost']}</b></span></td><td>&nbsp;Per Hour of Custom Code</td></tr>
+                    <tr><td><span><b>${info['dev_cost']}%</b></span></td><td>&nbsp;Off Custom Programming Cost</td></tr>
                     <tr><td><span class="glyphicon glyphicon-${info['plugins']}"></span></td><td>&nbsp;Free Plugins</td></tr>
                     <tr><td><span class="glyphicon glyphicon-${info['vpn']}"></span></td><td>&nbsp;Business Class VPN</td></tr>
                     <tr><td><span><b>${info['consult']}</b></span></td><td>&nbsp;In-Person Consultations Per Year*</td></tr>
@@ -730,11 +738,11 @@ p {
                   <h3><strong>\$${info['price']}</strong><small>/month</small></h3>
                   <a href="#contact" class="btn btn-lg" data-toggle="collapse" data-target="#contact">Contact</a>
                 </div>
-              </div>      
+              </div>
             </div>
 HTML;
         }
-        ?>    
+        ?>
   </div>
   <div class="row">
 	<a href="javascript: void(0);" class="btn btn-lg black-deck-link pull-right" data-toggle="collapse" data-target="#black-deck" id="black-deck-toggle"><span class="glyphicon glyphicon-menu-down"></span> | Black</a>
@@ -763,11 +771,11 @@ HTML;
           </table>
         </div>
         <div class="panel-footer">
-          <h3><strong>$15,000</strong><small>/year</small></h3>
+          <h3><strong>$12,000</strong><small>/year</small></h3>
           <p>You must be a member of the Premium tier before being considered for Black.</p>
           <span id="black-deck-invite" class="btn btn-lg">Invite Only</span>
         </div>
-      </div>      
+      </div>
     </div>
   </div>
   <div class="row fine-print">
@@ -866,7 +874,7 @@ Read more at: https://www.w3schools.com/graphics/google_maps_basic.asp
 
 <script>
 $(document).ready(function(){
-    $('[data-toggle="tooltip"]').tooltip();   
+    $('[data-toggle="tooltip"]').tooltip();
 });
 </script>
 <script type="text/javascript">
@@ -875,7 +883,7 @@ $(document).ready(function(){
     var g = 32
     setInterval(function(){
       $('#d_'+((i - 2) % g)).css('font-weight',300)
-      $('#d_'+(i % g)).css('font-weight',400)
+      //$('#d_'+(i % g)).css('font-weight',400)
       i++
     },100)
   })
@@ -897,13 +905,13 @@ $(document).ready(function(){
       $('html, body').animate({
         scrollTop: $(hash).offset().top
       }, 900, function(){
-   
+
         // Add hash (#) to URL when done scrolling (default click behavior)
         window.location.hash = hash;
       });
     } // End if
   });
-  
+
   $(window).scroll(function() {
     $(".slideanim").each(function(){
       var pos = $(this).offset().top;
