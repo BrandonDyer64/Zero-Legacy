@@ -3,6 +3,7 @@
 	"table_catalog",
 	"slave_tables",
 	"time_punch",
+	"pipeline",
 	"qr_codes",
 	"bill_of_lading",
 	"youtube",
