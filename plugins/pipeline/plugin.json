@@ -1,0 +1,28 @@
+{
+  "name": "Pipeline",
+  "type": "Page",
+  "version": "1.0.0",
+  "cost": 0,
+  "custom": true,
+  "description_short": "Pipelining system",
+  "description": "",
+  "files": {
+    "home": ["home.php"],
+    "page": ["pipe_next.php", "pipe_overview.php", "pipe_teams.php"]
+  },
+  "dependencies": ["document", "slave_tables"],
+  "home_links": [
+    {
+      "name": "Projects",
+      "url": "?p=pipe_overview",
+      "groups": ["admin", "employee"],
+      "module": "pipeline"
+    },
+    {
+      "name": "Teams",
+      "url": "?p=pipe_teams",
+      "groups": ["admin", "employee"],
+      "module": "pipeline"
+    }
+  ]
+}
