@@ -1,0 +1,45 @@
+<?php
+
+$field_type = "markdown";
+
+$field_types[$field_type]['edit'] = function ($name, $schema, $value = null, $focus = false) {
+    global $pdo;
+    $focus = $focus ? 'autofocus' : '';
+    $value = htmlspecialchars($value);
+    $content = <<<HTML
+   <textarea name="$name" value="$value" placeholder="$name" class="form-control" cols="52" rows="4" style="font-family: monospace; min-height: 200px;" $focus>$value</textarea>
+   <p>Simple Markdown supported.</p>
+HTML;
+    return $content;
+};
+
+$field_types[$field_type]['encode'] = function ($schema, $value, $values) {
+    return $value;
+};
+
+$field_types[$field_type]['decode'] = function ($schema, $value, $focus_link = '') {
+    $value = htmlspecialchars($value);
+    $value = preg_replace("/#(.*?)\n/", "<h3>$1</h3>", $value);
+    $value = preg_replace("/##(.*?)\n/", "<h4>$1</h4>", $value);
+    $value = preg_replace("/###(.*?)\n/", "<h5>$1</h5>", $value);
+    $value = preg_replace("/####(.*?)\n/", "<h6>$1</h6>", $value);
+    $value = preg_replace("/\*\*(.*?)\*\*/", "<b>$1</b>", $value);
+    $value = preg_replace("/_(.*?)_/", "<i>$1</i>", $value);
+    $value = preg_replace("/\<http(.*?)\>/", "<a href='http$1'>http$1</a>", $value);
+    $value = str_replace("\n", '<br>', $value);
+    return <<<HTML
+      $value
+HTML;
+};
+
+$field_types[$field_type]['decode_list'] = function ($schema, $value) {
+    if ($value == '' || $value == null) {
+        return '';
+    }
+    $value = explode("\n", $value);
+    return htmlspecialchars("${value[0]}...");
+};
+
+$field_types[$field_type]['decode_raw'] = function ($schema, $value, $focus_link = '') {
+    return $value;
+};

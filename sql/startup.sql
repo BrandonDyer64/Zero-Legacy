@@ -5,8 +5,7 @@ CREATE TABLE user (
    email VARCHAR(255) NOT NULL,
    user_groups TEXT COMMENT '{"type":"multi_select","from":"user_group"}',
    PRIMARY KEY (id),
-   UNIQUE INDEX (username),
-   UNIQUE INDEX (email)
+   UNIQUE INDEX (username)
 ) COMMENT = '{"whitelist":["admin","user_manager"],"display":{"whitelist":["user_viewer"]},"add":{"whitelist":"all"}}';
 
 CREATE TABLE user_group (
@@ -35,7 +34,7 @@ CREATE TABLE nav_tab (
   name varchar(52) NOT NULL,
   user_groups TEXT COMMENT '{"type":"multi_select","from":"user_group"}',
   url varchar(255) NOT NULL,
-  sort_order INT NOT NULL,
+  sort_order INT,
   PRIMARY KEY (id)
 )COMMENT = '{"whitelist":["admin","user_manager"],"display":{"whitelist":["user_viewer"]},"add":{"whitelist":[]]}}';
 

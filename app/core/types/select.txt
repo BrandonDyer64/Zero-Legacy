@@ -2,66 +2,67 @@
 
 $field_type = "select";
 
-$field_types[$field_type]['edit'] = function($name, $schema, $value = null, $focus = false, $where = ['1'=>'1']) {
-   global $user;
-   $from = $schema;
-   if (is_array($schema))
-      $from = $schema['data']['from'];
-   if ($value == null || $value == '') {
-      if ($from == 'user') {
-         $value = $user['id'];
-      } else {
-         $value = 0;
-      }
-   }
-   $options = '';
-   $rows = maj_get_all_names($from, $where);
-   foreach ($rows as $row) {
-      $selected = '';
-      if ($row['id'] == $value) {
-         $selected = 'selected';
-      }
-      $option_name = $row['name'];
-      $options .= "<option value='${row['id']}' $selected>$option_name</option>";
-   }
-   $content = <<<HTML
+$field_types[$field_type]['edit'] = function ($name, $schema, $value = null, $focus = false, $where = ['1'=>'1']) {
+    global $user;
+    $from = $schema;
+    if (is_array($schema)) {
+        $from = $schema['data']['from'];
+    }
+    if ($value == null || $value == '') {
+        if ($from == 'user') {
+            $value = $user['id'];
+        } else {
+            $value = 0;
+        }
+    }
+    $options = '';
+    $rows = maj_get_all_names($from, $where);
+    foreach ($rows as $row) {
+        $selected = '';
+        if ($row['id'] == $value) {
+            $selected = 'selected';
+        }
+        $option_name = $row['name'];
+        $options .= "<option value='${row['id']}' $selected>$option_name</option>";
+    }
+    $content = <<<HTML
    <div class="input-group">
       <select name="$name" value="$value" class="form-control">
          <option value="0">Select...</option>
          $options
       </select>
       <div class="input-group-btn">
-        <a href="?p=list&t=$from" class="btn btn-default"><span class="glyphicon glyphicon-th-list"></span></a>
-        <a href="?p=add&t=$from" class="btn btn-default"><span class="glyphicon glyphicon-plus"></span></a>
+        <a href="?p=list&t=$from" class="btn btn-primary"><span class="ti-view-list"></span></a>
+        <a href="?p=add&t=$from" class="btn btn-primary"><span class="ti-plus"></span></a>
       </div>
    </div>
 HTML;
-   return $content;
+    return $content;
 };
 
-$field_types[$field_type]['encode'] = function($schema, $value, $values) {
-   if ($value <= 0) {
-      return null;
-   }
-   return $value;
+$field_types[$field_type]['encode'] = function ($schema, $value, $values) {
+    if ($value <= 0) {
+        return null;
+    }
+    return $value;
 };
 
-$field_types[$field_type]['decode'] = function($schema, $value) {
-   if ($value == 0 || $value == null) {
-      return "None";
-   }
-   $from = $schema['data']['from'];
-   $name = maj_get_name($from, $value);
-   return "<a href='?p=display&t=$from&id=$value'>$name</a>";
+$field_types[$field_type]['decode'] = function ($schema, $value) {
+    if ($value == 0 || $value == null) {
+        return "None";
+    }
+    $from = $schema['data']['from'];
+    $name = maj_get_name($from, $value);
+    return "<a href='?p=display&t=$from&id=$value'>$name</a>";
 };
 
-$field_types[$field_type]['decode_raw'] = function($schema, $value) {
-   if ($value == 0 || $value == null) {
-      return "None";
-   }
-   $from = $schema['data']['from'];
-   $name = maj_get_name($from, $value);
-   return $name;
+$field_types[$field_type]['decode_raw'] = function ($schema, $value) {
+    if ($value == 0 || $value == null) {
+        return "None";
+    }
+    $from = $schema['data']['from'];
+    $name = maj_get_name($from, $value);
+    return $name;
 };
 
 /*

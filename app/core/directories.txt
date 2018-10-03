@@ -1,6 +1,7 @@
 <?php
 
 // Create all of the needed directories
+if (!$is_zero_included) {
 $required_directories = [
       "examples",
       "examples/config",
@@ -20,4 +21,5 @@ foreach ($required_directories as $directory) {
       mkdir("examples/$directory");
       chmod("examples/$directory", 0777);
    }
+}
 }

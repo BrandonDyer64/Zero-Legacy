@@ -9,39 +9,41 @@ $user = [
 ];
 
 if (isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] === true) {
-   $is_logged_in = true;
-   $user = [
+    $is_logged_in = true;
+    $user = [
       'username' => $_SESSION['username'],
       'token' => $_SESSION['token'],
       'email' => $_SESSION['email'],
       'id' => $_SESSION['user_id'],
       'groups' => $_SESSION['user_groups']
    ];
+} elseif (!is_zero_included) {
+    $is_logged_in = true;
 } else {
-   $token = false;
-   if (isset($_REQUEST['token'])) {
-      $token = $_REQUEST['token'];
-   } else if (isset($_REQUEST['-token'])) {
-      $token = $_REQUEST['-token'];
-   }
-   if ($token) {
-      $stmt = db_select('user',['*'],['password'=>$token]);
-      while ($row = $stmt->fetch()) {
-         $is_logged_in = true;
-         $groups = get_multi_select_names('user_group', $row['user_groups']);
-         $user = [
+    $token = false;
+    if (isset($_REQUEST['token'])) {
+        $token = $_REQUEST['token'];
+    } elseif (isset($_REQUEST['-token'])) {
+        $token = $_REQUEST['-token'];
+    }
+    if ($token) {
+        $stmt = db_select('user', ['*'], ['password'=>$token]);
+        while ($row = $stmt->fetch()) {
+            $is_logged_in = true;
+            $groups = get_multi_select_names('user_group', $row['user_groups']);
+            $user = [
             'username' => $row['username'],
             'token' => $token,
             'email' => $row['email'],
             'id' => $row['id'],
             'groups' => $groups
          ];
-      }
-   }
+        }
+    }
 }
 
 if ($is_logged_in) {
-   $logged_message = "Logged in as <b>${user['username']}</b> (<a href='?p=logout'>Log out</a>)";
+    $logged_message = "Logged in as <b>${user['username']}</b> (<a href='?p=logout'>Log out</a>)";
 } else {
-   $logged_message = "Please log in.";
+    $logged_message = "Please log in.";
 }

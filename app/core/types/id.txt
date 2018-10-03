@@ -22,3 +22,7 @@ $field_types[$field_type]['decode'] = function($schema, $value, $focus_link = ''
    <span class="text_dark" id="feild_id" onclick="copyElemToClipboard('#feild_id')">$value</span>
 HTML;
 };
+
+$field_types[$field_type]['decode_list'] = function($schema, $value) {
+   return $value;
+};

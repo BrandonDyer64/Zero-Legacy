@@ -39,24 +39,37 @@ $content = <<<PHP
 \$css_to_include = [];
 \$cards = [];
 
+if (isset(\$_GET['debug'])) {
+  ini_set('display_errors', 1);
+  ini_set('display_startup_errors', 1);
+  error_reporting(E_ALL);
+}
+
+if (count(get_included_files()) == 1) {
+  \$is_zero_included = false;
+} else {
+  \$is_zero_included = true;
+}
+
 PHP;
 
 // Function for loading files into the code
-function load($file) {
-   global $content;
-   if (file_exists("core/" . $file . ".txt")) {
-      $text = file_get_contents("core/" . $file . ".txt");
-      $text = preg_replace('/^\\<\\?php/', '', $text);
-      $text = trim($text, "\r\n");
-      $content .= <<<PHP
+function load($file)
+{
+    global $content;
+    if (file_exists("core/" . $file . ".txt")) {
+        $text = file_get_contents("core/" . $file . ".txt");
+        $text = preg_replace('/^\\<\\?php/', '', $text);
+        $text = trim($text, "\r\n");
+        $content .= <<<PHP
       if (isset(\$_GET['debug'])) {
          echo "$file<br>\\n";
       }
 PHP;
-      $content .= "\n// % $file\n" . $text . "\n";
-   } else {
-      $content .= "\n// Couln't find dependency: $file\n";
-   }
+        $content .= "\n// % $file\n" . $text . "\n";
+    } else {
+        $content .= "\n// Couln't find dependency: $file\n";
+    }
 }
 
 
@@ -85,6 +98,11 @@ load("quick_links");
 // Defines the various field types
 require("types.php");
 load("plugins_type");
+
+$content .= <<<PHP
+if (\$is_zero_included) return;
+PHP;
+
 // The various pages
 require("pages.php");
 load("plugins_page");

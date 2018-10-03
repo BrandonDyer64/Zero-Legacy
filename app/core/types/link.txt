@@ -1,0 +1,41 @@
+<?php
+
+$field_type = "link";
+
+
+$field_types[$field_type]['edit'] = function ($name, $schema, $value = null, $focus = false) {
+    global $pdo;
+    $focus = $focus ? 'autofocus' : '';
+    $value = htmlspecialchars($value);
+    $content = <<<HTML
+   <input type="text" name="$name" value="$value" placeholder="https:// $name" class="form-control" $focus>
+HTML;
+    return $content;
+};
+
+$field_types[$field_type]['encode'] = function ($schema, $value, $values) {
+    return $value;
+};
+
+$field_types[$field_type]['decode'] = function ($schema, $value, $focus_link = '') {
+    $value = htmlspecialchars($value);
+    if (trim($value) == '') {
+        return '';
+    }
+    return <<<HTML
+   <a href="$value" class="text_dark">$value</a>
+HTML;
+};
+
+$field_types[$field_type]['decode_list'] = function ($schema, $value) {
+    if (!$value) {
+        return '<span style="color: #ccc"><i class="ti-link"></i></span>';
+    }
+    return <<<HTML
+   <a href="$value" class="text_dark"><i class="ti-link"></i></a>
+HTML;
+};
+
+$field_types[$field_type]['decode_raw'] = function ($schema, $value, $focus_link = '') {
+    return $value;
+};

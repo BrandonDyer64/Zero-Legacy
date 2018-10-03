@@ -7,7 +7,7 @@ CREATE TABLE time_punch_entry (
    employee_payment INT COMMENT '{"type":"select","from":"employee_payment"}',
    invoiced BOOLEAN DEFAULT 0,
    PRIMARY KEY (id)
-) COMMENT = '{"whitelist":["admin"],"display":{"whitelist":["user_viewer","employee"]},"add":{"whitelist":["employee"]]}}';
+) COMMENT = '{"whitelist":["admin"],"display":{"whitelist":["user_viewer","employee"]},"add":{"whitelist":["employee"]}}';
 
 CREATE TABLE user_payroll_info (
    id INT NOT NULL AUTO_INCREMENT,

@@ -2,70 +2,74 @@
 
 session_start();
 
-$config_file_name = "config/config.json";
-
-function make_config($file, $text, $example, $force = false) {
-   $example_text_post = $example ? ".example.txt" : "";
-   $example_text_pre = $example ? "examples/" : "";
-   file_put_contents($example_text_pre . $file . $example_text_post, $text);
-   chmod($example_text_pre . $file . $example_text_post, 0777);
-   if (!file_exists($file) || $force) {
-      file_put_contents($file, $text);
-      chmod($file, 0777);
-   }
+if (!isset($config_file_name)) {
+    $config_file_name = "config/config.json";
 }
 
-function make_all_configs($example = false) {
-   global $config_file_name;
-   global $defaults_host;
-   if ($defaults_host == '') {
-      $defaults_host = $update_host_default;
-   }
-   // Config
-   make_config($config_file_name, file_get_contents($defaults_host . "/defaults/config.json"), $example);
-   make_config("config/nav_tabs.json", file_get_contents($defaults_host . "/defaults/nav_tabs.json"), $example);
-   make_config("config/standard_field_names.json", file_get_contents($defaults_host . "/defaults/standard_field_names.json"), $example);
-   make_config("config/home_modules.json", file_get_contents($defaults_host . "/defaults/home_modules.json"), $example);
-   make_config("config/quick_links.json", file_get_contents($defaults_host . "/defaults/quick_links.json"), $example);
-   make_config("config/plugins.json", file_get_contents($defaults_host . "/defaults/plugins.json"), $example);
-   // HTAccess
-   make_config("config/.htaccess", "deny from all", $example);
-   // CSS
-   make_config("css/wm.min.css", file_get_contents($defaults_host . "/defaults/wm.min.css"), $example, true);
-   make_config("css/ace.css", file_get_contents($defaults_host . "/defaults/ace.css"), $example, true);
-   make_config("css/zero.css", file_get_contents($defaults_host . "/defaults/zero.css"), $example, true);
-   // JS
-   make_config("js/zero.js", file_get_contents($defaults_host . "/defaults/zero.js"), $example, true);
-   make_config("js/ace.elements.min.js", file_get_contents($defaults_host . "/defaults/ace.elements.min.js"), $example, true);
-   make_config("js/ace.min.js", file_get_contents($defaults_host . "/defaults/ace.min.js"), $example, true);
-   // Image
-   make_config("favicon.ico", file_get_contents($defaults_host . "/defaults/favicon.ico"), $example);
-   make_config("zero_logo.png", file_get_contents($defaults_host . "/defaults/zero_logo_1.png"), $example);
+function make_config($file, $text, $example, $force = false)
+{
+    $example_text_post = $example ? ".example.txt" : "";
+    $example_text_pre = $example ? "examples/" : "";
+    file_put_contents($example_text_pre . $file . $example_text_post, $text);
+    chmod($example_text_pre . $file . $example_text_post, 0777);
+    if (!file_exists($file) || $force) {
+        file_put_contents($file, $text);
+        chmod($file, 0777);
+    }
+}
+
+function make_all_configs($example = false)
+{
+    global $config_file_name;
+    global $defaults_host;
+    if ($defaults_host == '') {
+        $defaults_host = $update_host_default;
+    }
+    // Config
+    make_config($config_file_name, file_get_contents($defaults_host . "/defaults/config.json"), $example);
+    make_config("config/nav_tabs.json", file_get_contents($defaults_host . "/defaults/nav_tabs.json"), $example);
+    make_config("config/standard_field_names.json", file_get_contents($defaults_host . "/defaults/standard_field_names.json"), $example);
+    make_config("config/home_modules.json", file_get_contents($defaults_host . "/defaults/home_modules.json"), $example);
+    make_config("config/quick_links.json", file_get_contents($defaults_host . "/defaults/quick_links.json"), $example);
+    make_config("config/plugins.json", file_get_contents($defaults_host . "/defaults/plugins.json"), $example);
+    // HTAccess
+    make_config("config/.htaccess", "deny from all", $example);
+    // CSS
+    make_config("css/wm.min.css", file_get_contents($defaults_host . "/defaults/wm.min.css"), $example, true);
+    make_config("css/ace.css", file_get_contents($defaults_host . "/defaults/ace.css"), $example, true);
+    make_config("css/zero.css", file_get_contents($defaults_host . "/defaults/zero.css"), $example, true);
+    // JS
+    make_config("js/zero.js", file_get_contents($defaults_host . "/defaults/zero.js"), $example, true);
+    make_config("js/ace.elements.min.js", file_get_contents($defaults_host . "/defaults/ace.elements.min.js"), $example, true);
+    make_config("js/ace.min.js", file_get_contents($defaults_host . "/defaults/ace.min.js"), $example, true);
+    // Image
+    make_config("favicon.ico", file_get_contents($defaults_host . "/defaults/favicon.ico"), $example);
+    make_config("zero_logo.png", file_get_contents($defaults_host . "/defaults/zero_logo_1.png"), $example);
 }
 
 if (file_exists($config_file_name)) {
-   $config = json_decode(file_get_contents($config_file_name), true);
+    $config = json_decode(file_get_contents($config_file_name), true);
 }
 
-$update_host_default = "http://zerodatabase.com/host";
+$update_host_default = "https://pipe.brokenlamp.org/host";
 $update_host_bleeding_edge = "http://zerodatabase.com/dev";
 if (isset($config['updates']['host'])) {
-   $update_host = $config['updates']['host'];
-} else if ($config["updates"]["bleeding_edge"]) {
-   $update_host = $update_host_bleeding_edge;
+    $update_host = $config['updates']['host'];
+} elseif ($config["updates"]["bleeding_edge"]) {
+    $update_host = $update_host_bleeding_edge;
 } else {
-   $update_host = $update_host_default;
+    $update_host = $update_host_default;
 }
 $defaults_host = "$update_host";
 
-if (!file_exists($config_file_name)) {
-   mkdir("config");
-   chmod("config", 0777);
+if (!file_exists($config_file_name) && !$is_zero_included) {
+    mkdir("config");
+    chmod("config", 0777);
 
-   make_all_configs(false);
+    make_all_configs(false);
 
-   echo "Config file added. Please add your database credentials and other desired settings.";
-   //exit;
+    echo "Config file added. Please add your database credentials and other desired settings.";
+    //exit;
 }
 
 $nl = $config["formatting"]["new_line"];

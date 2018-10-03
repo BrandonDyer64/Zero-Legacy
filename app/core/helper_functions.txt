@@ -1,16 +1,19 @@
 <?php
 
 // Returns the full url
-function get_url() {
+function get_url()
+{
     return (isset($_SERVER['HTTPS']) ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
 }
 
-function starts_with($haystack, $needle) {
+function starts_with($haystack, $needle)
+{
     $length = strlen($needle);
     return (substr($haystack, 0, $length) === $needle);
 }
 
-function select_table($name, $value = '') {
+function select_table($name, $value = '')
+{
     global $pdo;
     global $config;
     $query = "SHOW TABLES";
@@ -36,30 +39,29 @@ HTML;
 }
 
 // Returns a more readable version of a table name
-function table_pretty_print($name) {
+function table_pretty_print($name)
+{
     $name = str_replace('_', ' ', $name);
     $name = ucwords($name);
     return $name;
 }
 
 // Returns a more readable version of a column name
-$standard_field_names = json_decode(file_get_contents("config/standard_field_names.json"), true);
-function column_pretty_print($name) {
-    global $standard_field_names;
-    if (array_key_exists($name, $standard_field_names)) {
-        return $standard_field_names[$name];
-    }
+function column_pretty_print($name)
+{
     $name = str_replace('_', ' ', $name);
     $name = ucwords($name);
     return $name;
 }
 
 // Cleans table and column names
-function db_clean($str) {
+function db_clean($str)
+{
     return preg_replace('/[^A-Za-z0-9_\\*\\.\\>\\<\\=]+/', '', $str);
 }
 
-function db_select($table, $columns, $where, $extra = '') {
+function db_select($table, $columns, $where, $extra = '')
+{
     global $pdo;
     $table = db_clean($table);
     // Clean columns
@@ -71,13 +73,15 @@ function db_select($table, $columns, $where, $extra = '') {
     $where_conditions = array();
     $where_values = array();
     foreach ($where as $column => $value) {
+        $column = trim($column, '.');
         $column = db_clean($column);
         if ($value != null) {
             if (!is_array($value)) {
                 $where_conditions[] = "$column=?";
                 $where_values[] = $value;
+            } elseif ($value[0] == 'IN') {
+                $where_conditions[] = "$column IN (${value[1]})";
             } else {
-                $value[0] = db_clean($value[0]);
                 $where_conditions[] = "${column} ${value[0]} ?";
                 $where_values[] = $value[1];
             }
@@ -93,7 +97,8 @@ function db_select($table, $columns, $where, $extra = '') {
     return $stmt;
 }
 
-function db_select_ids($table, $columns, $id_min, $id_max) {
+function db_select_ids($table, $columns, $id_min, $id_max)
+{
     global $pdo;
     $table = db_clean($table);
     // Clean columns
@@ -108,7 +113,8 @@ function db_select_ids($table, $columns, $id_min, $id_max) {
     return $stmt;
 }
 
-function db_update($table, $values, $where) {
+function db_update($table, $values, $where)
+{
     global $pdo;
     $table = db_clean($table);
     // Clean columns
@@ -144,7 +150,8 @@ function db_update($table, $values, $where) {
     return $stmt;
 }
 
-function db_insert($table, $values) {
+function db_insert($table, $values)
+{
     global $pdo;
     $table = db_clean($table);
     // Clean columns
@@ -165,12 +172,14 @@ function db_insert($table, $values) {
     return $stmt;
 }
 
-function db_get_last_insert_id() {
+function db_get_last_insert_id()
+{
     global $pdo;
     return $pdo->lastInsertId();
 }
 
-function db_remove($table, $id) {
+function db_remove($table, $id)
+{
     global $pdo;
     $table = db_clean($table);
     // Create statement
@@ -180,7 +189,8 @@ function db_remove($table, $id) {
     return $stmt;
 }
 
-function db_schema($table) {
+function db_schema($table)
+{
     global $pdo;
     global $config;
     // Get values from database
@@ -225,7 +235,8 @@ function db_schema($table) {
     return $columns;
 }
 
-function db_table_data($table) {
+function db_table_data($table)
+{
     global $pdo;
     global $config;
     // Get values from database
@@ -248,18 +259,20 @@ function db_table_data($table) {
     }
     // Add slaves
     $slaves = [];
-    if (isset($comment['slaves']))
+    if (isset($comment['slaves'])) {
         $slaves = $comment['slaves'];
+    }
     // Create whitelist
     $user_groups = maj_get_all_names('user_group');
-    function create_whitelist($comment, $user_groups, $is_set = true) {
+    function create_whitelist($comment, $user_groups, $is_set = true)
+    {
         if (!$is_set) {
             return [];
         }
         $whitelist = [];
         if (isset($comment['whitelist']) && is_array($comment['whitelist'])) {
             $whitelist = $comment['whitelist'];
-        } else if (isset($comment['blacklist'])) {
+        } elseif (isset($comment['blacklist'])) {
             foreach ($user_groups as $key => $user_group) {
                 if (!in_array($user_group['name'], $comment['blacklist'])) {
                     $whitelist[] = $user_group['name'];
@@ -284,7 +297,8 @@ function db_table_data($table) {
     return $column;
 }
 
-function maj_update($table, $values, $id) {
+function maj_update($table, $values, $id)
+{
     global $field_types;
     $schema = db_schema($table);
     $update_values = [];
@@ -307,7 +321,8 @@ function maj_update($table, $values, $id) {
 
 $name_cache = [];
 
-function maj_get_name($table, $id) {
+function maj_get_name($table, $id)
+{
     if (isset($name_cache[$table][$id])) {
         return $name_cache[$table][$id];
     }
@@ -323,15 +338,21 @@ function maj_get_name($table, $id) {
     return $name;
 }
 
-function maj_get_all_names($table, $where = ['1'=>'1']) {
+function maj_get_all_names($table, $where = ['1'=>'1'])
+{
     $from_schema = db_schema($table);
     $name_key = array_slice($from_schema, 1, 1, true);
     $name_key = reset($name_key);
     $name_key = $name_key['name'];
     $names = [];
     $fn = get_type_function('decode_raw', $from_schema[$name_key]['type']);
-    $stmt = db_select($table, ['id', $name_key], $where);
-    while($row = $stmt->fetch()) {
+    if (isset($from_schema['sort_order'])) {
+        $extra = 'ORDER BY sort_order';
+    } else {
+        $extra = '';
+    }
+    $stmt = db_select($table, ['id', $name_key], $where, $extra);
+    while ($row = $stmt->fetch()) {
         $name = $fn($from_schema[$name_key], $row[$name_key]);
         $names[$row['id']] = [
             'id' => $row['id'],
@@ -341,18 +362,21 @@ function maj_get_all_names($table, $where = ['1'=>'1']) {
     return $names;
 }
 
-function get_type_function($page, $type) {
+function get_type_function($page, $type)
+{
     global $field_types;
     if (isset($field_types[$type])) {
         if (isset($field_types[$type][$page])) {
             return $field_types[$type][$page];
-        } if ($page == 'decode') {
+        }
+        if ($page == 'decode') {
             global $content;
             $content .= create_error("Decode of type is not defined.\n\$field_types[$type][decode]");
         } else {
             return get_type_function('decode', $type);
         }
-    } if ($type == 'varchar') {
+    }
+    if ($type == 'varchar') {
         global $content;
         $content .= create_error("VARCHAR type is not defined.\n\$field_types[varchar]");
     } else {
@@ -360,26 +384,32 @@ function get_type_function($page, $type) {
     }
 }
 
-function check_user_permission($whitelist) {
+function check_user_permission($whitelist)
+{
     global $user;
     foreach ($user['groups'] as $group) {
-        if (in_array($group, $whitelist))
+        if (in_array($group, $whitelist)) {
             return true;
+        }
     }
     return false;
 }
 
-function check_user_permission_force(...$whitelists) {
+function check_user_permission_force(...$whitelists)
+{
     $deny = true;
     foreach ($whitelists as $whitelist) {
-        if (check_user_permission($whitelist))
+        if (check_user_permission($whitelist)) {
             $deny = false;
+        }
     }
-    if ($deny)
+    if ($deny) {
         die('<h1>Permission Denied!</h1><p>You do not have permission to view this page</p>');
+    }
 }
 
-function get_multi_select_names($from, $ids) {
+function get_multi_select_names($from, $ids)
+{
     $values = [];
     if ($ids != null) {
         $values = explode(',', $ids);
@@ -392,7 +422,8 @@ function get_multi_select_names($from, $ids) {
     return $names;
 }
 
-function remove_directory($dirPath) {
+function remove_directory($dirPath)
+{
     if (! is_dir($dirPath)) {
         return;
     }
@@ -410,12 +441,16 @@ function remove_directory($dirPath) {
     rmdir($dirPath);
 }
 
-function is_assoc(array $arr) {
-    if (array() === $arr) return false;
+function is_assoc(array $arr)
+{
+    if (array() === $arr) {
+        return false;
+    }
     return array_keys($arr) !== range(0, count($arr) - 1);
 }
 
-function create_error($text, $is_for_quintify = false) {
+function create_error($text, $is_for_quintify = false)
+{
     global $url;
     if ($is_for_quintify) {
         $for = "This error is useful to Quintify.!\nPlease send it to them to help make this product better.";

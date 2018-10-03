@@ -1,12 +1,12 @@
 <?php
 
-$stmt = db_select('slave_table',['*'],['master'=>$table]);
+$stmt = db_select('slave_table', ['*'], ['master'=>$table]);
 
 while ($row = $stmt->fetch()) {
-	$t = $row['slave'];
-	$slave_field = $row['field'];
-	$table_field = $row['table_field'];
-	$t_header = "<th></th>";
+    $t = $row['slave'];
+    $slave_field = $row['field'];
+    $table_field = $row['table_field'];
+    $t_header = "<th></th>";
     $t_list_html = "";
     $list_list_html = '';
     $t_footer = "";
@@ -44,11 +44,11 @@ while ($row = $stmt->fetch()) {
 
         <tr class='list_table_data_row'>
             <td align="left" valign="center">
-                <a href="?p=display&t=$t&id={$row2['id']}" title="View"><span class="glyphicon glyphicon-eye-open"></span></a>
+                <a href="?p=display&t=$t&id={$row2['id']}" title="View"><span class="ti-eye"></span></a>
                 &nbsp;
-                <a href="?p=edit&t=$t&id={$row2['id']}" title="Edit"><span class="glyphicon glyphicon-edit"></a>
+                <a href="?p=edit&t=$t&id={$row2['id']}" title="Edit"><span class="ti-pencil"></a>
                 &nbsp;
-                <a href="?p=delete&t=$t&id={$row2['id']}" title="Delete"><span class="glyphicon glyphicon-remove"></a>
+                <a href="?p=delete&t=$t&id={$row2['id']}" title="Delete"><span class="ti-close"></a>
             </td>
             $t_row2
         </tr>
@@ -78,7 +78,7 @@ HTML;
                 </table>
             </div>
 HTML;
-        $t_list_html = '';
+            $t_list_html = '';
         }
     }
 
@@ -105,19 +105,19 @@ HTML;
     if (!$first) {
         $list_html .= <<<HTML
 
-        <p><a href="?p=add&t=$t"><span class="glyphicon glyphicon-plus"></span></a> &nbsp; <a href="?p=list&t=$t"><span class="glyphicon glyphicon-th-list"></span></a></p>
+        <p><a href='?p=add&t=$t&d={"$slave_field":"$id"}'><span class="ti-plus"></span></a> &nbsp; <a href="?p=list&t=$t"><span class="ti-view-list"></span></a></p>
 
         $list_list_html
 
 HTML;
     } else {
         $list_html .= <<<HTML
-        <h1><strong>: (</strong> &nbsp; Empty Set</h1>
-        <p><a href="?p=add&t=$t">Create the First One</a></p>
+        <h1>Empty Set</h1>
+        <p><a href='?p=add&t=$t&d={"$slave_field":"$id"}'>Create the First One</a></p>
 HTML;
     }
-	$tabs[] = [
-		'name' => table_pretty_print($t),
-		'html' => $list_html
-	];
+    $tabs[] = [
+        'name' => table_pretty_print($t),
+        'html' => $list_html
+    ];
 }

@@ -1,40 +1,24 @@
 {
-    "name": "Time Punch",
-    "type": "Home Item",
-    "version": "0.1.3 Alpha",
-    "cost": 1.99,
-    "description_short": "Employees can punch in and out.",
-    "description": "This plugin let's your employees punch into work directly from their home page.",
-    "files": {
-        "home": [
-            "time_punch.php"
-        ],
-        "page": [
-            "payroll.php",
-            "invoice.php"
-        ],
-        "display_top": [
-            "display_link.php"
-        ],
-        "config": [
-            "config.json"
-        ]
-    },
-    "home_links": [
-        {
-            "name": "Payroll",
-            "url": "?p=payroll",
-            "groups": ["admin"],
-            "module": "administration"
-        },
-        {
-            "name": "Clients",
-            "url": "?p=list&t=client",
-            "groups": ["admin"],
-            "module": "administration"
-        }
-    ],
-    "depend": [
-        "time_keeping"
-    ]
+  "name": "Time Punch",
+  "type": "Home Item",
+  "version": "0.1.3 Alpha",
+  "cost": 1.99,
+  "description_short": "Employees can punch in and out.",
+  "description":
+    "This plugin let's your employees punch into work directly from their home page.",
+  "files": {
+    "home": ["time_punch.php"],
+    "page": ["payroll.php", "invoice.php"],
+    "display_top": ["display_link.php"],
+    "config": ["config.json"]
+  },
+  "home_links": [
+    {
+      "name": "Payroll",
+      "url": "?p=payroll",
+      "groups": ["admin"],
+      "module": "administration"
+    }
+  ],
+  "depend": ["time_keeping"]
 }

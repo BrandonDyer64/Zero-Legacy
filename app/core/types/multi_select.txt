@@ -2,86 +2,96 @@
 
 $field_type = "multi_select";
 
-$field_types[$field_type]['edit'] = function($field_name, $schema, $value = null) {
-   global $pdo;
-   if ($value == null || $value == '') {
-      $value = [];
-   } else {
-      $value = explode(',', $value);
-   }
-   $from = $schema['data']['from'];
-   $rows = maj_get_all_names($from);
-   $nl_num = ceil(sqrt(count($rows)));
-   $options = '';
-   $i = 1;
-   foreach ($rows as $name) {
-      $selected = '';
-      if (in_array($name['id'], $value)) {
-         $selected = 'checked';
-      }
-      $options .= "<td><input type='checkbox' name='${field_name}[${name['id']}]' $selected>${name['name']}</td>";
-      if ($i % $nl_num == 0) {
-         $options .= '</tr><tr>';
-      }
-      $i++;
-   }
-   $content = <<<HTML
+$field_types[$field_type]['edit'] = function ($field_name, $schema, $value = null) {
+    global $pdo;
+    if ($value == null || $value == '') {
+        $value = [];
+    } else {
+        $value = explode(',', $value);
+    }
+    $from = $schema['data']['from'];
+    $rows = maj_get_all_names($from);
+    $nl_num = min(floor(sqrt(count($rows))), 5);
+    $options = '';
+    $i = 1;
+    foreach ($rows as $name) {
+        $selected = '';
+        if (in_array($name['id'], $value)) {
+            $selected = 'checked';
+        }
+        $options .= <<<HTML
+        <td style='padding: 5px;'>
+          <div class="checkbox checkbox-primary">
+            <input type='checkbox' id='${field_name}_${name['id']}' name='${field_name}[${name['id']}]' $selected>
+            <label for='${field_name}_${name['id']}'>
+              ${name['name']}
+            </label>
+          </div>
+        </td>
+HTML;
+        if ($i % $nl_num == 0) {
+            $options .= '</tr><tr>';
+        }
+        $i++;
+    }
+    $content = <<<HTML
       <input type='hidden' name='${field_name}[0]' value='off'>
       <table>
       <tr>$options</tr>
       </table>
 HTML;
-   return $content;
+    return $content;
 };
 
-$field_types[$field_type]['encode'] = function($schema, $value, $values) {
-   $ids = [];
-   foreach ($value as $key => $val) {
-      if ($val == 'on') {
-         $ids[] = $key;
-      }
-   }
-   return implode(',', $ids);
+$field_types[$field_type]['encode'] = function ($schema, $value, $values) {
+    $ids = [];
+    foreach ($value as $key => $val) {
+        if ($val == 'on') {
+            $ids[] = $key;
+        }
+    }
+    return implode(',', $ids);
 };
 
-$field_types[$field_type]['decode'] = function($schema, $ids) {
-   $from = $schema['data']['from'];
-   $count = 0;
-   $values = [];
-   if ($ids != null) {
-      $values = explode(',', $ids);
-      $count = count($values);
-   }
-   if ($count == 0) {
-      return "None";
-   } else {
-      $content = '';
-      foreach ($values as $value) {
-         $name = maj_get_name($from, $value);
-         $content .= "<a href='?p=display&t=$from&id=$value'>$name</a><br>";
-      }
-      return $content;
-   }
+$field_types[$field_type]['decode'] = function ($schema, $ids) {
+    $from = $schema['data']['from'];
+    $count = 0;
+    $values = [];
+    if ($ids != null) {
+        $values = explode(',', $ids);
+        $count = count($values);
+    }
+    if ($count == 0) {
+        return "None";
+    } else {
+        $content = '';
+        foreach ($values as $value) {
+            $name = maj_get_name($from, $value);
+            $content .= "<a href='?p=display&t=$from&id=$value'>$name</a><br>";
+        }
+        return $content;
+    }
 };
 
-$field_types[$field_type]['decode_list'] = function($schema, $ids) {
-   $from = $schema['data']['from'];
-   $count = 0;
-   $values = [];
-   if ($ids != null) {
-      $values = explode(',', $ids);
-      $count = count($values);
-   }
-   if ($count == 0) {
-      return "None";
-   } else if ($count <= 3) {
-      $content = '';
-      foreach ($values as $value) {
-         $name = maj_get_name($from, $value);
-         $content .= "<a href='?p=display&t=$from&id=$value'>$name</a><br>";
-      }
-      return $content;
-   } else {
-      return "&nbsp;<br>Multiple Items<br>&nbsp;";
-   }
+$field_types[$field_type]['decode_list'] = function ($schema, $ids) {
+    $from = $schema['data']['from'];
+    $count = 0;
+    $values = [];
+    if ($ids != null) {
+        $values = explode(',', $ids);
+        $count = count($values);
+    }
+    if ($count == 0) {
+        return "None";
+    } elseif ($count <= 3) {
+        $content = '';
+        foreach ($values as $value) {
+            $name = maj_get_name($from, $value);
+            $content .= "<a href='?p=display&t=$from&id=$value'>$name</a>, ";
+        }
+        $content = trim($content, ', ');
+        return "<small>$content</small>";
+    } else {
+        return "Multiple Items";
+    }
 };

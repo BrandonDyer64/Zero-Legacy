@@ -1,39 +1,39 @@
 <?php
 
 $bleeding_edge_text = $config["updates"]["bleeding_edge"] ? "Bleeding Edge" : "";
-$theme = 'material-vertical';
+$theme = $config['theme'] ? $config['theme'] : 'blue-vertical';
 
 $js_html = '';
 foreach ($js_to_include as $file) {
-   $js_html .= <<<HTML
+    $js_html .= <<<HTML
    <script src="$file"></script>
 HTML;
 }
 
 $js_first_html = '';
 foreach ($js_to_include as $file) {
-   $js_first_html .= <<<HTML
+    $js_first_html .= <<<HTML
    <script src="$file"></script>
 HTML;
 }
 
 if (isset($config['files']['css'])) {
-   foreach ($config['files']['css'] as $file) {
-      $css_to_include[] = $file;
-   }
+    foreach ($config['files']['css'] as $file) {
+        $css_to_include[] = $file;
+    }
 }
 
 $css_html = '';
 foreach ($css_to_include as $file) {
-   if (starts_with($file,'http')) {
-      $css_html .= <<<HTML
+    if (starts_with($file, 'http')) {
+        $css_html .= <<<HTML
          <link rel='stylesheet' href='$file' type='text/css'>
 HTML;
-   } else {
-      $css_html .= <<<HTML
+    } else {
+        $css_html .= <<<HTML
          <link rel='stylesheet' href='css/$file' type='text/css'>
 HTML;
-   }
+    }
 }
 
 // Render modules
@@ -41,28 +41,30 @@ $modules_html = "";
 $modules = [];
 if (is_array($plugin_home_links) && count($plugin_home_links) > 0) {
     foreach ($plugin_home_links as $link) {
-      if (isset($link['groups'])) {
-        if (!check_user_permission($link['groups'])) {
-          continue;
+        if (isset($link['groups'])) {
+            if (!check_user_permission($link['groups'])) {
+                continue;
+            }
         }
-      }
-      if (isset($link['module'])) {
-        $modules[$link['module']][] = $link;
-      } else {
-        $modules['misc'][] = $link;
-      }
+        if (isset($link['module'])) {
+            $modules[$link['module']][] = $link;
+        } else {
+            $modules['misc'][] = $link;
+        }
     }
 }
-$modules['misc'][] = ['name'=>'Zero Database','url'=>'http://zerodatabase.com'];
+//$modules['misc'][] = ['name'=>'Zero Database','url'=>'http://zerodatabase.com'];
 if (check_user_permission(['admin'])) {
-  $modules['administration'][] = ['name'=>'Users','url'=>'?p=list&t=user'];
-  $modules['administration'][] = ['name'=>'Zero Version','url'=>'?p=version'];
+    $modules['administration'][] = ['name'=>'Users','url'=>'?p=list&t=user'];
+    $modules['administration'][] = ['name'=>'Zero Version','url'=>'?p=version'];
 }
 $module_icons = [
   'administration' => 'user',
   'misc' => 'plus',
   'inventory' => 'dropbox',
-  'sales' => 'money'
+  'sales' => 'money',
+  //'pipeline' => 'control-shuffle'
+  'pipeline' => 'filter'
 ];
 foreach ($modules as $module_name => $links) {
     /*
@@ -73,7 +75,7 @@ foreach ($modules as $module_name => $links) {
     */
     $module_icon = "arrow-circle-right";
     if (isset($module_icons[$module_name])) {
-      $module_icon = $module_icons[$module_name];
+        $module_icon = $module_icons[$module_name];
     }
     $module_name = table_pretty_print($module_name);
     $modules_html .= <<<HTML
@@ -96,8 +98,8 @@ $modules_html = <<<HTML
             <ul>
               <li>
                   <a href="?p=home" class="waves-effect waves-primary">
-                    <i class="ti-dashboard"></i>
-                    <span> Dashboard </span>
+                    <i class="ti-home"></i>
+                    <span> Home </span>
                   </a>
               </li>
               $modules_html
@@ -111,7 +113,7 @@ $modules_html = <<<HTML
 HTML;
 
 if (trim($content) != '') {
-  $content = <<<HTML
+    $content = <<<HTML
   <div class="col-md-12">
     <div class="card-box">
       $content
@@ -122,17 +124,17 @@ HTML;
 
 // Render Cards
 foreach ($cards as $card) {
-  $size = '12';
-  if (isset($card['size'])) {
-    $size = $card['size'];
-  }
-  $card_title = '';
-  if (isset($card['title'])) {
-    $card_title = "<h3>${card['title']}</h3>";
-  }
-  $content .= <<<HTML
+    $size = '12';
+    if (isset($card['size'])) {
+        $size = $card['size'];
+    }
+    $card_title = '';
+    if (isset($card['title'])) {
+        $card_title = "<h3>${card['title']}</h3>";
+    }
+    $content .= <<<HTML
   <!-- CARD BEGIN -->
-  <div class="col-md-$size">
+  <div class="col-lg-$size">
     <div class="card-box">
       $card_title
       ${card['html']}
@@ -144,7 +146,7 @@ HTML;
 
 // Render embed
 if (isset($_GET['embed'])) {
-   echo <<<HTML
+    echo <<<HTML
 
 <!DOCTYPE HTML>
 <html lang='en'>
@@ -163,11 +165,11 @@ if (isset($_GET['embed'])) {
 </html>
 
 HTML;
-   exit;
+    exit;
 }
 
 if (!isset($page_title)) {
-  $page_title = "Zero Database";
+    $page_title = "Zero Database";
 }
 
 
@@ -178,21 +180,25 @@ $html = <<<HTML
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width,initial-scale=1">
-        <meta name="description" content="A fully featured admin theme which can be used to build CRM, CMS, etc.">
-        <meta name="author" content="Coderthemes">
+        <meta name="description" content="Zero Legacy dashboard for ${config['name']}">
+        <meta name="author" content="Brandon Dyer">
 
-        <link rel="shortcut icon" href="http://zerodatabase.com/host/cdn/Minton/Admin/$theme/assets/images/favicon_1.ico">
+        <link rel="shortcut icon" href="favicon.ico">
 
         <title>${config["name"]}</title>
 
-        <link href="http://zerodatabase.com/host/cdn/Minton/Admin/plugins/switchery/switchery.min.css" rel="stylesheet" />
-        <link href="http://zerodatabase.com/host/cdn/Minton/Admin/plugins/jquery-circliful/css/jquery.circliful.css" rel="stylesheet" type="text/css" />
+        <link href="$update_host/cdn/Minton/Admin/plugins/datatables/dataTables.bootstrap4.min.css"></link>
+        <link href="$update_host/cdn/Minton/Admin/plugins/datatables/buttons.bootstrap4.min.css"></link>
+        <link href="$update_host/cdn/Minton/Admin/plugins/datatables/responsive.bootstrap4.min.css"></link>
 
-        <link href="http://zerodatabase.com/host/cdn/Minton/Admin/$theme/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-        <link href="http://zerodatabase.com/host/cdn/Minton/Admin/$theme/assets/css/icons.css" rel="stylesheet" type="text/css">
-        <link href="http://zerodatabase.com/host/cdn/Minton/Admin/$theme/assets/css/style.css" rel="stylesheet" type="text/css">
+        <link href="$update_host/cdn/Minton/Admin/plugins/switchery/switchery.min.css" rel="stylesheet" />
+        <link href="$update_host/cdn/Minton/Admin/plugins/jquery-circliful/css/jquery.circliful.css" rel="stylesheet" type="text/css" />
 
-        <script src="http://zerodatabase.com/host/cdn/Minton/Admin/$theme/assets/js/modernizr.min.js"></script>
+        <link href="$update_host/cdn/Minton/Admin/$theme/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+        <link href="$update_host/cdn/Minton/Admin/$theme/assets/css/icons.css" rel="stylesheet" type="text/css">
+        <link href="$update_host/cdn/Minton/Admin/$theme/assets/css/style.css" rel="stylesheet" type="text/css">
+
+        <script src="$update_host/cdn/Minton/Admin/$theme/assets/js/modernizr.min.js"></script>
 
 
 
@@ -210,7 +216,10 @@ $html = <<<HTML
                 <!-- LOGO -->
                 <div class="topbar-left">
                     <div class="text-center">
-                        <a href="?p=home" class="logo"><i class="mdi mdi-radar"></i> <span>${config["name"]}</span></a>
+                        <a href="?p=home" class="logo">
+                          <i class="ti-pulse"></i>
+                          <span>${config["name"]}</span>
+                        </a>
                     </div>
                 </div>
 
@@ -219,85 +228,75 @@ $html = <<<HTML
 
                     <ul class="list-inline float-right mb-0">
 
-                        <li class="list-inline-item notification-list hide-phone">
+                        <!--<li class="list-inline-item notification-list hide-phone">
                             <a class="nav-link waves-light waves-effect" href="#" id="btn-fullscreen">
                                 <i class="mdi mdi-crop-free noti-icon"></i>
                             </a>
-                        </li>
+                        </li>-->
 
-                        <li class="list-inline-item notification-list">
+                        <!--<li class="list-inline-item notification-list">
                             <a class="nav-link right-bar-toggle waves-light waves-effect" href="#">
                                 <i class="mdi mdi-dots-horizontal noti-icon"></i>
                             </a>
-                        </li>
+                        </li>-->
 
-                        <li class="list-inline-item dropdown notification-list">
+                        <!--<li class="list-inline-item dropdown notification-list">
                             <a class="nav-link dropdown-toggle arrow-none waves-light waves-effect" data-toggle="dropdown" href="#" role="button"
                                aria-haspopup="false" aria-expanded="false">
                                 <i class="mdi mdi-bell noti-icon"></i>
                                 <span class="badge badge-pink noti-icon-badge">4</span>
                             </a>
                             <div class="dropdown-menu dropdown-menu-right dropdown-arrow dropdown-menu-lg" aria-labelledby="Preview">
-                                <!-- item-->
+                                <!-- item--
                                 <div class="dropdown-item noti-title">
                                     <h5 class="font-16"><span class="badge badge-danger float-right">5</span>Notification</h5>
                                 </div>
 
-                                <!-- item-->
+                                <!-- item--
                                 <a href="javascript:void(0);" class="dropdown-item notify-item">
                                     <div class="notify-icon bg-success"><i class="mdi mdi-comment-account"></i></div>
                                     <p class="notify-details">Robert S. Taylor commented on Admin<small class="text-muted">1 min ago</small></p>
                                 </a>
 
-                                <!-- item-->
+                                <!-- item--
                                 <a href="javascript:void(0);" class="dropdown-item notify-item">
                                     <div class="notify-icon bg-info"><i class="mdi mdi-account"></i></div>
                                     <p class="notify-details">New user registered.<small class="text-muted">1 min ago</small></p>
                                 </a>
 
-                                <!-- item-->
+                                <!-- item--
                                 <a href="javascript:void(0);" class="dropdown-item notify-item">
                                     <div class="notify-icon bg-danger"><i class="mdi mdi-airplane"></i></div>
                                     <p class="notify-details">Carlos Crouch liked <b>Admin</b><small class="text-muted">1 min ago</small></p>
                                 </a>
 
-                                <!-- All-->
+                                <!-- All--
                                 <a href="javascript:void(0);" class="dropdown-item notify-item notify-all">
                                     View All
                                 </a>
 
                             </div>
-                        </li>
+                        </li>-->
 
                         <li class="list-inline-item dropdown notification-list">
                             <a class="nav-link dropdown-toggle waves-effect waves-light nav-user" data-toggle="dropdown" href="#" role="button"
                                aria-haspopup="false" aria-expanded="false">
-                                <!--<img src="http://zerodatabase.com/host/cdn/Minton/Admin/$theme/assets/images/users/avatar-1.jpg" alt="user" class="rounded-circle">-->
+                                <!--<img src="$update_host/cdn/Minton/Admin/$theme/assets/images/users/avatar-1.jpg" alt="user" class="rounded-circle">-->
                                  ${user['username']}
                             </a>
                             <div class="dropdown-menu dropdown-menu-right profile-dropdown " aria-labelledby="Preview">
                                 <!-- item-->
-                                <div class="dropdown-item noti-title">
+                                <!--<div class="dropdown-item noti-title">
                                     <h5 class="text-overflow"><small>Welcome  ${user['username']}!</small> </h5>
-                                </div>
+                                </div>-->
 
                                 <!-- item-->
-                                <a href="javascript:void(0);" class="dropdown-item notify-item">
-                                    <i class="mdi mdi-account-star-variant"></i> <span>Profile</span>
-                                </a>
-
-                                <!-- item-->
-                                <a href="javascript:void(0);" class="dropdown-item notify-item">
+                                <a href="?p=account" class="dropdown-item notify-item">
                                     <i class="mdi mdi-settings"></i> <span>Settings</span>
                                 </a>
 
                                 <!-- item-->
-                                <a href="javascript:void(0);" class="dropdown-item notify-item">
-                                    <i class="mdi mdi-lock-open"></i> <span>Lock Screen</span>
-                                </a>
-
-                                <!-- item-->
-                                <a href="javascript:void(0);" class="dropdown-item notify-item">
+                                <a href="?p=logout" class="dropdown-item notify-item">
                                     <i class="mdi mdi-logout"></i> <span>Logout</span>
                                 </a>
 
@@ -312,12 +311,12 @@ $html = <<<HTML
                                 <i class="mdi mdi-menu"></i>
                             </button>
                         </li>
-                        <li class="hide-phone app-search">
+                        <!--<li class="hide-phone app-search">
                             <form role="search" class="">
                                 <input type="text" placeholder="Search..." class="form-control">
                                 <a href=""><i class="fa fa-search"></i></a>
                             </form>
-                        </li>
+                        </li>-->
                     </ul>
 
                 </nav>
@@ -343,7 +342,7 @@ $html = <<<HTML
                     <div class="container-fluid">
 
                         <!-- Page-Title -->
-                        <div class="row">
+                        <!--<div class="row">
                             <div class="col-sm-12">
                                 <div class="page-title-box">
                                     <h4 class="page-title">$page_title</h4>
@@ -354,7 +353,7 @@ $html = <<<HTML
                                     <div class="clearfix"></div>
                                 </div>
                             </div>
-                        </div>
+                        </div>-->
                         <div class="row">
                           $content
                         </div>
@@ -366,7 +365,7 @@ $html = <<<HTML
 
                 <footer class="footer">
                     <!--2016 - 2017 © Minton <span class="hide-phone">- Coderthemes.com</span>-->
-                    2017 © Magentex<span class="hide-phone"> - Zero Database - ${zero_version} ${bleeding_edge_text}</span>
+                    2017 © Magentex<span class="hide-phone"> - Zero Legacy - ${zero_version} ${bleeding_edge_text}</span>
                 </footer>
 
             </div>
@@ -500,49 +499,56 @@ $html = <<<HTML
         </script>
 
         <!-- Plugins  -->
-        <script src="http://zerodatabase.com/host/cdn/Minton/Admin/$theme/assets/js/jquery.min.js"></script>
-        <script src="http://zerodatabase.com/host/cdn/Minton/Admin/$theme/assets/js/popper.min.js"></script><!-- Popper for Bootstrap -->
-        <script src="http://zerodatabase.com/host/cdn/Minton/Admin/$theme/assets/js/bootstrap.min.js"></script>
-        <script src="http://zerodatabase.com/host/cdn/Minton/Admin/$theme/assets/js/detect.js"></script>
-        <script src="http://zerodatabase.com/host/cdn/Minton/Admin/$theme/assets/js/fastclick.js"></script>
-        <script src="http://zerodatabase.com/host/cdn/Minton/Admin/$theme/assets/js/jquery.slimscroll.js"></script>
-        <script src="http://zerodatabase.com/host/cdn/Minton/Admin/$theme/assets/js/jquery.blockUI.js"></script>
-        <script src="http://zerodatabase.com/host/cdn/Minton/Admin/$theme/assets/js/waves.js"></script>
-        <script src="http://zerodatabase.com/host/cdn/Minton/Admin/$theme/assets/js/wow.min.js"></script>
-        <script src="http://zerodatabase.com/host/cdn/Minton/Admin/$theme/assets/js/jquery.nicescroll.js"></script>
-        <script src="http://zerodatabase.com/host/cdn/Minton/Admin/$theme/assets/js/jquery.scrollTo.min.js"></script>
-        <script src="http://zerodatabase.com/host/cdn/Minton/Admin/plugins/switchery/switchery.min.js"></script>
+        <script src="$update_host/cdn/Minton/Admin/$theme/assets/js/jquery.min.js"></script>
+        <script src="$update_host/cdn/Minton/Admin/$theme/assets/js/popper.min.js"></script><!-- Popper for Bootstrap -->
+        <script src="$update_host/cdn/Minton/Admin/$theme/assets/js/bootstrap.min.js"></script>
+        <script src="$update_host/cdn/Minton/Admin/$theme/assets/js/detect.js"></script>
+        <script src="$update_host/cdn/Minton/Admin/$theme/assets/js/fastclick.js"></script>
+        <script src="$update_host/cdn/Minton/Admin/$theme/assets/js/jquery.slimscroll.js"></script>
+        <script src="$update_host/cdn/Minton/Admin/$theme/assets/js/jquery.blockUI.js"></script>
+        <script src="$update_host/cdn/Minton/Admin/$theme/assets/js/waves.js"></script>
+        <script src="$update_host/cdn/Minton/Admin/$theme/assets/js/wow.min.js"></script>
+        <script src="$update_host/cdn/Minton/Admin/$theme/assets/js/jquery.nicescroll.js"></script>
+        <script src="$update_host/cdn/Minton/Admin/$theme/assets/js/jquery.scrollTo.min.js"></script>
+        <script src="$update_host/cdn/Minton/Admin/plugins/switchery/switchery.min.js"></script>
 
         <!-- Counter Up  -->
-        <script src="http://zerodatabase.com/host/cdn/Minton/Admin/plugins/waypoints/lib/jquery.waypoints.min.js"></script>
-        <script src="http://zerodatabase.com/host/cdn/Minton/Admin/plugins/counterup/jquery.counterup.min.js"></script>
+        <script src="$update_host/cdn/Minton/Admin/plugins/waypoints/lib/jquery.waypoints.min.js"></script>
+        <script src="$update_host/cdn/Minton/Admin/plugins/counterup/jquery.counterup.min.js"></script>
 
         <!-- circliful Chart -->
-        <script src="http://zerodatabase.com/host/cdn/Minton/Admin/plugins/jquery-circliful/js/jquery.circliful.min.js"></script>
-        <script src="http://zerodatabase.com/host/cdn/Minton/Admin/plugins/jquery-sparkline/jquery.sparkline.min.js"></script>
+        <script src="$update_host/cdn/Minton/Admin/plugins/jquery-circliful/js/jquery.circliful.min.js"></script>
+        <script src="$update_host/cdn/Minton/Admin/plugins/jquery-sparkline/jquery.sparkline.min.js"></script>
 
         <!-- skycons -->
-        <script src="http://zerodatabase.com/host/cdn/Minton/Admin/plugins/skyicons/skycons.min.js" type="text/javascript"></script>
+        <script src="$update_host/cdn/Minton/Admin/plugins/skyicons/skycons.min.js" type="text/javascript"></script>
 
         <!-- Page js  -->
-        <script src="http://zerodatabase.com/host/cdn/Minton/Admin/$theme/assets/pages/jquery.dashboard.js"></script>
+        <script src="$update_host/cdn/Minton/Admin/$theme/assets/pages/jquery.dashboard.js"></script>
 
         <!-- Custom main Js -->
-        <script src="http://zerodatabase.com/host/cdn/Minton/Admin/$theme/assets/js/jquery.core.js"></script>
-        <script src="http://zerodatabase.com/host/cdn/Minton/Admin/$theme/assets/js/jquery.app.js"></script>
+        <script src="$update_host/cdn/Minton/Admin/$theme/assets/js/jquery.core.js"></script>
+        <script src="$update_host/cdn/Minton/Admin/$theme/assets/js/jquery.app.js"></script>
 
         <!-- FooTable -->
-        <script src="http://zerodatabase.com/host/cdn/Minton/Admin/plugins/footable/js/footable.all.min.js"></script>
-        <script src="http://zerodatabase.com/host/cdn/Minton/Admin/$theme/assets/pages/jquery.footable.js"></script>
+        <script src="$update_host/cdn/Minton/Admin/plugins/footable/js/footable.all.min.js"></script>
+        <script src="$update_host/cdn/Minton/Admin/$theme/assets/pages/jquery.footable.js"></script>
+
+        <!-- DataTables -->
+        <script src="$update_host/cdn/Minton/Admin/plugins/datatables/jquery.dataTables.min.js"></script>
+        <script src="$update_host/cdn/Minton/Admin/plugins/datatables/dataTables.bootstrap4.min.js"></script>
+        <script src="$update_host/cdn/Minton/Admin/plugins/datatables/dataTables.responsive.min.js"></script>
+        <script src="$update_host/cdn/Minton/Admin/plugins/datatables/responsive.bootstrap4.min.js"></script>
 
 
         <script type="text/javascript">
-            jQuery(document).ready(function($) {
+            jQuery(document).ready(function() {
                 $('.counter').counterUp({
                     delay: 100,
                     time: 1200
                 });
                 $('.circliful-chart').circliful();
+                $('.primary-list').DataTable();
             });
 
             // BEGIN SVG WEATHER ICON
@@ -710,8 +716,8 @@ HTML;*/
 HTML;*/
 
 if (isset($_GET['api'])) {
-   echo json_encode($content_api, JSON_PRETTY_PRINT);
-   exit;
+    echo json_encode($content_api, JSON_PRETTY_PRINT);
+    exit;
 }
 
 echo $html;

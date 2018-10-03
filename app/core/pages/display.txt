@@ -1,7 +1,6 @@
 <?php
 
 if ($page == "display") {
-
     $table_data = db_table_data($table);
     check_user_permission_force($table_data['whitelist'], $table_data['whitelist_display']);
 
@@ -14,6 +13,8 @@ if ($page == "display") {
     $schema = db_schema($table);
     $row = $stmt->fetch();
 
+    $value_prev = '';
+
     foreach ($row as $key => $value) {
         $fn = get_type_function('decode', $schema[$key]['type']);
         $focus_link = "?p=edit&t=$table&id=$id&focus=$key";
@@ -21,10 +22,13 @@ if ($page == "display") {
         $key_pretty = column_pretty_print($key);
         $content_api[$key] = ["name"=>$key_pretty,"value"=>$value];
         $value = trim($value);
+        if ("$value_prev" != '' && "$value" != '') {
+            $table_content .= '<br />';
+        }
         if ("$value" == '') {
             $table_content .= <<<HTML
               <div class="row">
-                <label class="control-label col-sm-2" style="text-align: right; color: #ccc;">$key_pretty:</label>
+                <label class="control-label col-sm-2" style="text-align: right; color: #ccc;"><small>$key_pretty:</small></label>
                 <div class="col-sm-10">
                 </div>
               </div>
@@ -37,9 +41,9 @@ HTML;
                     $value
                 </div>
               </div>
-              <br>
 HTML;
         }
+        $value_prev = $value;
     }
 
     $links = [''];
@@ -47,8 +51,9 @@ HTML;
 
     if (isset($plugin_files['display_top'])) {
         foreach ($plugin_files['display_top'] as $file) {
-            if (file_exists($file))
+            if (file_exists($file)) {
                 include_once($file);
+            }
         }
     }
 
@@ -66,7 +71,11 @@ HTML;
         </div>
 HTML;
         $tab_button_html .= <<<HTML
-        <li><a data-toggle="tab" href="#tab$i">${tab['name']}</a></li>
+        <li class="nav-item">
+          <a data-toggle="tab" href="#tab$i" class="nav-link">
+            ${tab['name']}
+          </a>
+        </li>
 HTML;
         $i++;
     }
@@ -86,11 +95,11 @@ HTML;
 
     <h2>Display: <strong>$table_pretty</strong></h2>
     <p>
-        <a href="?p=edit&t=$table&id=$id"><span class="glyphicon glyphicon-edit"></span></a>
+        <a href="?p=edit&t=$table&id=$id"><span class="ti-pencil"></span></a>
         &nbsp;
-        <a href="?p=list&t=$table"><span class="glyphicon glyphicon-th-list"></span></a>
+        <a href="?p=list&t=$table"><span class="ti-view-list"></span></a>
         &nbsp;
-        <a href="?p=add&t=$table"><span class="glyphicon glyphicon-plus"></span></a>
+        <a href="?p=add&t=$table"><span class="ti-plus"></span></a>
         $links
     </p>
 
@@ -106,9 +115,9 @@ HTML;
 
     if (isset($plugin_files['display_bottom'])) {
         foreach ($plugin_files['display_bottom'] as $file) {
-            if (file_exists($file))
+            if (file_exists($file)) {
                 include_once($file);
+            }
         }
     }
-
 }
