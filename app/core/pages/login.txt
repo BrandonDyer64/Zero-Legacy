@@ -1,7 +1,6 @@
 <?php
 
 if ($page == "login") {
-
     $login_fail = false;
 
     if (isset($_POST["submit"])) {
@@ -20,6 +19,15 @@ if ($page == "login") {
             $stmt = db_select('user', ['*'], ['username'=>$_POST['username'], 'password'=>md5($_POST['password'] . SALT . $_POST['username'])]);
             $_SESSION["logged_in"] = false;
             if ($row = $stmt->fetch()) {
+                $_SESSION['use_2fa'] = false;
+                if ($row['use_2fa']) {
+                    $g = new \Sonata\GoogleAuthenticator\GoogleAuthenticator();
+                    $code = $g->getCode($row['salt_2fa']);
+                    if ($code !== $_POST['key']) {
+                        die(get_page_error('2FA', 'Wrong key'));
+                    }
+                    $_SESSION['use_2fa'] = true;
+                }
                 $groups = get_multi_select_names('user_group', $row['user_groups']);
                 $_SESSION["logged_in"] = true;
                 $_SESSION['username'] = $row['username'];
@@ -38,12 +46,12 @@ if ($page == "login") {
                 $login_fail = true;
             }
         }
-    } else if (isset($_POST["submit_register"])) {
-        $stmt = db_select('user',['*'],['username'=>$_POST['username']]);
+    } elseif (isset($_POST["submit_register"])) {
+        $stmt = db_select('user', ['*'], ['username'=>$_POST['username']]);
         if ($stmt->fetch()) {
             $content .= "<p>Username taken</p>";
         } else {
-            $stmt = db_select('user_group',['id'],['name'=>'user']);
+            $stmt = db_select('user_group', ['id'], ['name'=>'user']);
             $row = $stmt->fetch();
             $user_group_id = $row['id'];
             db_insert('user', [
@@ -64,7 +72,123 @@ if ($page == "login") {
         </div>
 HTML;
     }
+    $theme = $config['theme'] ? $config['theme'] : 'blue-vertical';
+    echo <<<HTML
+    <!DOCTYPE html>
+    <html>
+        <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width,initial-scale=1">
+            <meta name="description" content="Zero Legacy dashboard.">
+            <meta name="author" content="Brandon Dyer">
 
+            <link rel="shortcut icon" href="$update_host/cdn/Minton/Admin/$theme/assets/images/favicon_1.ico">
+
+            <title>${config['name']}</title>
+
+            <link href="$update_host/cdn/Minton/Admin/plugins/switchery/switchery.min.css" rel="stylesheet" />
+
+            <link href="$update_host/cdn/Minton/Admin/$theme/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+            <link href="$update_host/cdn/Minton/Admin/$theme/assets/css/icons.css" rel="stylesheet" type="text/css">
+            <link href="$update_host/cdn/Minton/Admin/$theme/assets/css/style.css" rel="stylesheet" type="text/css">
+
+            <script src="$update_host/cdn/Minton/Admin/$theme/assets/js/modernizr.min.js"></script>
+
+        </head>
+        <body>
+
+            <div class="wrapper-page">
+
+                <div class="text-center">
+                    <a href="index.html" class="logo-lg"><i class="ti-pulse"></i> <span>${config['name']}</span> </a>
+                </div>
+
+                <form class="form-horizontal m-t-20" action="#" name="register_form" method="post" id="registerForm" novalidate="" _lpchecked="1">
+
+                    <div class="form-group row">
+                        <div class="col-12">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="mdi mdi-account"></i></span>
+                                <input class="form-control" type="text" required="" name="username" placeholder="Username">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-12">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="mdi mdi-lock"></i></span>
+                                <input class="form-control" type="password" required="" name="password" placeholder="Password">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-12">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="mdi mdi-key"></i></span>
+                                <input class="form-control" type="text" name="key" placeholder="2FA Code">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--<div class="form-group row">
+                        <div class="col-12">
+                            <div class="checkbox checkbox-primary">
+                                <input id="checkbox-signup" type="checkbox">
+                                <label for="checkbox-signup">
+                                    Remember me
+                                </label>
+                            </div>
+
+                        </div>
+                    </div>-->
+
+                    <div class="form-group text-right m-t-20">
+                            <button class="btn btn-primary btn-custom w-md waves-effect waves-light" type="submit" name="submit">Log In
+                            </button>
+                    </div>
+
+                    <div class="form-group row m-t-30">
+                        <div class="col-sm-7">
+                            <a href="?p=forgot_password" class="text-muted"><i class="fa fa-lock m-r-5"></i> Forgot your
+                                password?</a>
+                        </div>
+                        <div class="col-sm-5 text-right">
+                            <a href="pages-register.html" class="text-muted">Create an account</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+
+            <script>
+                var resizefunc = [];
+            </script>
+
+            <!-- Plugins  -->
+            <script src="$update_host/cdn/Minton/Admin/$theme/assets/js/jquery.min.js"></script>
+            <script src="$update_host/cdn/Minton/Admin/$theme/assets/js/popper.min.js"></script><!-- Popper for Bootstrap -->
+            <script src="$update_host/cdn/Minton/Admin/$theme/assets/js/bootstrap.min.js"></script>
+            <script src="$update_host/cdn/Minton/Admin/$theme/assets/js/detect.js"></script>
+            <script src="$update_host/cdn/Minton/Admin/$theme/assets/js/fastclick.js"></script>
+            <script src="$update_host/cdn/Minton/Admin/$theme/assets/js/jquery.slimscroll.js"></script>
+            <script src="$update_host/cdn/Minton/Admin/$theme/assets/js/jquery.blockUI.js"></script>
+            <script src="$update_host/cdn/Minton/Admin/$theme/assets/js/waves.js"></script>
+            <script src="$update_host/cdn/Minton/Admin/$theme/assets/js/wow.min.js"></script>
+            <script src="$update_host/cdn/Minton/Admin/$theme/assets/js/jquery.nicescroll.js"></script>
+            <script src="$update_host/cdn/Minton/Admin/$theme/assets/js/jquery.scrollTo.min.js"></script>
+            <script src="$update_host/cdn/Minton/Admin/plugins/switchery/switchery.min.js"></script>
+
+            <!-- Custom main Js -->
+            <script src="$update_host/cdn/Minton/Admin/$theme/assets/js/jquery.core.js"></script>
+            <script src="$update_host/cdn/Minton/Admin/$theme/assets/js/jquery.app.js"></script>
+
+    	</body>
+    </html>
+HTML;
+    exit;
+    /*
     $content .= <<<HTML
 
     <div class="container-center animated slideInDown">
@@ -140,68 +264,5 @@ HTML;
     </div>
 
 HTML;
-/*
-    $content .= <<<HTML
-
-    <div>
-        <div class="error error_message">You must be logged in to access this page.</div>
-
-        <h2>Log in</h2>
-
-        <form action="#" name="login_form" method="post">
-            <table class="login" cellpadding="4">
-                <tbody>
-                <tr>
-                    <td>Username:</td>
-                    <td>
-                        <input type="text" name="username" value="" maxlength="20" class="text" style="background-image: url(&quot;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGP6zwAAAgcBApocMXEAAAAASUVORK5CYII=&quot;); cursor: auto;" autocomplete="off">
-                    </td>
-                </tr>
-                <tr>
-                    <td>Password:</td>
-                    <td>
-                        <input type="password" name="password" value="" maxlength="20" class="text" style="background-image: url(&quot;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGP6zwAAAgcBApocMXEAAAAASUVORK5CYII=&quot;); cursor: auto;" autocomplete="off">
-                    </td>
-                </tr>
-                <!--<tr><td colspan="2"><input type="checkbox" name="remember_username">&nbsp;&nbsp;Remember my username on this computer</td></tr>-->
-                <tr><td colspan="2"><center><input type="submit" name="submit" value="Login" class="button"></center></td></tr>
-                </tbody>
-            </table>
-        </form>
-        <p><a href="?p=forgot_password">Forgot your password?</a></p>
-        <p><a href="#" onclick="document.getElementById('register_form').style.display = 'block';">Register</a></p>
-    </div>
-    <div id="register_form" style="display: none;">
-        <h2>Register</h2>
-
-        <form action="#" name="register_form" method="post">
-            <table class="login" cellpadding="4">
-                <tbody>
-                <tr>
-                    <td>Username:</td>
-                    <td>
-                        <input type="text" name="username" value="" maxlength="20" class="text" style="background-image: url(&quot;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGP6zwAAAgcBApocMXEAAAAASUVORK5CYII=&quot;); cursor: auto;" autocomplete="off">
-                    </td>
-                </tr>
-                <tr>
-                    <td>Password:</td>
-                    <td>
-                        <input type="password" name="password" value="" class="text" style="background-image: url(&quot;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGP6zwAAAgcBApocMXEAAAAASUVORK5CYII=&quot;); cursor: auto;" autocomplete="off">
-                    </td>
-                </tr>
-                <tr>
-                    <td>Email:</td>
-                    <td>
-                        <input type="email" name="email" value="" class="text" placeholder="We Don't Spam" style="background-image: url(&quot;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGP6zwAAAgcBApocMXEAAAAASUVORK5CYII=&quot;); cursor: auto;" autocomplete="off">
-                    </td>
-                </tr>
-                <!--<tr><td colspan="2"><input type="checkbox" name="remember_username">&nbsp;&nbsp;Remember my username on this computer</td></tr>-->
-                <tr><td colspan="2"><center><input type="submit" name="submit_register" value="Register" class="button"></center></td></tr>
-                </tbody>
-            </table>
-        </form>
-    </div>
-
-HTML;
-*/
+    */
 }

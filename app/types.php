@@ -22,3 +22,4 @@ load("types/decimal");
 // Others
 load("types/link");
 load("types/markdown");
+load("types/image");

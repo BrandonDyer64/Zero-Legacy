@@ -51,6 +51,8 @@ if (count(get_included_files()) == 1) {
   \$is_zero_included = true;
 }
 
+require_once 'vendor/autoload.php';
+
 PHP;
 
 // Function for loading files into the code

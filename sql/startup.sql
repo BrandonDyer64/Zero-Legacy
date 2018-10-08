@@ -4,6 +4,8 @@ CREATE TABLE user (
    password VARCHAR(32) NOT NULL COMMENT '{"type":"password"}',
    email VARCHAR(255) NOT NULL,
    user_groups TEXT COMMENT '{"type":"multi_select","from":"user_group"}',
+   use_2fa BOOLEAN,
+   salt_2fa VARCHAR(32) COMMENT '{"type":"password"}',
    PRIMARY KEY (id),
    UNIQUE INDEX (username)
 ) COMMENT = '{"whitelist":["admin","user_manager"],"display":{"whitelist":["user_viewer"]},"add":{"whitelist":"all"}}';

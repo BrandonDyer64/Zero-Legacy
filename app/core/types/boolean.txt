@@ -2,28 +2,29 @@
 
 $field_type = "tinyint";
 
-$field_types[$field_type]['edit'] = function($name, $schema, $value = null, $focus = false) {
-   $checked = $value ? 'checked' : 'unchecked';
-   $content = <<<HTML
-   <input type="checkbox" name="$name" $checked>
+$field_types[$field_type]['edit'] = function ($name, $schema, $value = null, $focus = false) {
+    $checked = $value ? 'checked' : 'unchecked';
+    $content = <<<HTML
+      <input type="hidden" name="$name" value="off">
+      <input type="checkbox" name="$name" $checked>
 HTML;
-   return $content;
+    return $content;
 };
 
-$field_types[$field_type]['encode'] = function($schema, $value, $values) {
-   return $value == 'on' ? 1 : 0;
+$field_types[$field_type]['encode'] = function ($schema, $value, $values) {
+    return $value == 'on' ? 1 : 0;
 };
 
-$field_types[$field_type]['decode'] = function($schema, $value) {
-   if ($value) {
-      return '<span class="glyphicon glyphicon-check"></span>';
-   } else {
-      return '<span class="glyphicon glyphicon-unchecked"></span>';
-   }
+$field_types[$field_type]['decode'] = function ($schema, $value) {
+    if ($value) {
+        return '<span class="ti-check"></span>';
+    } else {
+        return '<span class="ti-close"></span>';
+    }
 };
 
-$field_types[$field_type]['decode_raw'] = function($schema, $value) {
-   return $value;
+$field_types[$field_type]['decode_raw'] = function ($schema, $value) {
+    return $value;
 };
 
 /*

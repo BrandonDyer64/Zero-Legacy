@@ -79,8 +79,8 @@ function db_select($table, $columns, $where, $extra = '')
             if (!is_array($value)) {
                 $where_conditions[] = "$column=?";
                 $where_values[] = $value;
-            } elseif ($value[0] == 'IN') {
-                $where_conditions[] = "$column IN (${value[1]})";
+            } elseif ($value[0] == 'IN' || $value[0] == 'NOT IN') {
+                $where_conditions[] = "$column ${value[0]} (${value[1]})";
             } else {
                 $where_conditions[] = "${column} ${value[0]} ?";
                 $where_values[] = $value[1];
@@ -288,6 +288,7 @@ function db_table_data($table)
     // Add data to column
     $column['name'] = $name;
     $column['data'] = $comment;
+    $column['data_raw'] = $row['TABLE_COMMENT'];
     $column['slaves'] = $slaves;
     $column['whitelist'] = create_whitelist($comment, $user_groups);
     $column['whitelist_display'] = create_whitelist(isset($comment['display']) ? $comment['display'] : [], $user_groups, isset($comment['display']), isset($comment['display']));
@@ -404,7 +405,7 @@ function check_user_permission_force(...$whitelists)
         }
     }
     if ($deny) {
-        die('<h1>Permission Denied!</h1><p>You do not have permission to view this page</p>');
+        die(get_403());
     }
 }
 
@@ -449,48 +450,102 @@ function is_assoc(array $arr)
     return array_keys($arr) !== range(0, count($arr) - 1);
 }
 
-function create_error($text, $is_for_quintify = false)
+function get_404()
 {
-    global $url;
-    if ($is_for_quintify) {
-        $for = "This error is useful to Quintify.!\nPlease send it to them to help make this product better.";
-    } else {
-        $for = '';
-    }
-    $text = <<<TEXT
+    return get_page_error('404', 'Page not found');
+}
 
-    Encountered error: $text
-    URL: $url
-    $for
+function get_403()
+{
+    return get_page_error('403', 'Forbidden', 'You do not have permission to view this page.');
+}
 
-TEXT;
-    $text = base64_encode($text);
-    $url_text = urlencode($text);
-    $error = <<<HTML
+function get_page_error($code, $message = '', $stack_message = '')
+{
+    global $config;
+    global $update_host;
+    $theme = $config['theme'] ? $config['theme'] : 'blue-vertical';
+    $content = <<<HTML
+  <!DOCTYPE html>
+  <html>
+      <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width,initial-scale=1">
+          <title>Error - $code</title>
+          <link href="$update_host/cdn/Minton/Admin/plugins/switchery/switchery.min.css" rel="stylesheet" />
+          <link href="$update_host/cdn/Minton/Admin/$theme/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+          <link href="$update_host/cdn/Minton/Admin/$theme/assets/css/icons.css" rel="stylesheet" type="text/css">
+          <link href="$update_host/cdn/Minton/Admin/$theme/assets/css/style.css" rel="stylesheet" type="text/css">
+          <script src="$update_host/cdn/Minton/Admin/$theme/assets/js/modernizr.min.js"></script>
+      </head>
+      <body>
+          <div class="ex-page-content">
+              <div class="container">
+                  <div class="row">
+                      <div class="col-lg-6">
+                          <svg class="svg-box" width="380px" height="500px" viewBox="0 0 837 1045" version="1.1"
+                               xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                               xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+                              <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"
+                                 sketch:type="MSPage">
+                                  <path d="M353,9 L626.664028,170 L626.664028,487 L353,642 L79.3359724,487 L79.3359724,170 L353,9 Z"
+                                        id="Polygon-1" stroke="#3bafda" stroke-width="6" sketch:type="MSShapeGroup"></path>
+                                  <path d="M78.5,529 L147,569.186414 L147,648.311216 L78.5,687 L10,648.311216 L10,569.186414 L78.5,529 Z"
+                                        id="Polygon-2" stroke="#7266ba" stroke-width="6" sketch:type="MSShapeGroup"></path>
+                                  <path d="M773,186 L827,217.538705 L827,279.636651 L773,310 L719,279.636651 L719,217.538705 L773,186 Z"
+                                        id="Polygon-3" stroke="#f76397" stroke-width="6" sketch:type="MSShapeGroup"></path>
+                                  <path d="M639,529 L773,607.846761 L773,763.091627 L639,839 L505,763.091627 L505,607.846761 L639,529 Z"
+                                        id="Polygon-4" stroke="#00b19d" stroke-width="6" sketch:type="MSShapeGroup"></path>
+                                  <path d="M281,801 L383,861.025276 L383,979.21169 L281,1037 L179,979.21169 L179,861.025276 L281,801 Z"
+                                        id="Polygon-5" stroke="#ffaa00" stroke-width="6" sketch:type="MSShapeGroup"></path>
+                              </g>
+                          </svg>
+                      </div>
 
-    <h2>Something went wrong.</h2>
+                      <div class="col-lg-6">
+                          <div class="message-box">
+                              <h1 class="m-b-0">$code</h1>
+                              <h6>$message</h6>
+                              <div class="buttons-con">
+                                  <div class="action-link-wrap">
+                                      <a onclick="history.back(-1)" href="Javascript:void(0);" class="btn btn-custom btn-primary waves-effect waves-light m-t-20">Go Back</a>
+                                      <a href="?p=home" class="btn btn-custom btn-primary waves-effect waves-light m-t-20">Go to Home Page</a>
+                                  </div>
+                              </div>
+                              <br />
+                              <p>$stack_message</p>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
 
-    <p>Send this to one of your developers:</p>
 
-    <script type="text/javascript">
-         function selectText(containerid) {
-              if (document.selection) {
-                    var range = document.body.createTextRange();
-                    range.moveToElementText(document.getElementById(containerid));
-                    range.select();
-              } else if (window.getSelection) {
-                    var range = document.createRange();
-                    range.selectNode(document.getElementById(containerid));
-                    window.getSelection().removeAllRanges();
-                    window.getSelection().addRange(range);
-              }
-         }
-    </script>
 
-    <p id="error_text" onclick="selectText('error_text')">$text</p>
+      <script>
+              var resizefunc = [];
+          </script>
 
-    <p><sub><a href="?p=err&text=$url_text">I am a developer</a></sub></p>
+          <!-- Plugins  -->
+          <script src="$update_host/cdn/Minton/Admin/$theme/assets/js/jquery.min.js"></script>
+          <script src="$update_host/cdn/Minton/Admin/$theme/assets/js/popper.min.js"></script><!-- Popper for Bootstrap -->
+          <script src="$update_host/cdn/Minton/Admin/$theme/assets/js/bootstrap.min.js"></script>
+          <script src="$update_host/cdn/Minton/Admin/$theme/assets/js/detect.js"></script>
+          <script src="$update_host/cdn/Minton/Admin/$theme/assets/js/fastclick.js"></script>
+          <script src="$update_host/cdn/Minton/Admin/$theme/assets/js/jquery.slimscroll.js"></script>
+          <script src="$update_host/cdn/Minton/Admin/$theme/assets/js/jquery.blockUI.js"></script>
+          <script src="$update_host/cdn/Minton/Admin/$theme/assets/js/waves.js"></script>
+          <script src="$update_host/cdn/Minton/Admin/$theme/assets/js/wow.min.js"></script>
+          <script src="$update_host/cdn/Minton/Admin/$theme/assets/js/jquery.nicescroll.js"></script>
+          <script src="$update_host/cdn/Minton/Admin/$theme/assets/js/jquery.scrollTo.min.js"></script>
+          <script src="$update_host/cdn/Minton/Admin/plugins/switchery/switchery.min.js"></script>
 
+          <!-- Custom main Js -->
+          <script src="$update_host/cdn/Minton/Admin/$theme/assets/js/jquery.core.js"></script>
+          <script src="$update_host/cdn/Minton/Admin/$theme/assets/js/jquery.app.js"></script>
+
+      </body>
+  </html>
 HTML;
-    return $error;
+    return $content;
 }

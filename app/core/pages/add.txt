@@ -1,55 +1,59 @@
 <?php
 
 if ($page == "add") {
+    $table_data = db_table_data($table);
+    check_user_permission_force($table_data['whitelist'], $table_data['whitelist_add']);
 
-   $table_data = db_table_data($table);
-   check_user_permission_force($table_data['whitelist'], $table_data['whitelist_add']);
+    $schema = db_schema($table);
 
-   $schema = db_schema($table);
-
-   if (isset($_POST['-submit'])) {
-      $quantity = 1;
-      if (isset($_POST['-quantity']) && $_POST['-quantity'] > 1) {
-         $quantity = $_POST['-quantity'];
-      }
-      for ($i = 0; $i < $quantity; $i++) {
-         $update_values = array();
-         foreach ($_POST as $key => $value) {
-            if (!starts_with($key, '-') && $key != 'id') {
-               $fn = get_type_function('encode', $schema[$key]['type']);
-               $value = $fn($schema[$key], $value, $_POST, $i);
-               $update_values[$key] = $value;
+    if (isset($_POST['-submit'])) {
+        $quantity = 1;
+        if (isset($_POST['-quantity']) && $_POST['-quantity'] > 1) {
+            $quantity = $_POST['-quantity'];
+        }
+        for ($i = 0; $i < $quantity; $i++) {
+            $update_values = array();
+            foreach ($_POST as $key => $value) {
+                if (!starts_with($key, '-') && $key != 'id') {
+                    $fn = get_type_function('encode', $schema[$key]['type']);
+                    $value = $fn($schema[$key], $value, $_POST, $i);
+                    $update_values[$key] = $value;
+                }
             }
-         }
-         db_insert($table, $update_values);
-      }
-      $id = $pdo->lastInsertId();
-      if (!isset($_GET['api'])) {
-         header("Location: ?p=display&t=$table&id=$id");
-      } else {
-         $content_api['success'] = true;
-         $content_api['id'] = $id;
-      }
-   }
+            db_insert($table, $update_values);
+        }
+        $id = $pdo->lastInsertId();
+        if (!isset($_GET['api'])) {
+            header("Location: ?p=display&t=$table&id=$id");
+        } else {
+            $content_api['success'] = true;
+            $content_api['id'] = $id;
+        }
+    }
 
-   $table_content = '';
+    $table_content = '';
 
-   if (isset($_GET['d'])) {
-      $defaults = json_decode($_GET['d'], true);
-   }
+    if (isset($_GET['d'])) {
+        $defaults = json_decode($_GET['d'], true);
+    }
 
-   foreach ($schema as $key => $value) {
-      if ($key == 'id') {
-         continue;
-      }
-      $key_pretty = column_pretty_print($key);
-      $fn = get_type_function('edit', $schema[$key]['type']);
-      $value = '';
-      if (isset($defaults[$key])) {
-         $value = $defaults[$key];
-      }
-      $input = $fn($key, $schema[$key], $value);
-      $table_content .= <<<HTML
+    foreach ($schema as $key => $value) {
+        if ($key == 'id') {
+            continue;
+        }
+        if (isset($schema[$key]['data']['groups'])) {
+            if (!check_user_permission($schema[$key]['data']['groups'])) {
+                continue;
+            }
+        }
+        $key_pretty = column_pretty_print($key);
+        $fn = get_type_function('edit', $schema[$key]['type']);
+        $value = '';
+        if (isset($defaults[$key])) {
+            $value = $defaults[$key];
+        }
+        $input = $fn($key, $schema[$key], $value);
+        $table_content .= <<<HTML
 
       <div class="form-group">
         <label class="control-label col-sm-2">$key_pretty:</label>
@@ -59,9 +63,9 @@ if ($page == "add") {
       </div>
 
 HTML;
-   }
+    }
 
-   $content .= <<<HTML
+    $content .= <<<HTML
 
    <h2>Add: $table_pretty</h2>
    <p><a href="?p=list&t=$table"><span class="glyphicon glyphicon-th-list"></span></a></p>
@@ -81,5 +85,4 @@ HTML;
    </form>
 
 HTML;
-
 }

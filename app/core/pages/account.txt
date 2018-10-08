@@ -1,16 +1,43 @@
 <?php
 
 if ($page == 'account') {
-   if (isset($_POST['-submit'])) {
-      $values = [
+    if (isset($_POST['-submit'])) {
+        $values = [
          'username' => $_POST['username'],
          'email' => $_POST['email'],
          'password' => $_POST['password']
       ];
-      maj_update('user',$values,$user['id']);
-   }
-   $groups = implode(', ', $user['groups']);
-   $content .= <<<HTML
+        maj_update('user', $values, $user['id']);
+    }
+    $g = new \Sonata\GoogleAuthenticator\GoogleAuthenticator();
+    $groups = implode(', ', $user['groups']);
+    $stmt = db_select('user', ['*'], ['id'=>$user['id']]);
+    $user_vals = $stmt->fetch();
+    if (isset($_GET['enable_2fa'])) {
+        $secret = $secret = $g->generateSecret();
+        db_update('user', ['use_2fa'=>1,'salt_2fa'=>$secret], ['id'=>$user['id']]);
+        $user_vals['use_2fa'] = true;
+        $user_vals['salt_2fa'] = $secret;
+        header("Location: ?p=account");
+        exit;
+    }
+    if ($user_vals['use_2fa']) {
+        $img_url = \Sonata\GoogleAuthenticator\GoogleQrUrl::generate(
+            $user['username'],
+            $user_vals['salt_2fa'],
+            $config['name']
+        );
+        $_2fa = <<<HTML
+          <img src="$img_url" />
+          <p style="max-width: 300px;">Download the Google Authenticator application from App Store or Google Play Store and scan the above code.
+          </p>
+HTML;
+    } else {
+        $_2fa = <<<HTML
+          <a href="?p=account&enable_2fa" class="btn btn-primary">Enable 2FA</a>
+HTML;
+    }
+    $content .= <<<HTML
    <form method="post">
       <table cellpadding="4">
          <tbody>
@@ -40,9 +67,7 @@ if ($page == 'account') {
             </td>
             <td>
                <small>
-                  <b>Warning:</b> Anyone with this token can log in as you.<br>
-                  Neither <b>Quintify</b> nor an admin from <b>${config['name']}</b> will ask you for this.<br>
-                  If someone does please report it to <b>support@quintify.com</b>.
+                  Do NOT give this to anyone!
                </small>
             </td>
          </tr>
@@ -59,7 +84,11 @@ if ($page == 'account') {
             </td>
          </tr>
          <tr>
-            <td><input type="submit" name="-submit" value="Submit" class="button"></td>
+           <td>2FA:</td>
+           <td>$_2fa</td>
+         </tr>
+         <tr>
+            <td><input type="submit" name="-submit" value="Submit" class="btn btn-primary"></td>
          </tr>
          </tbody>
       </table>

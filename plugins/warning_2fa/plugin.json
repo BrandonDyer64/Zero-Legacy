@@ -1,0 +1,14 @@
+{
+  "name": "2FA Warning",
+  "type": "Home",
+  "version": "1.0.0",
+  "cost": 0,
+  "icon": "mdi mdi-key",
+  "description_short": "Warns users that don't have 2 Factor Authentication.",
+  "description": "",
+  "files": {
+    "home": ["warning.php"],
+    "page": ["enabling.php"]
+  },
+  "home_links": []
+}

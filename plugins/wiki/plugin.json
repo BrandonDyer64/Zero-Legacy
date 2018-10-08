@@ -1,0 +1,34 @@
+{
+  "name": "Wiki",
+  "type": "Page",
+  "version": "1.0.0",
+  "cost": 0,
+  "custom": true,
+  "description_short": "For documenting things.",
+  "description": "",
+  "files": {
+    "page": ["wiki.php"],
+    "display_top": ["display_link.php"]
+  },
+  "dependencies": ["document", "slave_tables"],
+  "home_links": [
+    {
+      "name": "Wiki Home",
+      "url": "?p=wiki&w=home",
+      "groups": ["admin", "employee"],
+      "module": "wiki"
+    },
+    {
+      "name": "New Page",
+      "url": "?p=add&t=wiki_page",
+      "groups": ["admin", "employee"],
+      "module": "wiki"
+    },
+    {
+      "name": "Pages",
+      "url": "?p=list&t=wiki_page",
+      "groups": ["admin", "employee"],
+      "module": "wiki"
+    }
+  ]
+}

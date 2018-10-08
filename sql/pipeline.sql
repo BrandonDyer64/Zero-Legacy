@@ -19,23 +19,24 @@ CREATE TABLE j_user_team (
   PRIMARY KEY (id)
 ) COMMENT = '{"whitelist":["admin"]}';
 
-CREATE TABLE team_relationship (
-  id INT NOT NULL AUTO_INCREMENT,
-  team_from INT COMMENT '{"type":"select","from":"team"}',
-  team_to INT COMMENT '{"type":"select","from":"team"}',
-  PRIMARY KEY (id)
-) COMMENT = '{"whitelist":["admin"]}';
-
 CREATE TABLE project (
   id INT NOT NULL AUTO_INCREMENT,
   name VARCHAR(32),
   pipeline INT COMMENT '{"type":"select","from":"pipeline"}',
-  current_team INT COMMENT '{"type":"select","from":"team"}',
-  proposal TEXT COMMENT '{"type":"link"}',
-  repository TEXT COMMENT '{"type":"link"}',
+  current_team INT DEFAULT 1 COMMENT '{"type":"select","from":"team","groups":["admin"]}',
   route TEXT COMMENT '{"type":"multi_select","from":"team"}',
   PRIMARY KEY (id)
-) COMMENT = '{"whitelist":["admin"],"display":{"whitelist":["employee"]},"add":{"whitelist":["game_designer"]}}';
+) COMMENT = '{"whitelist":["admin"]}';
+
+CREATE TABLE project_team_transfer (
+  id INT NOT NULL AUTO_INCREMENT,
+  project INT COMMENT '{"type":"select","from":"project"}',
+  team_from INT COMMENT '{"type":"select","from":"team"}',
+  team_to INT COMMENT '{"type":"select","from":"team"}',
+  user INT COMMENT '{"type":"select","from":"user"}',
+  date_of_transfer DATE,
+  PRIMARY KEY (id)
+) COMMENT = '{"whitelist":["admin"]}';
 
 CREATE TABLE project_document (
   id INT NOT NULL AUTO_INCREMENT,

@@ -29,6 +29,9 @@ HTML;
         while ($row = $stmt_1->fetch()) {
             $content .= <<<HTML
                 <a href="?p=display&t=project&id=${row['id']}" style="color: #343c49;"> ${row['id']} - ${row['name']}</a>
+                <span style="float: right;">
+                  <a href="?p=pipe_next&id=${row['id']}"><i class="ti-arrow-right"></i></a>
+                </span>
                 <br />
 HTML;
         }

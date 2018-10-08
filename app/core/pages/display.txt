@@ -4,6 +4,8 @@ if ($page == "display") {
     $table_data = db_table_data($table);
     check_user_permission_force($table_data['whitelist'], $table_data['whitelist_display']);
 
+    $name = maj_get_name($_GET['t'], (int)$_GET['id']);
+
     $is_can_edit = check_user_permission($table_data['whitelist_edit']);
     $is_can_add = check_user_permission($table_data['whitelist_add']);
 
@@ -93,7 +95,7 @@ HTML;
 
     $content .= <<<HTML
 
-    <h2>Display: <strong>$table_pretty</strong></h2>
+    <h2>$table_pretty: <strong>$name</strong></h2>
     <p>
         <a href="?p=edit&t=$table&id=$id"><span class="ti-pencil"></span></a>
         &nbsp;

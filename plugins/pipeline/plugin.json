@@ -23,6 +23,12 @@
       "url": "?p=pipe_teams",
       "groups": ["admin", "employee"],
       "module": "pipeline"
+    },
+    {
+      "name": "Audits",
+      "url": "?p=list&t=project_team_transfer",
+      "groups": ["admin"],
+      "module": "pipeline"
     }
   ]
 }

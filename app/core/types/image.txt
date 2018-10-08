@@ -1,0 +1,40 @@
+<?php
+
+$field_type = "image";
+
+
+$field_types[$field_type]['edit'] = function ($name, $schema, $value = null, $focus = false) {
+    global $pdo;
+    $focus = $focus ? 'autofocus' : '';
+    $value = htmlspecialchars($value);
+    $content = <<<HTML
+   <input type="text" name="$name" value="$value" placeholder="$name" class="form-control" $focus>
+HTML;
+    return $content;
+};
+
+$field_types[$field_type]['encode'] = function ($schema, $value, $values) {
+    return $value;
+};
+
+$field_types[$field_type]['decode'] = function ($schema, $value, $focus_link = '') {
+    $value = htmlspecialchars($value);
+    if (trim($value) == '') {
+        return '';
+    }
+    return <<<HTML
+   <img src="$value" style="max-width: 400px; max-height: 400px;" />
+HTML;
+};
+
+$field_types[$field_type]['decode_list'] = function ($schema, $value) {
+    if ($value) {
+        return "<i class='ti-image'></i>";
+    } else {
+        return "";
+    }
+};
+
+$field_types[$field_type]['decode_raw'] = function ($schema, $value, $focus_link = '') {
+    return $value;
+};

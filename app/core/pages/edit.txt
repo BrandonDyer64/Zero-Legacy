@@ -1,36 +1,40 @@
 <?php
 
 if ($page == "edit") {
+    $table_data = db_table_data($table);
+    check_user_permission_force($table_data['whitelist'], $table_data['whitelist_edit']);
 
-   $table_data = db_table_data($table);
-   check_user_permission_force($table_data['whitelist'], $table_data['whitelist_edit']);
+    $schema = db_schema($table);
 
-   $schema = db_schema($table);
+    if (isset($_POST['-submit'])) {
+        maj_update($table, $_POST, $id);
+        header("Location: ?p=display&t=$table&id=$id");
+    }
 
-   if (isset($_POST['-submit'])) {
-      maj_update($table, $_POST, $id);
-      header("Location: ?p=display&t=$table&id=$id");
-   }
+    $table_content = "";
 
-   $table_content = "";
+    $stmt = db_select($_GET['t'], ["*"], ["id"=>$id]);
 
-   $stmt = db_select($_GET['t'], ["*"], ["id"=>$id]);
+    $focus = '';
+    if (isset($_GET['focus'])) {
+        $focus = $_GET['focus'];
+    }
 
-   $focus = '';
-   if (isset($_GET['focus'])) {
-      $focus = $_GET['focus'];
-   }
+    $row = $stmt->fetch();
 
-   $row = $stmt->fetch();
-
-   foreach ($row as $key => $value) {
-      if ($key == 'id') {
-         continue;
-      }
-      $key_pretty = column_pretty_print($key);
-      $fn = get_type_function('edit', $schema[$key]['type']);
-      $input = $fn($key, $schema[$key], $value, $key == $focus);
-      $table_content .= <<<HTML
+    foreach ($row as $key => $value) {
+        if ($key == 'id') {
+            continue;
+        }
+        if (isset($schema[$key]['data']['groups'])) {
+            if (!check_user_permission($schema[$key]['data']['groups'])) {
+                continue;
+            }
+        }
+        $key_pretty = column_pretty_print($key);
+        $fn = get_type_function('edit', $schema[$key]['type']);
+        $input = $fn($key, $schema[$key], $value, $key == $focus);
+        $table_content .= <<<HTML
 
       <div class="form-group">
         <label class="control-label col-sm-2">$key_pretty:</label>
@@ -40,9 +44,9 @@ if ($page == "edit") {
       </div>
 
 HTML;
-   }
+    }
 
-   $content .= <<<HTML
+    $content .= <<<HTML
 
    <h2>Edit: <strong>$table_pretty</strong></h2>
    <p>
@@ -61,5 +65,4 @@ HTML;
    </form>
 
 HTML;
-
 }

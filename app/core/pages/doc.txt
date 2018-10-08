@@ -1,12 +1,13 @@
 <?php
 
 if ($page == "doc") {
-    $table_data = '';
+    $table_content = '';
     $table_header = '';
 
-    $data = db_schema($table);
+    $table_schema = db_schema($table);
+    $table_data = db_table_data($table);
     $first = true;
-    foreach ($data as $row) {
+    foreach ($table_schema as $row) {
         $table_row = "";
         foreach ($row as $key => $value) {
             if (is_array($value)) {
@@ -14,7 +15,7 @@ if ($page == "doc") {
             }
             $table_row .= "<td>$value</td>";
         }
-        $table_data .= <<<HTML
+        $table_content .= <<<HTML
 
       <tr class='list_table_data_row'>
          $table_row
@@ -41,9 +42,10 @@ HTML;
          <tr class="list_table_header_row">
             $table_header
          </tr>
-         $table_data
+         $table_content
       </tbody>
    </table>
+   ${table_data['data_raw']}
 
 
 HTML;
