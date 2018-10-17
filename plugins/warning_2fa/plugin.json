@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "cost": 0,
   "icon": "mdi mdi-key",
-  "description_short": "Warns users that don't have 2 Factor Authentication.",
+  "description_short": "Adds a warning on the dashboard when 2 Factor Authentication is disabled",
   "description": "",
   "files": {
     "home": ["warning.php"],
