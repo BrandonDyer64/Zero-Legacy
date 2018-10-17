@@ -5,7 +5,7 @@
   "cost": 0,
   "custom": true,
   "description_short": "Pipelining system",
-  "description": "",
+  "description": "Adds a pipelinging system, which allows projects to be transferred between teams.",
   "files": {
     "home": ["home.php"],
     "page": ["pipe_next.php", "pipe_overview.php", "pipe_teams.php"]
